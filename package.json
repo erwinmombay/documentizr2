@@ -1,0 +1,13 @@
+{
+  "name": "shippingtree",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": ">= 2.5.1",
+    "pg": ">= 0.6.6",
+    "jade": ">= 0.0.1",
+    "socket.io": ">= 0.8.7",
+    "underscore": ">= 1.2.2",
+    "backbone": ">= 0.5.3"
+  }
+}
