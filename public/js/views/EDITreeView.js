@@ -3,33 +3,41 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     
-    var TreeView = require('views/EDITreeView');
+    var TreeView = require('views/TreeView');
+    var TreeViewComposite = require('views/TreeViewComposite');
+    var TreeViewLeaf = require('views/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
     var EDITreeView = TreeView.extend({
-
         initialize: function(options) {
-            _.bindAll(this, 'render', 'add', 'addAll');
-            this.segments = this.collection = options.collection || new SegmentsCollection(); 
+            _.bindAll(this, 'render', 'addOne', 'addAll');
+            this.segments = this.collection = options.collection || new SegmentsCollection();
+            this.segments.bind('add', this.addOne); 
+            this.$ul = $('<ul/>');
         },
 
         render: function() {
+            $(this.el).empty();
+            $(this.el).append(this.$ul);
+            this.addAll();
             return this;
         },
 
-        add: function(model) {
+        addOne: function(model) {
             var view = null;
-            new TreeViewComponent();
-            if (model.blueprint.segments) {
-                view = TreeViewComponent.getInstance('composite', model);
+            if (model.segments) {
+                view = new TreeViewComposite({ model: model });
+                $(view.el).droppable({ drop: view.onDrop });
             } else {
-                view = TreeViewComponent.getInstance('leaf', model);
+                view = new TreeViewLeaf({ model: model });
             }
+            view.render();
+            this.$ul.append(view.el);
         },
 
         addAll: function () {
-            this.collection.each(this.add);
+            this.segments.each(this.addOne);
         }
     });
-    return TreeView;
+    return EDITreeView;
 });

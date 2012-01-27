@@ -26,6 +26,7 @@ app.configure('production', function() {
 
 // Routes
 app.get('/', routes.index);
+app.get('/items', routes.items);
 
 app.listen(process.env.PORT || 5000);
 console.log("Express server listening on port %d in %s mode",
