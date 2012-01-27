@@ -4,16 +4,19 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var TreeView = Backbone.View.extend({
-
         initialize: function() {
             _.bindAll(this, 'render', 'add', 'addAll');
+            this.collection.bind('add', this.addOne);
         },
 
         render: function() {
             return this;
         },
 
-        add: function (model) {
+        addOne: function (model) {
+            var view = Backbone.View();
+            view.render();
+            $(this.el).append(view.el);
         },
 
         addAll: function () {

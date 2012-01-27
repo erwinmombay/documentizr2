@@ -7,7 +7,7 @@ define(function(require) {
 
     var SegmentsCollection = Backbone.Collection.extend({
         model: SegmentModel,
-        url: '/segments'
+        url: '/items'
     });
     return SegmentsCollection;
 });

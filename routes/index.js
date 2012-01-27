@@ -4,14 +4,16 @@ exports.index = function(req, res) {
     });
 };
 
-exports.segments = function(req, res) {
+exports.items = function(req, res) {
     res.contentType('json');
-    res.send(JSON.stringify({
-        'TABLE_2': [
-            { 'HL_LOOP': 
-                { 'HL': 'blah*blah' } 
-            }
-        ]
-    }));
+    res.send(JSON.stringify([{
+        'HL': 'blah*blah'
+    },
+    {
+        'HL': 'blah*blah'
+    },
+    {
+        'HL': 'blah*blah'
+    }]));
 };
 

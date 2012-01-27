@@ -10,10 +10,10 @@
 require.config({
     paths: {
         order: 'libs/require/order.min',
-        //jquery: 'libs/jquery/jquery-1.7.1.min',
+        jquery: 'libs/jquery/jquery-1.7.1.min',
         //: firebug causes firefox to hang when using local jquery.min
         //: use jquery cdn instead during development
-        jquery: 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min',
+        //jquery: 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min',
         jqueryui: 'libs/jquery/jquery-ui-1.8.17.custom.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
