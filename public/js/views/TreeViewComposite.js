@@ -9,24 +9,25 @@ define(function(require) {
     var SegmentModel = require('models/SegmentModel');
 
     var TreeViewComposite = AbstractTreeViewComponent.extend({
-        tagName: 'li',
-
         events: {
             'click': 'onClick',
-            'dblclick .tvc-container': 'onDblClick'
+            'dblclick': 'onDblClick'
         },
 
         template: [
             '<div class="tvc-container">',
+            '<span class="tvc-minus"></span>',
             '<span class="tvc-label">',
             '</span>',
+            '<img class="tvc-img" src="" />',
             '</div>',
-            '<ul class="tvc-nodes">',
+            '<ul class="tvc-ul">',
             '</ul>'
         ].join(''),
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOne', 'addAll', 'onDrop', 'onClick', 'onDblClick');
+            _.bindAll(this, 'render', 'addOne', 'addAll', 'onDrop',
+                      'onClick', 'onDblClick');
             this.segments = options.segments || new SegmentsCollection(); 
             this.segments.bind('add', this.addOne); 
             $(this.el).attr('id', this.model.cid);
@@ -35,22 +36,37 @@ define(function(require) {
         render: function() {
             $(this.el).append(this.template);
             $(this.el).find('.tvc-label').text(this.model.cid);
-            this.$segments = $(this.el).children('.tvc-nodes');
+            this.$segments = $(this.el).children('.tvc-ul');
+            this.$tvcPlusMinus = $(this.el).find('.tvc-minus');
             return this;
         },
 
         onClick: function(e) {
             e.stopPropagation();
-            $(this.el).children('div').addClass('tv-selected');
+            $(this.el).children('div').addClass('tvc-selected');
+            if ($(e.target).is(this.$tvcPlusMinus)) {
+                this.ulFoldToggle();
+            }
         },
 
         onDblClick: function(e) {
             e.stopPropagation();
-            console.log('triggered');
+            if ($(e.target).parent().is('.tvc-container') ||
+                $(e.target).is('.tvc-container')) {
+                    this.ulFoldToggle();
+            }
+        },
+
+        ulFoldToggle: function() {
+            var that = this;
+            this.$tvcPlusMinus.toggleClass(function() {
+                return that.$tvcPlusMinus.is('.tvc-minus') ?
+                    'tvc-plus' : 'tvc-minus';
+            });
             this.$segments.toggle();
         },
 
-        onDrop: function(events, ui) {
+        onDrop: function(e, ui) {
             var model = new SegmentModel();
             this.segments.add(model);
         },
@@ -73,4 +89,3 @@ define(function(require) {
     });
     return TreeViewComposite;
 });
-

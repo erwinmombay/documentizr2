@@ -6,8 +6,6 @@ define(function(require) {
     var AbstractTreeViewComponent = require('views/AbstractTreeViewComponent');
 
     var TreeViewLeaf = AbstractTreeViewComponent.extend({
-        tagName: 'li',
-
         initialize: function(options) {
             _.bindAll(this, 'render');
             $(this.el).attr('id', this.model.cid);

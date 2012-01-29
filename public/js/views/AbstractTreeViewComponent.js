@@ -12,6 +12,8 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var AbstractTreeViewComponent = Backbone.View.extend({
+        tagName: 'li',
+        className: 'tvc',
 
         initialize: function() {
             throw Error('TreeViewComponent is non instantiable.');

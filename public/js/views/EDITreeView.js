@@ -9,6 +9,8 @@ define(function(require) {
     var SegmentsCollection = require('collections/SegmentsCollection');
 
     var EDITreeView = TreeView.extend({
+        tagName: 'div',
+
         initialize: function(options) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.segments = this.collection = options.collection || new SegmentsCollection();
