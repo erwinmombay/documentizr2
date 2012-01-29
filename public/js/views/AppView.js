@@ -23,16 +23,11 @@ define(function(require) {
             this.shipTree = new EDITreeView({
                 tagName: 'div', id: 'ship-tree', className: 'tree-panel span4'
             }).render();
-            //this.itemTree = new EDITreeViewDecorator.Sortable(this.itemTree);
-            this.itemTree.$ul.sortable();
-            this.itemTree.$ul.selectable();
+            this.itemTree.$ul.sortable({ helper: 'clone', placeholder: 'ui-state-highlight' });
             this.itemTree.segments.fetch({ success: this.itemTree.render });
             var newTVC = new SegmentModel();
             newTVC.segments = new SegmentsCollection();
             this.shipTree.segments.add(newTVC);
-            var newTVC2 = new SegmentModel();
-            newTVC2.segments = new SegmentsCollection();
-            this.shipTree.segments.add(newTVC2);
         },
 
         render: function() {
