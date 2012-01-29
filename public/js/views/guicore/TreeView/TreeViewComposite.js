@@ -3,8 +3,8 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var AbstractTreeViewComponent = require('views/AbstractTreeViewComponent');
-    var TreeViewLeaf = require('views/TreeViewLeaf');
+    var AbstractTreeViewComponent = require('views/guicore/TreeView/AbstractTreeViewComponent');
+    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
     var SegmentModel = require('models/SegmentModel');
 
@@ -16,9 +16,8 @@ define(function(require) {
 
         template: [
             '<div class="tvc-container">',
-            '<span class="tvc-minus"></span>',
-            '<span class="tvc-label">',
-            '</span>',
+            '<span class="tvc-minus handle"></span>',
+            '<span class="tvc-label"></span>',
             '<img class="tvc-img" src="" />',
             '</div>',
             '<ul class="tvc-ul">',
@@ -35,7 +34,7 @@ define(function(require) {
 
         render: function() {
             $(this.el).append(this.template);
-            $(this.el).find('.tvc-label').text(this.model.cid);
+            $(this.el).find('.tvc-label').text('composite ' + this.model.cid);
             this.$segments = $(this.el).children('.tvc-ul');
             this.$tvcPlusMinus = $(this.el).find('.tvc-minus');
             return this;
@@ -51,8 +50,11 @@ define(function(require) {
 
         onDblClick: function(e) {
             e.stopPropagation();
-            if ($(e.target).parent().is('.tvc-container') ||
-                $(e.target).is('.tvc-container')) {
+            //console.log('========');
+            //console.log(e.target);
+            //console.log(e.currentTarget);
+            if ($(e.target).parent() === ($(e.currentTarget).children('.tvc-container')) ||
+                 $(e.target) === ($(e.currentTarget).children('.tvc-container'))) {
                     this.ulFoldToggle();
             }
         },
@@ -67,7 +69,19 @@ define(function(require) {
         },
 
         onDrop: function(e, ui) {
+            e.stopPropagation();
+            //: this condition makes sure that when the sortable
+            //: inside this current object fires an onDrop event
+            //: we dont keep on creating a new segment model
+            //console.log('=====');
+            //console.log(e.isPropagationStopped());
+            //console.log(e.target);
+            //console.log(e.currentTarget);
+            if ($(e.target).find(ui.helper).length) {
+                return;
+            }
             var model = new SegmentModel();
+            model.segments = new SegmentsCollection();
             this.segments.add(model);
         },
 
@@ -75,11 +89,16 @@ define(function(require) {
             var view = null;
             if (model.segments) {
                 view = new TreeViewComposite({ model: model });
-                $(view.el).droppable({ drop: view.onDrop });
+                $(view.el).droppable({ drop: view.onDrop, greedy: true });
+                $(view.render().$segments)
+                    .sortable({
+                        helper: 'clone', placeholder: 'ui-state-highlight',
+                        handle: '.handle'
+                    });
             } else {
                 view = new TreeViewLeaf({ model: model });
+                view.render();
             }
-            view.render();
             this.$segments.append(view.el);
         },
 

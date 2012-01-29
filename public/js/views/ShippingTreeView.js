@@ -3,9 +3,9 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     
-    var TreeView = require('views/TreeView');
-    var TreeViewComposite = require('views/TreeViewComposite');
-    var TreeViewLeaf = require('views/TreeViewLeaf');
+    var TreeView = require('views/guicore/TreeView/TreeView');
+    var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
+    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
     var EDITreeView = TreeView.extend({
@@ -15,7 +15,7 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.segments = this.collection = options.collection || new SegmentsCollection();
             this.segments.bind('add', this.addOne); 
-            this.$ul = $('<ul/>');
+            this.$ul = $('<ul/>', { 'class': 'tvc' });
         },
 
         render: function() {
@@ -30,10 +30,11 @@ define(function(require) {
             if (model.segments) {
                 view = new TreeViewComposite({ model: model });
                 $(view.el).droppable({ drop: view.onDrop });
+                $(view.render().$segments).sortable();
             } else {
                 view = new TreeViewLeaf({ model: model });
+                view.render();
             }
-            view.render();
             this.$ul.append(view.el);
         },
 
