@@ -3,8 +3,13 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     
+<<<<<<< HEAD
     var TreeViewComposite = require('views/TreeViewComposite');
     var TreeViewLeaf = require('views/TreeViewLeaf');
+=======
+    var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
+    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
+>>>>>>> develop
     
     //: TODO These are not true decorators and are more like
     //: function augmenters, probably need to rethink this more in the future

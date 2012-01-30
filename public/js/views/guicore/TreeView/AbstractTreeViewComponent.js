@@ -1,5 +1,5 @@
 /**
- * views/guicore/AbstractTreeViewComponent.js
+ * views/TreeView/guicore/AbstractTreeViewComponent.js
  * ~~~~~~~~~~~~~~~~~~~
  * AbstractTreeViewComponent
  *

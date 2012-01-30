@@ -3,16 +3,24 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var AbstractTreeViewComponent = require('views/AbstractTreeViewComponent');
+    var AbstractTreeViewComponent = require('views/guicore/TreeView/AbstractTreeViewComponent');
 
     var TreeViewLeaf = AbstractTreeViewComponent.extend({
+        template: [
+            '<div class="tvc-container">',
+            '<span class="tvc-minus handle"></span>',
+            '<span class="tvc-label"></span>',
+            '</div>'
+        ].join(''),
+
         initialize: function(options) {
             _.bindAll(this, 'render');
             $(this.el).attr('id', this.model.cid);
         },
 
         render: function() {
-            $(this.el).append('leaf ' + this.model.cid);
+            $(this.el).append(this.template);
+            $(this.el).find('.tvc-label').text('leaf ' + this.model.cid);
             return this;
         }
     });
