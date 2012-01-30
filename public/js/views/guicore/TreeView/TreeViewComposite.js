@@ -26,7 +26,7 @@ define(function(require) {
 
         initialize: function(options) {
             _.bindAll(this, 'render', 'addOne', 'addAll', 'onDrop',
-                      'onClick', 'onDblClick');
+                      'onClick', 'onDblClick', 'ulFoldToggle');
             this.segments = options.segments || new SegmentsCollection(); 
             this.segments.bind('add', this.addOne); 
             $(this.el).attr('id', this.model.cid);

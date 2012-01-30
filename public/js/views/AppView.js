@@ -24,7 +24,11 @@ define(function(require) {
 			this.itemTree.$ul
 				.sortable({ 
 					helper: 'clone', placeholder: 'ui-state-highlight',
-					handle: '.handle'
+					handle: '.handle', start: function(e, ui) {
+						var selectedSiblings = $(ui.item).siblings('.ui-selected');
+						console.log('selected==');
+						console.log(selectedSiblings);
+					}
 				})
 				.selectable();
             this.itemTree.segments.fetch({ success: this.itemTree.render });
