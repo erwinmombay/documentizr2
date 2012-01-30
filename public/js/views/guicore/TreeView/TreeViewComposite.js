@@ -50,11 +50,8 @@ define(function(require) {
 
         onDblClick: function(e) {
             e.stopPropagation();
-            //console.log('========');
-            //console.log(e.target);
-            //console.log(e.currentTarget);
             if ($(e.target).parent() === ($(e.currentTarget).children('.tvc-container')) ||
-                 $(e.target) === ($(e.currentTarget).children('.tvc-container'))) {
+                $(e.target) === ($(e.currentTarget).children('.tvc-container'))) {
                     this.ulFoldToggle();
             }
         },
@@ -69,20 +66,20 @@ define(function(require) {
         },
 
         onDrop: function(e, ui) {
+            var i;
             e.stopPropagation();
             //: this condition makes sure that when the sortable
             //: inside this current object fires an onDrop event
             //: we dont keep on creating a new segment model
-            //console.log('=====');
-            //console.log(e.isPropagationStopped());
-            //console.log(e.target);
-            //console.log(e.currentTarget);
             if ($(e.target).find(ui.helper).length) {
                 return;
             }
-            var model = new SegmentModel();
-            model.segments = new SegmentsCollection();
-            this.segments.add(model);
+            //: create the number of helpers dropped
+            for (i = 0; i < ui.helper.length; i++) {
+                var model = new SegmentModel();
+                model.segments = new SegmentsCollection();
+                this.segments.add(model);
+            }
         },
 
         addOne: function(model) {

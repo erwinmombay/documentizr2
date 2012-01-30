@@ -23,12 +23,16 @@ define(function(require) {
             }).render();
 			this.itemTree.$ul
 				.sortable({ 
-					helper: 'clone', placeholder: 'ui-state-highlight',
-					handle: '.handle', start: function(e, ui) {
-						var selectedSiblings = $(ui.item).siblings('.ui-selected');
-						console.log('selected==');
-						console.log(selectedSiblings);
-					}
+					helper: function(e, ui) {
+						console.log('helper');
+						//: `this` is the $ul which we add sortable to
+						var selected = $(this).children('.ui-selected');
+						return selected.length ?
+							selected.clone().empty()
+							: ui.clone().empty();
+					},
+					placeholder: 'ui-state-highlight',
+					handle: '.handle'
 				})
 				.selectable();
             this.itemTree.segments.fetch({ success: this.itemTree.render });
