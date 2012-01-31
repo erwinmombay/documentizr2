@@ -4,7 +4,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var SegmentModel = require('models/SegmentModel');
-    var ShippingTreeView = require('views/ShippingTreeView');
+    var EDITreeView = require('views/EDITreeView');
     var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
     var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
@@ -15,10 +15,10 @@ define(function(require) {
             this.mainPanel = new Backbone.View({
                 tagName: 'div', id: 'main-panel', className: 'row'
             }).render();
-            this.itemTree = new ShippingTreeView({
+            this.itemTree = new EDITreeView({
                 tagName: 'div', id: 'item-tree', className: 'tree-panel span4'
             });
-            this.shipTree = new ShippingTreeView({
+            this.shipTree = new EDITreeView({
                 tagName: 'div', id: 'ship-tree', className: 'tree-panel span4'
             }).render();
 			this.itemTree.$ul
@@ -42,9 +42,9 @@ define(function(require) {
         },
 
         render: function() {
-            $(this.el).append(this.mainPanel.el);
-            $(this.mainPanel.el).append(this.itemTree.el);
-            $(this.mainPanel.el).append(this.shipTree.el);
+            this.$el.append(this.mainPanel.el);
+            this.mainPanel.$el.append(this.itemTree.el);
+            this.mainPanel.$el.append(this.shipTree.el);
             return this;
         }
 

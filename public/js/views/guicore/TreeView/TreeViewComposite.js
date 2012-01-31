@@ -28,21 +28,21 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll', 'onDrop',
                       'onClick', 'onDblClick', 'ulFoldToggle');
             this.segments = options.segments || new SegmentsCollection(); 
-            this.segments.bind('add', this.addOne); 
-            $(this.el).attr('id', this.model.cid);
+            this.segments.on('add', this.addOne); 
+            this.$el.attr('id', this.model.cid);
         },
 
         render: function() {
-            $(this.el).append(this.template);
-            $(this.el).find('.tvc-label').text('composite ' + this.model.cid);
-            this.$segments = $(this.el).children('.tvc-ul');
-            this.$tvcPlusMinus = $(this.el).find('.tvc-minus');
+            this.$el.append(this.template);
+            this.$('.tvc-label').text('composite ' + this.model.cid);
+            this.$segments = this.$el.children('.tvc-ul');
+            this.$tvcPlusMinus = this.$('.tvc-minus');
             return this;
         },
 
         onClick: function(e) {
             e.stopPropagation();
-            $(this.el).children('div').addClass('tvc-selected');
+            this.$el.children('div').addClass('tvc-selected');
             if ($(e.target).is(this.$tvcPlusMinus)) {
                 this.ulFoldToggle();
             }
@@ -77,7 +77,7 @@ define(function(require) {
             //: create the number of helpers dropped
             for (i = 0; i < ui.helper.length; i++) {
                 var model = new SegmentModel();
-                model.segments = new SegmentsCollection();
+                //model.segments = new SegmentsCollection();
                 this.segments.add(model);
             }
         },
@@ -86,12 +86,13 @@ define(function(require) {
             var view = null;
             if (model.segments) {
                 view = new TreeViewComposite({ model: model });
-                $(view.el).droppable({ drop: view.onDrop, greedy: true });
-                $(view.render().$segments)
+                view.$el.droppable({ drop: view.onDrop, greedy: true });
+                view.render().$segments
                     .sortable({
                         helper: 'clone', placeholder: 'ui-state-highlight',
                         handle: '.handle'
-                    });
+                    })
+                    .selectable();
             } else {
                 view = new TreeViewLeaf({ model: model });
                 view.render();

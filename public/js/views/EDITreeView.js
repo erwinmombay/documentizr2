@@ -29,8 +29,8 @@ define(function(require) {
             var view = null;
             if (model.segments) {
                 view = new TreeViewComposite({ model: model });
-                $(view.el).droppable({ drop: view.onDrop });
-                $(view.render().$segments).sortable();
+                view.$el.droppable({ drop: view.onDrop });
+                view.render().$segments.sortable({ handle: '.handle' });
             } else {
                 view = new TreeViewLeaf({ model: model });
                 view.render();

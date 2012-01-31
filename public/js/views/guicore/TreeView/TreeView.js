@@ -6,7 +6,7 @@ define(function(require) {
     var TreeView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render', 'add', 'addAll');
-            this.collection.bind('add', this.addOne);
+            this.collection.on('add', this.addOne);
         },
 
         render: function() {
@@ -16,7 +16,7 @@ define(function(require) {
         addOne: function (model) {
             var view = Backbone.View();
             view.render();
-            $(this.el).append(view.el);
+            this.$el.append(view.el);
         },
 
         addAll: function () {
