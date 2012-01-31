@@ -15,12 +15,12 @@ define(function(require) {
 
         initialize: function(options) {
             _.bindAll(this, 'render');
-            $(this.el).attr('id', this.model.cid);
+            this.$el.attr('id', this.model.cid);
         },
 
         render: function() {
-            $(this.el).append(this.template);
-            $(this.el).find('.tvc-label').text('leaf ' + this.model.cid);
+            this.$el.append(this.template);
+            this.$('.tvc-label').text('leaf ' + this.model.cid);
             return this;
         }
     });
