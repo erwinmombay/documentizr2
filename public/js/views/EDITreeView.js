@@ -30,7 +30,12 @@ define(function(require) {
             if (model.segments) {
                 view = new TreeViewComposite({ model: model });
                 view.$el.droppable({ drop: view.onDrop });
-                view.render().$segments.sortable({ handle: '.handle' });
+                view.render().$segments
+                    .sortable({
+                        helper: 'clone', placeholder: 'ui-state-highlight',
+                        handle: '.handle'
+                    })
+                    .selectable();
             } else {
                 view = new TreeViewLeaf({ model: model });
                 view.render();

@@ -41,7 +41,8 @@ define(function(require) {
         },
 
         onClick: function(e) {
-            e.stopPropagation();
+            e.stopImmediatePropagation();
+            console.log('click ' + this.model.cid);
             this.$el.children('div').addClass('tvc-selected');
             if ($(e.target).is(this.$tvcPlusMinus)) {
                 this.ulFoldToggle();
@@ -49,7 +50,8 @@ define(function(require) {
         },
 
         onDblClick: function(e) {
-            e.stopPropagation();
+            e.stopImmediatePropagation();
+            console.log('dblclick ' + this.model.cid);
             if ($(e.target).parent() === ($(e.currentTarget).children('.tvc-container')) ||
                 $(e.target) === ($(e.currentTarget).children('.tvc-container'))) {
                     this.ulFoldToggle();
@@ -67,7 +69,7 @@ define(function(require) {
 
         onDrop: function(e, ui) {
             var i;
-            e.stopPropagation();
+            e.stopImmediatePropagation();
             //: this condition makes sure that when the sortable
             //: inside this current object fires an onDrop event
             //: we dont keep on creating a new segment model
@@ -77,12 +79,13 @@ define(function(require) {
             //: create the number of helpers dropped
             for (i = 0; i < ui.helper.length; i++) {
                 var model = new SegmentModel();
-                //model.segments = new SegmentsCollection();
+                model.segments = new SegmentsCollection();
                 this.segments.add(model);
             }
         },
 
         addOne: function(model) {
+            console.log('adder ' + this.model.cid);
             var view = null;
             if (model.segments) {
                 view = new TreeViewComposite({ model: model });
