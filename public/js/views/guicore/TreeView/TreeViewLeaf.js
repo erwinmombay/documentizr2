@@ -4,14 +4,10 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var AbstractTreeViewComponent = require('views/guicore/TreeView/AbstractTreeViewComponent');
+    var leafTemplate = require('text!templates/TreeView/LeafTemplate.html');
 
     var TreeViewLeaf = AbstractTreeViewComponent.extend({
-        template: [
-            '<div class="tvc-container">',
-            '<span class="tvc-minus handle"></span>',
-            '<span class="tvc-label"></span>',
-            '</div>'
-        ].join(''),
+        template: leafTemplate,
 
         initialize: function(options) {
             _.bindAll(this, 'render');
@@ -20,11 +16,12 @@ define(function(require) {
 
         render: function() {
             this.$el.empty();
-            this.$el.append(this.template);
-            var text = 'leaf ' + this.model.cid + ' => ';
-            text += 'qty: ' + this.model.get('qty');
-            text += ' per: ' + this.model.get('per');
-            this.$('.tvc-label').text(text);
+            var template = Handlebars.compile(this.template); 
+            this.$el.append(template({
+                leaf: this.model.cid,
+                qty: this.model.get('qty'),
+                per: this.model.get('per')
+            }));
             return this;
         }
     });

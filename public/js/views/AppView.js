@@ -4,7 +4,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var SegmentModel = require('models/SegmentModel');
-    var SegmentsTreeView = require('views/guicore/SegmentsTreeView/SegmentsTreeView');
+    var SegmentTreeView = require('views/guicore/SegmentTreeView/SegmentTreeView');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
     var AppView = Backbone.View.extend({
@@ -14,11 +14,11 @@ define(function(require) {
                 tagName: 'div', id: 'main-panel',
                 className: 'row span12'
             }).render();
-            this.itemTree = new SegmentsTreeView({
+            this.itemTree = new SegmentTreeView({
                 tagName: 'div', id: 'item-tree',
                 className: 'tree-panel span4'
             });
-            this.shipTree = new SegmentsTreeView({
+            this.shipTree = new SegmentTreeView({
                 tagName: 'div', id: 'ship-tree',
                 className: 'tree-panel span4'
             }).render();

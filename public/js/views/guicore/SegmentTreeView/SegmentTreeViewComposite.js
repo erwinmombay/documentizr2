@@ -3,41 +3,22 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var AbstractTreeViewComponent = require('views/guicore/TreeView/AbstractTreeViewComponent');
+    var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
     var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
     var SegmentModel = require('models/SegmentModel');
 
-    var TreeViewComposite = AbstractTreeViewComponent.extend({
+    var SegmentTreeViewComposite = TreeViewComposite.extend({
         events: {
             'click': 'onClick',
             'dblclick': 'onDblClick'
         },
 
-        template: [
-            '<div class="tvc-container">',
-            '<span class="tvc-minus handle"></span>',
-            '<span class="tvc-label"></span>',
-            '<img class="tvc-img" src="" />',
-            '</div>',
-            '<ul class="tvc-ul">',
-            '</ul>'
-        ].join(''),
-
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOne', 'addAll', 'onDrop',
-                      'onClick', 'onDblClick', 'ulFoldToggle');
+            _.bindAll(this, 'addOne', 'onDrop', 'onClick', 'onDblClick', 'ulFoldToggle');
             this.segments = options.segments || new SegmentsCollection(); 
             this.segments.on('add', this.addOne); 
             this.$el.attr('id', this.model.cid);
-        },
-
-        render: function() {
-            this.$el.append(this.template);
-            this.$('.tvc-label').text('composite ' + this.model.cid);
-            this.$segments = this.$el.children('.tvc-ul');
-            this.$tvcPlusMinus = this.$('.tvc-minus');
-            return this;
         },
 
         onClick: function(e) {
@@ -86,27 +67,23 @@ define(function(require) {
         },
 
         addOne: function(model) {
-            console.log('adder ' + this.model.cid);
             var view = null;
             if (model.segments) {
-                view = new TreeViewComposite({ model: model });
+                view = new SegmentTreeViewComposite({ model: model });
                 view.$el.droppable({ drop: view.onDrop, greedy: true });
                 view.render().$segments
                     .sortable({
-                        helper: 'clone', placeholder: 'ui-state-highlight',
+                        helper: 'clone',
+                        placeholder: 'ui-state-highlight',
                         handle: '.handle'
                     })
                     .selectable();
             } else {
-                view = new TreeViewLeaf({ model: model });
+                view = new SegmentTreeViewLeaf({ model: model });
                 view.render();
             }
             this.$segments.append(view.el);
-        },
-
-        addAll: function () {
-            this.segments.each(this.addOne);
         }
     });
-    return TreeViewComposite;
+    return SegmentTreeViewComposite;
 });

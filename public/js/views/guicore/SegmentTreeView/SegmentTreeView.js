@@ -4,11 +4,11 @@ define(function(require) {
     var Backbone = require('backbone');
     
     var TreeView = require('views/guicore/TreeView/TreeView');
-    var SegmentTreeViewComposite = require('views/guicore/SegmentsTreeView/SegmentTreeViewComposite');
-    var SegmentTreeViewLeaf = require('views/guicore/SegmentsTreeView/SegmentTreeViewLeaf');
+    var SegmentTreeViewComposite = require('views/guicore/SegmentTreeView/SegmentTreeViewComposite');
+    var SegmentTreeViewLeaf = require('views/guicore/SegmentTreeView/SegmentTreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
-    var SegmentsTreeView = TreeView.extend({
+    var SegmentTreeView = TreeView.extend({
         tagName: 'div',
 
         initialize: function(options) {
@@ -47,5 +47,5 @@ define(function(require) {
             this.segments.each(this.addOne);
         }
     });
-    return SegmentsTreeView;
+    return SegmentTreeView;
 });
