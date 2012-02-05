@@ -4,22 +4,23 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var SegmentModel = require('models/SegmentModel');
-    var EDITreeView = require('views/EDITreeView');
-    var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
-    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
+    var SegmentsTreeView = require('views/guicore/SegmentsTreeView/SegmentsTreeView');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
     var AppView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
             this.mainPanel = new Backbone.View({
-                tagName: 'div', id: 'main-panel', className: 'row'
+                tagName: 'div', id: 'main-panel',
+                className: 'row span12'
             }).render();
-            this.itemTree = new EDITreeView({
-                tagName: 'div', id: 'item-tree', className: 'tree-panel span4'
+            this.itemTree = new SegmentsTreeView({
+                tagName: 'div', id: 'item-tree',
+                className: 'tree-panel span4'
             });
-            this.shipTree = new EDITreeView({
-                tagName: 'div', id: 'ship-tree', className: 'tree-panel span4'
+            this.shipTree = new SegmentsTreeView({
+                tagName: 'div', id: 'ship-tree',
+                className: 'tree-panel span4'
             }).render();
 			this.itemTree.$ul
 				.sortable({ 
@@ -47,7 +48,6 @@ define(function(require) {
             this.mainPanel.$el.append(this.shipTree.el);
             return this;
         }
-
     });
     return AppView;
 });

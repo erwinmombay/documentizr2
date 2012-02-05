@@ -4,11 +4,11 @@ define(function(require) {
     var Backbone = require('backbone');
     
     var TreeView = require('views/guicore/TreeView/TreeView');
-    var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
-    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
+    var SegmentTreeViewComposite = require('views/guicore/SegmentsTreeView/SegmentTreeViewComposite');
+    var SegmentTreeViewLeaf = require('views/guicore/SegmentsTreeView/SegmentTreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
-    var EDITreeView = TreeView.extend({
+    var SegmentsTreeView = TreeView.extend({
         tagName: 'div',
 
         initialize: function(options) {
@@ -28,7 +28,7 @@ define(function(require) {
         addOne: function(model) {
             var view = null;
             if (model.segments) {
-                view = new TreeViewComposite({ model: model });
+                view = new SegmentTreeViewComposite({ model: model });
                 view.$el.droppable({ drop: view.onDrop });
                 view.render().$segments
                     .sortable({
@@ -37,7 +37,7 @@ define(function(require) {
                     })
                     .selectable();
             } else {
-                view = new TreeViewLeaf({ model: model });
+                view = new SegmentTreeViewLeaf({ model: model });
                 view.render();
             }
             this.$ul.append(view.el);
@@ -47,5 +47,5 @@ define(function(require) {
             this.segments.each(this.addOne);
         }
     });
-    return EDITreeView;
+    return SegmentsTreeView;
 });

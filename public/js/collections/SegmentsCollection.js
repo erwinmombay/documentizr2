@@ -7,7 +7,20 @@ define(function(require) {
 
     var SegmentsCollection = Backbone.Collection.extend({
         model: SegmentModel,
-        url: '/items'
+        url: '/items',
+
+        deepQueryById: function(id) { },
+
+        deepQueryByCid: function(cid) {
+            this.each(function(value, key) {
+                if (value.cid === cid) {
+                    return value;
+                }
+                if (value.segments) {
+                    value.segments.deepQueryByCid(id);
+                }
+            }, this);
+        }
     });
     return SegmentsCollection;
 });

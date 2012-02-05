@@ -7,13 +7,13 @@ exports.index = function(req, res) {
 exports.items = function(req, res) {
     res.contentType('json');
     res.send(JSON.stringify([{
-        'HL': 'blah*blah'
+        'qty': '23', 'per': '10'
     },
     {
-        'HL': 'blah*blah'
+        'qty': '50', 'per': '25'
     },
     {
-        'HL': 'blah*blah'
+        'qty': '20', 'per': '10'
     }]));
 };
 
