@@ -18,7 +18,7 @@ define(function(require) {
             this.$el.empty();
             var template = Handlebars.compile(this.template); 
             this.$el.append(template({
-                leaf: this.model.cid,
+                label: this.model.cid,
                 qty: this.model.get('qty'),
                 per: this.model.get('per')
             }));

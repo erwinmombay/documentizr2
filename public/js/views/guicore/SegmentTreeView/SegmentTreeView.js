@@ -32,8 +32,9 @@ define(function(require) {
                 view.$el.droppable({ drop: view.onDrop });
                 view.render().$segments
                     .sortable({
-                        helper: 'clone', placeholder: 'ui-state-highlight',
-                        handle: '.handle'
+                        helper: 'clone',
+                        handle: '.handle',
+                        placeholder: 'ui-state-highlight'
                     })
                     .selectable();
             } else {

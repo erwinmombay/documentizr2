@@ -3,6 +3,8 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
+    var mediator = require('views/mediator');
+    var modalEditorView = require('views/modalEditorView');
     var SegmentModel = require('models/SegmentModel');
     var SegmentTreeView = require('views/guicore/SegmentTreeView/SegmentTreeView');
     var SegmentsCollection = require('collections/SegmentsCollection');
@@ -10,19 +12,16 @@ define(function(require) {
     var AppView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
-            this.mainPanel = new Backbone.View({
-                tagName: 'div', id: 'main-panel',
-                className: 'row span12'
-            }).render();
-            this.itemTree = new SegmentTreeView({
+            this.mediator = mediator;
+            this.mediator.itemTree = new SegmentTreeView({
                 tagName: 'div', id: 'item-tree',
                 className: 'tree-panel span4'
             });
-            this.shipTree = new SegmentTreeView({
+            this.mediator.shipTree = new SegmentTreeView({
                 tagName: 'div', id: 'ship-tree',
                 className: 'tree-panel span4'
             }).render();
-			this.itemTree.$ul
+			this.mediator.itemTree.$ul
 				.sortable({ 
 					helper: function(e, ui) {
 						console.log('helper');
@@ -36,16 +35,18 @@ define(function(require) {
 					handle: '.handle'
 				})
 				.selectable();
-            this.itemTree.segments.fetch({ success: this.itemTree.render });
+            this.mediator.itemTree.segments.fetch({ success: this.mediator.itemTree.render });
             var shipmentHL = new SegmentModel();
             shipmentHL.segments = new SegmentsCollection();
-            this.shipTree.segments.add(shipmentHL);
+            this.mediator.shipTree.segments.add(shipmentHL);
         },
 
         render: function() {
-            this.$el.append(this.mainPanel.el);
-            this.mainPanel.$el.append(this.itemTree.el);
-            this.mainPanel.$el.append(this.shipTree.el);
+            this.$el.append(this.mediator.el);
+            this.mediator.$el.append(this.mediator.itemTree.el);
+            this.mediator.$el.append(this.mediator.shipTree.el);
+            this.$el.append(modalEditorView.render().el);
+            $(modalEditorView.el).modal('show');
             return this;
         }
     });

@@ -17,15 +17,16 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.segments = options.segments || new SegmentsCollection(); 
             this.segments.on('add', this.addOne); 
+            this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
         },
 
         render: function() {
             this.$el.empty();
-            var template = Handlebars.compile(this.template);
-            this.$el.append(template({ label: this.model.cid }));
+            this.$el.append(this.template({ label: this.model.cid }));
             this.$segments = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
+            this.addAll();
             return this;
         },
 
