@@ -34,8 +34,9 @@ define(function(require) {
         }
     });
 
+    mediator.on('click', function(context) {
 
-
+    });
     return mediator;
 });
 

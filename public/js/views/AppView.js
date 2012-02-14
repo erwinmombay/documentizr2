@@ -13,6 +13,7 @@ define(function(require) {
         initialize: function() {
             _.bindAll(this, 'render');
             this.mediator = mediator;
+            this.editor = modalEditorView;
             this.mediator.itemTree = new SegmentTreeView({
                 tagName: 'div', id: 'item-tree',
                 className: 'tree-panel span4'
@@ -45,8 +46,9 @@ define(function(require) {
             this.$el.append(this.mediator.el);
             this.mediator.$el.append(this.mediator.itemTree.el);
             this.mediator.$el.append(this.mediator.shipTree.el);
-            this.$el.append(modalEditorView.render().el);
-            $(modalEditorView.el).modal('show');
+            this.editor.render();
+            this.$el.append(this.editor.el);
+            this.editor.$el.modal('show');
             return this;
         }
     });
