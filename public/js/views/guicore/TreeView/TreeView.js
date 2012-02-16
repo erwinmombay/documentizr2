@@ -14,7 +14,7 @@ define(function(require) {
         },
 
         addOne: function (model) {
-            var view = Backbone.View();
+            var view = new Backbone.View();
             view.render();
             this.$el.append(view.el);
         },

@@ -3,51 +3,49 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
+    var mediator = require('views/mediator');
+    var modalEditorView = require('views/modalEditorView');
     var SegmentModel = require('models/SegmentModel');
-    var EDITreeView = require('views/EDITreeView');
-    var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
-    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
+    var SegmentTreeView = require('views/guicore/SegmentTreeView/SegmentTreeView');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
     var AppView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
-            this.mainPanel = new Backbone.View({
-                tagName: 'div', id: 'main-panel', className: 'row'
-            }).render();
-            this.itemTree = new EDITreeView({
-                tagName: 'div', id: 'item-tree', className: 'tree-panel span4'
+            this.mediator = mediator;
+            this.editor = modalEditorView;
+            this.mediator.itemTree = new SegmentTreeView({
+                tagName: 'div', id: 'item-tree',
+                className: 'tree-panel span4'
             });
-            this.shipTree = new EDITreeView({
-                tagName: 'div', id: 'ship-tree', className: 'tree-panel span4'
+            this.mediator.shipTree = new SegmentTreeView({
+                tagName: 'div', id: 'ship-tree',
+                className: 'tree-panel span4'
             }).render();
-			this.itemTree.$ul
+			this.mediator.itemTree.$ul
 				.sortable({ 
 					helper: function(e, ui) {
-						console.log('helper');
 						//: `this` is the $ul which we add sortable to
 						var selected = $(this).children('.ui-selected');
-						return selected.length ?
-							selected.clone().empty()
-							: ui.clone().empty();
+						return selected.length ? selected.clone().empty() : ui.clone().empty();
 					},
 					placeholder: 'ui-state-highlight',
 					handle: '.handle'
 				})
 				.selectable();
-            this.itemTree.segments.fetch({ success: this.itemTree.render });
+            this.mediator.itemTree.segments.fetch({ success: this.mediator.itemTree.render });
             var shipmentHL = new SegmentModel();
             shipmentHL.segments = new SegmentsCollection();
-            this.shipTree.segments.add(shipmentHL);
+            this.mediator.shipTree.segments.add(shipmentHL);
         },
 
         render: function() {
-            this.$el.append(this.mainPanel.el);
-            this.mainPanel.$el.append(this.itemTree.el);
-            this.mainPanel.$el.append(this.shipTree.el);
+            this.$el.append(this.mediator.el);
+            this.mediator.$el.append(this.mediator.itemTree.el);
+            this.mediator.$el.append(this.mediator.shipTree.el);
+            this.editor.render();
             return this;
         }
-
     });
     return AppView;
 });

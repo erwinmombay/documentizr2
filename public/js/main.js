@@ -23,7 +23,8 @@ require.config({
         templates: '../templates',
         models: 'models',
         collections: 'collections',
-        utils: 'utils'
+        utils: 'utils',
+        modal: 'libs/bootstrap/bootstrap-modal'
     }
 });
 
@@ -35,7 +36,9 @@ define(function(require) {
     var handlebars = require('order!handlebars');
     var jqui = require('order!jqueryui');
     var App = require('order!app');
-    //var modals = require('order!modals');
+    var modal = require('order!modal');
 
     App.initialize();
 });
+
+console = console || { log: function() { /*noop*/ } };

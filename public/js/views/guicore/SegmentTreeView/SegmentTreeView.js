@@ -4,11 +4,11 @@ define(function(require) {
     var Backbone = require('backbone');
     
     var TreeView = require('views/guicore/TreeView/TreeView');
-    var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
-    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
+    var SegmentTreeViewComposite = require('views/guicore/SegmentTreeView/SegmentTreeViewComposite');
+    var SegmentTreeViewLeaf = require('views/guicore/SegmentTreeView/SegmentTreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
 
-    var EDITreeView = TreeView.extend({
+    var SegmentTreeView = TreeView.extend({
         tagName: 'div',
 
         initialize: function(options) {
@@ -28,16 +28,18 @@ define(function(require) {
         addOne: function(model) {
             var view = null;
             if (model.segments) {
-                view = new TreeViewComposite({ model: model });
+                view = new SegmentTreeViewComposite({ model: model });
                 view.$el.droppable({ drop: view.onDrop });
                 view.render().$segments
                     .sortable({
-                        helper: 'clone', placeholder: 'ui-state-highlight',
-                        handle: '.handle'
+                        helper: 'clone',
+                        handle: '.handle',
+                        placeholder: 'ui-state-highlight'
                     })
-                    .selectable();
+                    //: sure distance > 0 so that we click events are still triggered
+                    .selectable({ distance: 20 });
             } else {
-                view = new TreeViewLeaf({ model: model });
+                view = new SegmentTreeViewLeaf({ model: model });
                 view.render();
             }
             this.$ul.append(view.el);
@@ -47,5 +49,5 @@ define(function(require) {
             this.segments.each(this.addOne);
         }
     });
-    return EDITreeView;
+    return SegmentTreeView;
 });

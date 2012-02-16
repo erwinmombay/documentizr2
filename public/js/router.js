@@ -14,7 +14,6 @@ define(function(require) {
     var AppView = require('views/AppView');
 
     var Router = Backbone.Router.extend({
-
         routes: {
             '': ''
         },
