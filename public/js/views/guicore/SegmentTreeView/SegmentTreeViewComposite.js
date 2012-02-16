@@ -46,7 +46,9 @@ define(function(require) {
             if (e.which == 1) {
                 console.log(e.which);
                 console.log('clicked composite ' + this.model.cid);
-                e.stopPropagation();
+                //: doing a stoppropagation here causes selectable 
+                //: behavior to not trigger. comment out for now.
+                //e.stopPropagation();
                 this.$el.children('div').addClass('tvc-selected');
                 if ($(e.target).is(this.$tvcPlusMinus)) {
                     this.ulFoldToggle();
@@ -75,8 +77,8 @@ define(function(require) {
                         handle: '.handle',
                         placeholder: 'ui-state-highlight'
                     })
-                    //: sure distance > 0 so that we click events are still triggered
-                    .selectable({ distance: 20 });
+                    //: make sure distance > 0 so that we click events are still triggered
+                    .selectable({ distance: 1 });
             } else {
                 view = new SegmentTreeViewLeaf({ model: model });
                 view.render();
