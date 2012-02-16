@@ -16,6 +16,8 @@ html(lang="eng")
     
     script(type="text/javascript", src="/js/libs/less/less.min.js")
     script(data-main="js/main", src="js/libs/require/require.min.js")
+    script(type="text/javascript")
+      | console = console || { log: function() { /*noop*/ } };
     style
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
