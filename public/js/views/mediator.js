@@ -5,6 +5,7 @@ define(function(require) {
     
     var SegmentModel = require('models/SegmentModel');
     var SegmentsCollection = require('collections/SegmentsCollection');
+    var modalEditorView = require('views/modalEditorView');
 
     var mediator = new Backbone.View({
        tagName: 'div', id: 'main-panel',
@@ -34,9 +35,9 @@ define(function(require) {
         }
     });
 
-    mediator.on('click', function(context) {
-
+    mediator.on('click:composite', function(context) {
+        modalEditorView.$el.modal('show');
+        console.log(context.model.cid);
     });
     return mediator;
 });
-

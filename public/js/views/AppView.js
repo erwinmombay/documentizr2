@@ -25,12 +25,9 @@ define(function(require) {
 			this.mediator.itemTree.$ul
 				.sortable({ 
 					helper: function(e, ui) {
-						console.log('helper');
 						//: `this` is the $ul which we add sortable to
 						var selected = $(this).children('.ui-selected');
-						return selected.length ?
-							selected.clone().empty()
-							: ui.clone().empty();
+						return selected.length ? selected.clone().empty() : ui.clone().empty();
 					},
 					placeholder: 'ui-state-highlight',
 					handle: '.handle'
@@ -47,8 +44,6 @@ define(function(require) {
             this.mediator.$el.append(this.mediator.itemTree.el);
             this.mediator.$el.append(this.mediator.shipTree.el);
             this.editor.render();
-            this.$el.append(this.editor.el);
-            this.editor.$el.modal('show');
             return this;
         }
     });

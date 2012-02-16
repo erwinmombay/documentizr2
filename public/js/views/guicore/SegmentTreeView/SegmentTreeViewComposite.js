@@ -11,12 +11,12 @@ define(function(require) {
 
     var SegmentTreeViewComposite = TreeViewComposite.extend({
         events: {
-            'click': 'onClick',
-            'dblclick': 'onDblClick'
+            'dblclick': 'onDblClick',
+            'mousedown': 'onMouseDown'
         },
         
         initialize: function(options) {
-            _.bindAll(this, 'addOne', 'onDrop', 'onClick', 'onDblClick', 'ulFoldToggle');
+            _.bindAll(this, 'addOne', 'onDrop', 'onMouseDown', 'onDblClick', 'ulFoldToggle');
             this.segments = options.segments || new SegmentsCollection(); 
             this.segments.on('add', this.addOne); 
             this.template = Handlebars.compile(this.template);
@@ -32,14 +32,6 @@ define(function(require) {
             this.$segments.toggle();
         },
 
-        onClick: function(e) {
-            e.stopPropagation();
-            this.$el.children('div').addClass('tvc-selected');
-            if ($(e.target).is(this.$tvcPlusMinus)) {
-                this.ulFoldToggle();
-            }
-        },
-
         onDblClick: function(e) {
             e.stopPropagation();
             console.log('dblclick ' + this.model.cid);
@@ -49,8 +41,23 @@ define(function(require) {
             }
         },
 
+        onMouseDown: function(e) {
+            //: 1 is left click
+            if (e.which == 1) {
+                console.log(e.which);
+                console.log('clicked composite ' + this.model.cid);
+                e.stopPropagation();
+                this.$el.children('div').addClass('tvc-selected');
+                if ($(e.target).is(this.$tvcPlusMinus)) {
+                    this.ulFoldToggle();
+                }
+            //: 3 is right click
+            } else if (e.which == 3) {
+                mediator.trigger('rightClick', this);
+            }
+        },
+
         onDrop: function(e, ui) {
-            var i;
             e.stopPropagation();
             mediator.trigger('drop:composite', { context: this, event: e, ui: ui });
 
@@ -66,13 +73,15 @@ define(function(require) {
                     .sortable({
                         helper: 'clone',
                         handle: '.handle',
-                        containment: 'parent',
                         placeholder: 'ui-state-highlight'
-                    }).selectable();
+                    })
+                    //: sure distance > 0 so that we click events are still triggered
+                    .selectable({ distance: 20 });
             } else {
                 view = new SegmentTreeViewLeaf({ model: model });
                 view.render();
             }
+            console.log(view.events);
             this.$segments.append(view.el);
         }
     });

@@ -36,7 +36,8 @@ define(function(require) {
                         handle: '.handle',
                         placeholder: 'ui-state-highlight'
                     })
-                    .selectable();
+                    //: sure distance > 0 so that we click events are still triggered
+                    .selectable({ distance: 20 });
             } else {
                 view = new SegmentTreeViewLeaf({ model: model });
                 view.render();
