@@ -15,7 +15,7 @@ html(lang="eng")
     block extra-css
     
     script(type="text/javascript")
-      | if(!window.console) { console = { log: function(){ } } }; 
+      if(!window.console) { console = { log: function(){ } } }; 
     script(type="text/javascript", src="/js/libs/less/less.min.js")
     script(data-main="js/main", src="js/libs/require/require.min.js")
     style
