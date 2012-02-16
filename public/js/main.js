@@ -40,5 +40,3 @@ define(function(require) {
 
     App.initialize();
 });
-
-console = console || { log: function() { /*noop*/ } };

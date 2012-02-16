@@ -14,6 +14,8 @@ html(lang="eng")
     link(rel="stylesheet/less", href="/css/ui-hooks.less")
     block extra-css
     
+    script(type="text/javascript")
+      if(!window.console) { console = { log: function(){ } } }; 
     script(type="text/javascript", src="/js/libs/less/less.min.js")
     script(data-main="js/main", src="js/libs/require/require.min.js")
     style
