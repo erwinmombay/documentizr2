@@ -3,7 +3,6 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     
-    var mediator = require('views/mediator');
     var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
     var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
@@ -16,14 +15,24 @@ define(function(require) {
         },
         
         initialize: function(options) {
-            _.bindAll(this, 'addOne', 'onDrop', 'onMouseDown', 'onDblClick', 'ulFoldToggle');
-            this.segments = options.segments || new SegmentsCollection(); 
+            _.bindAll(this, 'render', 'addOne', 'onDrop', 'onMouseDown', 'onDblClick', 'foldToggle');
+            this.segments = options.segments || new SegmentsCollection();
+            this.mediator = options.mediator || { trigger: function() { /** noop **/ } };
             this.segments.on('add', this.addOne); 
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
         },
 
-        ulFoldToggle: function() {
+        render: function() {
+            this.$el.empty();
+            this.$el.append(this.template({ label: this.model.cid }));
+            this.$segments = this.$el.children('.tvc-ul');
+            this.$tvcPlusMinus = this.$('.tvc-minus');
+            this.addAll();
+            return this;
+        },
+
+        foldToggle: function() {
             var that = this;
             this.$tvcPlusMinus.toggleClass(function() {
                 return that.$tvcPlusMinus.is('.tvc-minus') ?
@@ -33,43 +42,30 @@ define(function(require) {
         },
 
         onDblClick: function(e) {
-            e.stopPropagation();
-            console.log('dblclick ' + this.model.cid);
-            if ($(e.target).parent() === ($(e.currentTarget).children('.tvc-container')) ||
-                $(e.target) === ($(e.currentTarget).children('.tvc-container'))) {
-                    this.ulFoldToggle();
-            }
+           this.mediator.trigger('dblClick:composite', { context: this, event: e }); 
         },
 
         onMouseDown: function(e) {
             //: 1 is left click
             if (e.which == 1) {
-                console.log(e.which);
-                console.log('clicked composite ' + this.model.cid);
-                //: doing a stoppropagation here causes selectable 
-                //: behavior to not trigger. comment out for now.
-                //e.stopPropagation();
-                this.$el.children('div').addClass('tvc-selected');
-                if ($(e.target).is(this.$tvcPlusMinus)) {
-                    this.ulFoldToggle();
-                }
+                //: doing an event.stopPropagation on lefclick mousedown causes $.selectable 
+                //: behavior to not trigger. take this into account if you want to
+                //: stop the event propagation.
+                this.mediator.trigger('leftClick:composite', { context: this, event: e });
             //: 3 is right click
             } else if (e.which == 3) {
-                mediator.trigger('rightClick', this);
+                this.mediator.trigger('rightClick:composite', { context: this, event: e });
             }
         },
 
         onDrop: function(e, ui) {
-            e.stopPropagation();
-            mediator.trigger('drop:composite', { context: this, event: e, ui: ui });
-
+            this.mediator.trigger('drop:composite', { context: this, event: e, ui: ui });
         },
         
         addOne: function(model) {
             var view = null;
             if (model.segments) {
-                console.log('adding segment');
-                view = new SegmentTreeViewComposite({ model: model });
+                view = new SegmentTreeViewComposite({ model: model, mediator: this.mediator });
                 view.$el.droppable({ drop: view.onDrop, greedy: true });
                 view.render().$segments
                     .sortable({
@@ -77,14 +73,17 @@ define(function(require) {
                         handle: '.handle',
                         placeholder: 'ui-state-highlight'
                     })
-                    //: make sure distance > 0 so that we click events are still triggered
+                    //: make sure distance > 0 so that click events are still triggered
                     .selectable({ distance: 1 });
             } else {
-                view = new SegmentTreeViewLeaf({ model: model });
+                view = new SegmentTreeViewLeaf({ model: model, mediator: this.mediator });
                 view.render();
             }
-            console.log(view.events);
             this.$segments.append(view.el);
+        },
+        
+        addAll: function() {
+            this.segments.each(this.addOne);
         }
     });
     return SegmentTreeViewComposite;

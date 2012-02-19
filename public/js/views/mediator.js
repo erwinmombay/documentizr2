@@ -8,8 +8,7 @@ define(function(require) {
     var modalEditorView = require('views/modalEditorView');
 
     var mediator = new Backbone.View({
-       tagName: 'div', id: 'main-panel',
-        className: 'row span12' 
+       tagName: 'div', id: 'main-panel', className: 'row span12' 
     });
     _.extend(mediator, Backbone.Events);
 
@@ -17,16 +16,14 @@ define(function(require) {
         if (spec.context && spec.event && spec.ui) {
             //: this condition makes sure that when the sortable
             //: inside this current object fires an onDrop event
-            //: we dont keep on creating a new segment model
-            //: NOTE: this can later be changed to some sort of lookup or a root level query
-            //: if needed or deemed better
+            //: we dont keep on creating a new segment model.
+            //: NOTE: this can later be changed to some sort of lookup or a root level query.
             if ($(spec.ui.helper).attr('id').substring(0, 3) == 'tvc') {
                 return;
             }
 
-            //: create the number of helpers dropped
+            //: make sure to create the number of helpers dropped.
             for (i = 0; i < spec.ui.helper.length; i++) {
-                console.log('adding');
                 var model = new SegmentModel();
                 model.segments = new SegmentsCollection();
                 model.cid = 'tvc-' + model.cid;
@@ -35,9 +32,23 @@ define(function(require) {
         }
     });
 
-    mediator.on('click:composite', function(context) {
-        modalEditorView.$el.modal('show');
-        console.log(context.model.cid);
+    mediator.on('leftClick:composite', function(spec) {
+        spec.context.$el.children('div').addClass('tvc-selected');
+        if ($(spec.event.target).is(spec.context.$tvcPlusMinus)) {
+            spec.context.foldToggle();
+        }
     });
+
+    mediator.on('rightClick:composite', function(spec) {
+    });
+
+    mediator.on('dblClick:composite', function(spec) {
+        spec.event.stopPropagation();
+        if ($(spec.event.target).parent() === ($(spec.event.currentTarget).children('.tvc-container')) ||
+            $(spec.event.target) === ($(spec.event.currentTarget).children('.tvc-container'))) {
+                spec.context.ulFoldToggle();
+        }
+    });
+
     return mediator;
 });

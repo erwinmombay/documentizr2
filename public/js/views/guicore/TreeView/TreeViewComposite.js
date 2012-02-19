@@ -15,8 +15,8 @@ define(function(require) {
 
         initialize: function(options) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
-            this.segments = options.segments || new SegmentsCollection(); 
-            this.segments.on('add', this.addOne); 
+            this.collection = options.collection || new Backbone.Collection(); 
+            this.collection.on('add', this.addOne); 
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
         },
@@ -24,7 +24,7 @@ define(function(require) {
         render: function() {
             this.$el.empty();
             this.$el.append(this.template({ label: this.model.cid }));
-            this.$segments = this.$el.children('.tvc-ul');
+            this.$collection = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
             this.addAll();
             return this;
@@ -38,11 +38,11 @@ define(function(require) {
                 view = new TreeViewLeaf({ model: model });
             }
             view.render();
-            this.$segments.append(view.el);
+            this.$collection.append(view.el);
         },
 
         addAll: function () {
-            this.segments.each(this.addOne);
+            this.collection.each(this.addOne);
         }
     });
     return TreeViewComposite;
