@@ -15,7 +15,7 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.segments = this.collection = options.collection || new SegmentsCollection();
             this.segments.bind('add', this.addOne); 
-            this.mediator = options.mediator || { trigger: function() { /** noop **/ } };
+            this.mediator = options.mediator || { trigger: function() { /** no op **/ } };
             this.$ul = $('<ul/>', { 'class': 'tvc' });
         },
 
@@ -30,7 +30,14 @@ define(function(require) {
             var view = null;
             if (model.segments) {
                 view = new SegmentTreeViewComposite({ model: model, mediator: this.mediator });
-                view.$el.droppable({ drop: view.onDrop });
+                view.$el.droppable({
+                    drop: view.onDrop,
+                    greedy: true,
+                    accept: '.tvc',
+                    tolerance: 'pointer',
+                    over: view.onHoverEnter,
+                    out: view.onHoverExit
+                });
                 view.render().$segments
                     .sortable({
                         helper: 'clone',

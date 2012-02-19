@@ -25,6 +25,9 @@ define(function(require) {
 				.sortable({ 
 					placeholder: 'ui-state-highlight',
 					handle: '.handle',
+                    //: we create our own helper to allow for multiple select and
+                    //: multiple dragged items to be dropped.
+                    //: TODO currently only one clone is visible on drag, try to fix in the future
                     helper: function(e, ui) {
                         //: `this` is the $ul which we add sortable to
                         var selected = $(this).children('.ui-selected');

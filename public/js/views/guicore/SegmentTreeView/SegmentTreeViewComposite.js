@@ -10,14 +10,15 @@ define(function(require) {
 
     var SegmentTreeViewComposite = TreeViewComposite.extend({
         events: {
-            'dblclick': 'onDblClick',
+            'dblclick': 'onDoubleClick',
             'mousedown': 'onMouseDown'
         },
-        
+
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOne', 'onDrop', 'onMouseDown', 'onDblClick', 'foldToggle');
+            _.bindAll(this, 'render', 'addOne', 'onDrop', 'onMouseDown',
+                      'onDblClick', 'foldToggle', 'onHoverEnter', 'onHoverExit');
             this.segments = options.segments || new SegmentsCollection();
-            this.mediator = options.mediator || { trigger: function() { /** noop **/ } };
+            this.mediator = options.mediator || { trigger: function() { /** no op **/ } };
             this.segments.on('add', this.addOne); 
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
@@ -41,8 +42,8 @@ define(function(require) {
             this.$segments.toggle();
         },
 
-        onDblClick: function(e) {
-           this.mediator.trigger('dblClick:composite', { context: this, event: e }); 
+        onDoubleClick: function(e) {
+           this.mediator.trigger('doubleClick:composite', { context: this, event: e }); 
         },
 
         onMouseDown: function(e) {
@@ -61,12 +62,27 @@ define(function(require) {
         onDrop: function(e, ui) {
             this.mediator.trigger('drop:composite', { context: this, event: e, ui: ui });
         },
-        
+
+        onHoverEnter: function(e, ui) {
+            this.mediator.trigger('hoverEnter:composite', { context: this, event: e, ui: ui });
+        },
+
+        onHoverExit: function(e, ui) {
+            this.mediator.trigger('hoverExit:composite', { context: this, event: e, ui: ui });
+        },
+
         addOne: function(model) {
             var view = null;
             if (model.segments) {
                 view = new SegmentTreeViewComposite({ model: model, mediator: this.mediator });
-                view.$el.droppable({ drop: view.onDrop, greedy: true });
+                view.$el.droppable({ 
+                    drop: view.onDrop,
+                    greedy: true,
+                    accept: '.tvc',
+                    tolerance: 'pointer',
+                    over: view.onHoverEnter,
+                    out: view.onHoverExit
+                });
                 view.render().$segments
                     .sortable({
                         helper: 'clone',
@@ -79,11 +95,13 @@ define(function(require) {
                 view = new SegmentTreeViewLeaf({ model: model, mediator: this.mediator });
                 view.render();
             }
+            console.log(view);
             this.$segments.append(view.el);
         },
         
         addAll: function() {
             this.segments.each(this.addOne);
+            return this;
         }
     });
     return SegmentTreeViewComposite;
