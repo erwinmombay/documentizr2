@@ -16,7 +16,7 @@ define(function(require) {
 
         initialize: function(options) {
             _.bindAll(this, 'render', 'addOne', 'onDrop', 'onMouseDown',
-                      'onDblClick', 'foldToggle', 'onHoverEnter', 'onHoverExit');
+                      'onDoubleClick', 'foldToggle', 'onHoverEnter', 'onHoverExit');
             this.segments = options.segments || new SegmentsCollection();
             this.mediator = options.mediator || { trigger: function() { /** no op **/ } };
             this.segments.on('add', this.addOne); 
@@ -73,7 +73,7 @@ define(function(require) {
 
         addOne: function(model) {
             var view = null;
-            if (model.segments) {
+            if (model && model.segments) {
                 view = new SegmentTreeViewComposite({ model: model, mediator: this.mediator });
                 view.$el.droppable({ 
                     drop: view.onDrop,
@@ -95,7 +95,6 @@ define(function(require) {
                 view = new SegmentTreeViewLeaf({ model: model, mediator: this.mediator });
                 view.render();
             }
-            console.log(view);
             this.$segments.append(view.el);
         },
         

@@ -3,13 +3,13 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var modalTemplate = require('text!templates/ModalEditor.html');
+    var contextMenuTemplate = require('text!templates/ContextMenu.html');
 
-    var modalEditorView = Backbone.View.extend({
+    var treeViewContextMenuView = Backbone.View.extend({
         tagName: 'div',
-        id: 'modal-editor',
-        className: 'modal fade',
-        template: modalTemplate,
+        id: 'context-menu',
+        className: '',
+        template: contextMenuTemplate,
 
         initialize: function(options) {
             _.bindAll(this, 'render');
@@ -24,5 +24,6 @@ define(function(require) {
             }
         }
     });
-    return new modalEditorView();
+
+    return new treeViewContextMenuView();
 });
