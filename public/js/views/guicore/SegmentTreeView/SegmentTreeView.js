@@ -15,13 +15,13 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.segments = this.collection = options.collection || new SegmentsCollection();
             this.segments.bind('add', this.addOne); 
-            this.mediator = options.mediator || { trigger: function() { /** noop **/ } };
-            this.$ul = $('<ul/>', { 'class': 'tvc' });
+            this.mediator = options.mediator || { trigger: function() { /** no op **/ } };
+            this.$segments = $('<ul/>', { 'class': 'tvc' });
         },
 
         render: function() {
             $(this.el).empty();
-            $(this.el).append(this.$ul);
+            $(this.el).append(this.$segments);
             this.addAll();
             return this;
         },
@@ -30,7 +30,14 @@ define(function(require) {
             var view = null;
             if (model.segments) {
                 view = new SegmentTreeViewComposite({ model: model, mediator: this.mediator });
-                view.$el.droppable({ drop: view.onDrop });
+                view.$el.droppable({
+                    drop: view.onDrop,
+                    greedy: true,
+                    accept: '.tvc',
+                    tolerance: 'pointer',
+                    over: view.onHoverEnter,
+                    out: view.onHoverExit
+                });
                 view.render().$segments
                     .sortable({
                         helper: 'clone',
@@ -43,7 +50,7 @@ define(function(require) {
                 view = new SegmentTreeViewLeaf({ model: model, mediator: this.mediator });
                 view.render();
             }
-            this.$ul.append(view.el);
+            this.$segments.append(view.el);
         },
 
         addAll: function () {

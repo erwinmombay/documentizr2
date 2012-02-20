@@ -21,15 +21,17 @@ define(function(require) {
                 tagName: 'div', id: 'ship-tree', className: 'tree-panel span4',
                 mediator: this.mediator
             }).render();
-			this.itemTree.$ul
+			this.itemTree.$segments
 				.sortable({ 
 					placeholder: 'ui-state-highlight',
 					handle: '.handle',
+                    //: we create our own helper to allow for multiple select and
+                    //: multiple dragged items to be dropped.
+                    //: TODO currently only one clone is visible on drag, try to fix in the future
                     helper: function(e, ui) {
-                        //: `this` is the $ul which we add sortable to
+                        //: `this` is the $segments which we add sortable to
                         var selected = $(this).children('.ui-selected');
-                        return selected.length ?
-                            selected.clone().empty() : ui.clone().empty();
+                        return selected.length ? selected.clone().empty() : ui.clone().empty();
                     }
 				})
 				.selectable({ distance: 1 });

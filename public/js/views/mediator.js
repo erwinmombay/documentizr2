@@ -6,13 +6,17 @@ define(function(require) {
     var SegmentModel = require('models/SegmentModel');
     var SegmentsCollection = require('collections/SegmentsCollection');
     var modalEditorView = require('views/modalEditorView');
+    var treeViewComponentContextMenuView = require('views/treeViewContextMenuView');
 
     var mediator = new Backbone.View({
        tagName: 'div', id: 'main-panel', className: 'row span12' 
     });
     _.extend(mediator, Backbone.Events);
-
+    var $body = $('body').on('mousedown', function(e) {
+        console.log(e.which);  
+    });
     mediator.on('drop:composite', function(spec) {
+        spec.context.$el.css({ 'border-color': '' });
         if (spec.context && spec.event && spec.ui) {
             //: this condition makes sure that when the sortable
             //: inside this current object fires an onDrop event
@@ -33,7 +37,9 @@ define(function(require) {
     });
 
     mediator.on('leftClick:composite', function(spec) {
+        console.log('test');  
         spec.context.$el.children('div').addClass('tvc-selected');
+        //: toggle the folding when the leftClick target is the $tvcPlusMinus region
         if ($(spec.event.target).is(spec.context.$tvcPlusMinus)) {
             spec.context.foldToggle();
         }
@@ -42,12 +48,16 @@ define(function(require) {
     mediator.on('rightClick:composite', function(spec) {
     });
 
-    mediator.on('dblClick:composite', function(spec) {
+    mediator.on('doubleClick:composite', function(spec) {
         spec.event.stopPropagation();
-        if ($(spec.event.target).parent() === ($(spec.event.currentTarget).children('.tvc-container')) ||
-            $(spec.event.target) === ($(spec.event.currentTarget).children('.tvc-container'))) {
-                spec.context.ulFoldToggle();
-        }
+    });
+
+    mediator.on('hoverEnter:composite', function(spec) {
+        spec.context.$el.css({ 'border-color': 'red' });
+    });
+
+    mediator.on('hoverExit:composite', function(spec) {
+        spec.context.$el.css({ 'border-color': '' });
     });
 
     return mediator;
