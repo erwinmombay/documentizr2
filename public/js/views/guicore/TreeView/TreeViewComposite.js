@@ -3,7 +3,6 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var mediator = require('views/mediator');
     var AbstractTreeViewComponent = require('views/guicore/TreeView/AbstractTreeViewComponent');
     var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
