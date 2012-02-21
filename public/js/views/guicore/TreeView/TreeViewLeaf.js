@@ -12,6 +12,7 @@ define(function(require) {
         initialize: function(options) {
             _.bindAll(this, 'render');
             this.$el.attr('id', this.model.cid);
+            this.model.on('change:qty', this.render);
         },
 
         render: function() {

@@ -2,11 +2,9 @@ define(function(require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    
+
     var TreeViewComposite = require('views/guicore/TreeView/TreeViewComposite');
-    var TreeViewLeaf = require('views/guicore/TreeView/TreeViewLeaf');
     var SegmentsCollection = require('collections/SegmentsCollection');
-    var SegmentModel = require('models/SegmentModel');
 
     var SegmentTreeViewComposite = TreeViewComposite.extend({
         events: {
@@ -15,11 +13,12 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOne', 'onDrop', 'onMouseDown',
-                      'onDoubleClick', 'foldToggle', 'onHoverEnter', 'onHoverExit');
-            this.segments = options.segments || new SegmentsCollection();
-            this.mediator = options.mediator || { trigger: function() { /** no op **/ } };
-            this.segments.on('add', this.addOne); 
+            _.bindAll(this, 'render', 'addOneView', 'addAllViews' , 'onDrop', 'onMouseDown',
+                'onDoubleClick', 'foldToggle', 'onHoverEnter', 'onHoverExit');
+            this.collection = options.collection || new SegmentsCollection();
+            this.$collection = null;
+            this.subscriber = options.subscriber || { trigger: function() { /** no op **/ } };
+            this.collection.on('add', this.addOneView);
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
         },
@@ -27,7 +26,7 @@ define(function(require) {
         render: function() {
             this.$el.empty();
             this.$el.append(this.template({ label: this.model.cid }));
-            this.$segments = this.$el.children('.tvc-ul');
+            this.$collection = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
             this.addAll();
             return this;
@@ -39,67 +38,48 @@ define(function(require) {
                 return that.$tvcPlusMinus.is('.tvc-minus') ?
                     'tvc-plus' : 'tvc-minus';
             });
-            this.$segments.toggle();
+            this.$collection.toggle();
+            this.subscriber.trigger('foldToggle:composite', this);
         },
 
         onDoubleClick: function(e) {
-           this.mediator.trigger('doubleClick:composite', { context: this, event: e }); 
+           this.subscriber.trigger('doubleClick:composite', { context: this, event: e });
         },
 
         onMouseDown: function(e) {
-            //: 1 is left click
+            //: 1 is a mouse left click event
             if (e.which == 1) {
-                //: doing an event.stopPropagation on lefclick mousedown causes $.selectable 
+                //: doing an event.stopPropagation on lefclick mousedown causes $.selectable
                 //: behavior to not trigger. take this into account if you want to
                 //: stop the event propagation.
-                this.mediator.trigger('leftClick:composite', { context: this, event: e });
-            //: 3 is right click
+                this.subscriber.trigger('leftClick:composite', { context: this, event: e });
+            //: 3 is a mouse right click event
             } else if (e.which == 3) {
-                this.mediator.trigger('rightClick:composite', { context: this, event: e });
+                this.subscriber.trigger('rightClick:composite', { context: this, event: e });
+            } else if (e.which == 2) {
+                this.subscriber.trigger('middleClick:composite', { context: this, event: e });
             }
         },
 
         onDrop: function(e, ui) {
-            this.mediator.trigger('drop:composite', { context: this, event: e, ui: ui });
+            this.subscriber.trigger('drop:composite', { context: this, event: e, ui: ui });
         },
 
         onHoverEnter: function(e, ui) {
-            this.mediator.trigger('hoverEnter:composite', { context: this, event: e, ui: ui });
+            this.subscriber.trigger('hoverEnter:composite', { context: this, event: e, ui: ui });
         },
 
         onHoverExit: function(e, ui) {
-            this.mediator.trigger('hoverExit:composite', { context: this, event: e, ui: ui });
+            this.subscriber.trigger('hoverExit:composite', { context: this, event: e, ui: ui });
         },
 
-        addOne: function(model) {
-            var view = null;
-            if (model && model.segments) {
-                view = new SegmentTreeViewComposite({ model: model, mediator: this.mediator });
-                view.$el.droppable({ 
-                    drop: view.onDrop,
-                    greedy: true,
-                    accept: '.tvc',
-                    tolerance: 'pointer',
-                    over: view.onHoverEnter,
-                    out: view.onHoverExit
-                });
-                view.render().$segments
-                    .sortable({
-                        helper: 'clone',
-                        handle: '.handle',
-                        placeholder: 'ui-state-highlight'
-                    })
-                    //: make sure distance > 0 so that click events are still triggered
-                    .selectable({ distance: 1 });
-            } else {
-                view = new SegmentTreeViewLeaf({ model: model, mediator: this.mediator });
-                view.render();
-            }
-            this.$segments.append(view.el);
+        addOneView: function(model) {
+            this.subscriber.trigger('addOneView:composite', { context: this, model: model });
         },
-        
-        addAll: function() {
-            this.segments.each(this.addOne);
+
+        addAllViews: function() {
+            this.collection.each(this.addOneView);
+            this.subscriber.trigger('addAllViews:composite', this);
             return this;
         }
     });

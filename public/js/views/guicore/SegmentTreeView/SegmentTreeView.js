@@ -15,7 +15,7 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.segments = this.collection = options.collection || new SegmentsCollection();
             this.segments.bind('add', this.addOne); 
-            this.mediator = options.mediator || { trigger: function() { /** no op **/ } };
+            this.subscriber = options.subscriber || { trigger: function() { /** no op **/ } };
             this.$segments = $('<ul/>', { 'class': 'tvc' });
         },
 
@@ -29,7 +29,7 @@ define(function(require) {
         addOne: function(model) {
             var view = null;
             if (model.segments) {
-                view = new SegmentTreeViewComposite({ model: model, mediator: this.mediator });
+                view = new SegmentTreeViewComposite({ model: model, subscriber: this.subscriber });
                 view.$el.droppable({
                     drop: view.onDrop,
                     greedy: true,
@@ -38,16 +38,15 @@ define(function(require) {
                     over: view.onHoverEnter,
                     out: view.onHoverExit
                 });
-                view.render().$segments
+                view.render().$collection
                     .sortable({
                         helper: 'clone',
                         handle: '.handle',
                         placeholder: 'ui-state-highlight'
                     }) 
-                    //: make sure distance > 0 so that click events are still triggered
-                    .selectable({ distance: 1 });
+                    .selectable();
             } else {
-                view = new SegmentTreeViewLeaf({ model: model, mediator: this.mediator });
+                view = new SegmentTreeViewLeaf({ model: model, subscriber: this.subscriber });
                 view.render();
             }
             this.$segments.append(view.el);

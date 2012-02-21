@@ -24,6 +24,6 @@ define(function(require) {
             }
         }
     });
-
+    //: guarantees singleton
     return new treeViewContextMenuView();
 });
