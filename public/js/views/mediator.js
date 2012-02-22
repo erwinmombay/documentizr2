@@ -3,10 +3,10 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     
-    var SegmentTreeViewLeaf = require('views/guicore/SegmentTreeView/SegmentTreeViewLeaf');
-    var SegmentTreeViewComposite = require('views/guicore/SegmentTreeView/SegmentTreeViewComposite');
-    var SegmentModel = require('models/SegmentModel');
-    var SegmentsCollection = require('collections/SegmentsCollection');
+    var LeafComponent = require('views/guicore/TreeView/LeafComponent');
+    var CompositeComponent = require('views/guicore/TreeView/CompositeComponent');
+    var DocumentComponentModel = require('models/DocumentComponentModel');
+    var DocumentComponentCollection = require('collections/DocumentComponentCollection');
     var modalEditorView = require('views/modalEditorView');
     var treeViewComponentContextMenuView = require('views/treeViewContextMenuView');
 
@@ -27,6 +27,7 @@ define(function(require) {
     var curContextMenu = null;
 
     mediator.on('drop:composite', function(spec) {
+        console.log('drop');
         //: make sure to reset border since onhover events trigger first
         //: before drop.
         spec.context.$el.css({ 'border-color': '' });
@@ -43,15 +44,15 @@ define(function(require) {
                 //: make sure to create the number of helpers dropped.
                 for (i = 0; i < spec.ui.helper.length; i++) {
                     var helperCid = $(spec.ui.helper[i]).attr('id');
-                    var itemTreeModel = mediator.itemTree.collection.getByCid(helperCid);
+                    var itemTreeModel = mediator.itemTree.componentCollection.getByCid(helperCid);
                     //: if the itemTreeModel's qty is not > 0 then do nothing
                     var qty = itemTreeModel.get('qty');  
                     if (qty > 0) {
                         itemTreeModel.set({ qty: 0 });
-                        var model = new SegmentModel({ qty: qty });
-                        //model.segments = new SegmentsCollection();
+                        var model = new DocumentComponentModel({ qty: qty });
+                        //model.componentCollection = new DocumentComponentCollection();
                         model.cid = 'st-' + model.cid;
-                        spec.context.collection.add(model);
+                        spec.context.componentCollection.add(model);
                     }
                 }
             }
@@ -80,13 +81,15 @@ define(function(require) {
         }
         for (i = 0; i < spec.ui.helper.length; i++) {
             var helperCid = $(spec.ui.helper[i]).attr('id');
-            var itemTreeModel = mediator.itemTree.collection.getByCid(helperCid);
+            var itemTreeModel = mediator.itemTree.componentCollection.getByCid(helperCid);
             if (itemTreeModel) {
                 //: if the itemTreeModel's qty is not > 0 then do nothing
                 //: and return early to not waste looping.
                 var qty = itemTreeModel.get('qty');  
                 if (qty <= 0) {
                     spec.context.$el.css({ 'border-color': 'red' });
+                } else {
+                    spec.context.$el.css({ 'border-color': 'green' });
                 }
             }
         }
@@ -97,12 +100,13 @@ define(function(require) {
     });
 
     mediator.on('addOneView:composite', function(spec) {
+        console.log('addOneView');
         try {
         var view = null;
-        if (spec.model && spec.model.collection) {
-            view = new SegmentTreeViewComposite({ 
+        if (spec.model && spec.model.componentCollection) {
+            view = new CompositeComponent({ 
                 model: spec.model,
-                subscriber: spec.context.subscriber
+                observer: spec.context.subscriber
             });
             view.$el.droppable({
                 drop: view.onDrop,
@@ -112,7 +116,7 @@ define(function(require) {
                 over: view.onHoverEnter,
                 out: view.onHoverExit
             });
-            view.render().$collection
+            view.render().$componentCollection
                 .sortable({
                     helper: 'clone',
                     handle: '.handle',
@@ -120,13 +124,13 @@ define(function(require) {
                 })
                 .selectable();
         } else {
-            view = new SegmentTreeViewLeaf({
+            view = new LeafComponent({
                 model: spec.model,
-                subscriber: spec.context.subscriber
+                observer: spec.context.subscriber
             });
             view.render();
         }
-        spec.context.$collection.append(view.el);
+        spec.context.$componentCollection.append(view.el);
         } catch (e) {
             console.log(e.message);
         }
