@@ -10,7 +10,12 @@ define(function(require) {
         template: leafTemplate,
 
         initialize: function(options) {
+            //: rebind all the inherited methods from AbstractComponent to
+            //: `this` LeafComponent instance.
+            AbstractComponent.prototype.initialize.call(this);
             _.bindAll(this, 'render');
+            this._type = 'leaf';
+            this.observer = options.observer;
             this.$el.attr('id', this.model.cid);
             this.model.on('change', this.render);
         },

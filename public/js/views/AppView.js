@@ -5,9 +5,9 @@ define(function(require) {
 
     var mediator = require('views/mediator');
     var modalEditorView = require('views/modalEditorView');
-    var DocumentComponentModel = require('models/DocumentComponentModel');
+    var ComponentModel = require('models/ComponentModel');
     var TreeView = require('views/guicore/TreeView/TreeView');
-    var DocumentComponentCollection = require('collections/DocumentComponentCollection');
+    var ComponentCollection = require('collections/ComponentCollection');
 
     var AppView = Backbone.View.extend({
         initialize: function() {
@@ -43,10 +43,10 @@ define(function(require) {
                         return selected.length ? selected.clone().empty() : ui.clone().empty();
                     }
 				})
-				.selectable();
+				.selectable({ distance: 1 });
             this.mediator.itemTree.componentCollection.fetch({ success: this.mediator.itemTree.render });
-            var shipmentHL = new DocumentComponentModel();
-            shipmentHL.componentCollection = new DocumentComponentCollection();
+            var shipmentHL = new ComponentModel();
+            shipmentHL.componentCollection = new ComponentCollection();
             this.mediator.shipTree.componentCollection.add(shipmentHL);
         },
 

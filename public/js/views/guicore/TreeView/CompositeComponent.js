@@ -4,24 +4,22 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
-    var DocumentComponentCollection = require('collections/DocumentComponentCollection');
+    var ComponentCollection = require('collections/ComponentCollection');
     var compositeTemplate = require('text!templates/TreeView/CompositeTemplate.html');
 
     var CompositeComponent = AbstractComponent.extend({
         template: compositeTemplate,
 
-        events: {
-            'dblclick': 'onDoubleClick',
-            'mousedown': 'onMouseDown'
-        },
-
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOneView', 'addAllViews' , 'onDrop', 'onMouseDown',
-                'onDoubleClick', 'foldToggle', 'onHoverEnter', 'onHoverExit');
-            this.componentCollection = options.collection || new DocumentComponentCollection();
+            //: rebind all the inherited methods from AbstractComponent to
+            //: `this` CompositeComponent instance.
+            AbstractComponent.prototype.initialize.call(this);
+            _.bindAll(this, 'render', 'addOneView', 'addAllViews', 'foldToggle');
+            this._type = 'composite';
+            this.componentCollection = options.collection || new ComponentCollection();
             this.componentCollection.on('add', this.addOneView);
             this.$componentCollection = null;
-            this.observer = options.observer || { trigger: function() { /** no op **/ } };
+            this.observer = options.observer;
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
         },
@@ -43,37 +41,6 @@ define(function(require) {
             });
             this.$componentCollection.toggle();
             this.observer.trigger('foldToggle:composite', this);
-        },
-
-        onDoubleClick: function(e) {
-           this.observer.trigger('doubleClick:composite', { context: this, event: e });
-        },
-
-        onMouseDown: function(e) {
-            //: 1 is a mouse left click event
-            if (e.which == 1) {
-                //: doing an event.stopPropagation on lefclick mousedown causes $.selectable
-                //: behavior to not trigger. take this into account if you want to
-                //: stop the event propagation.
-                this.observer.trigger('leftClick:composite', { context: this, event: e });
-            //: 3 is a mouse right click event
-            } else if (e.which == 3) {
-                this.observer.trigger('rightClick:composite', { context: this, event: e });
-            } else if (e.which == 2) {
-                this.observer.trigger('middleClick:composite', { context: this, event: e });
-            }
-        },
-
-        onDrop: function(e, ui) {
-            this.observer.trigger('drop:composite', { context: this, event: e, ui: ui });
-        },
-
-        onHoverEnter: function(e, ui) {
-            this.observer.trigger('hoverEnter:composite', { context: this, event: e, ui: ui });
-        },
-
-        onHoverExit: function(e, ui) {
-            this.observer.trigger('hoverExit:composite', { context: this, event: e, ui: ui });
         },
 
         addOneView: function(model) {
