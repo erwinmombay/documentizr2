@@ -4,7 +4,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
-    var leafTemplate = require('text!templates/TreeView/leafTemplate.html');
+    var leafTemplate = require('text!templates/TreeView/LeafTemplate.html');
 
     var LeafComponent = AbstractComponent.extend({
         template: leafTemplate,

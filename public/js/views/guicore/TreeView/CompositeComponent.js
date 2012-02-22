@@ -5,7 +5,7 @@ define(function(require) {
 
     var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
     var DocumentComponentCollection = require('collections/DocumentComponentCollection');
-    var compositeTemplate = require('text!templates/TreeView/compositeTemplate.html');
+    var compositeTemplate = require('text!templates/TreeView/CompositeTemplate.html');
 
     var CompositeComponent = AbstractComponent.extend({
         template: compositeTemplate,
