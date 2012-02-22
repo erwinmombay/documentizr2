@@ -3,10 +3,10 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var SegmentModel = require('models/SegmentModel');
+    var DocumentComponentModel = require('models/DocumentComponentModel');
 
-    var SegmentsCollection = Backbone.Collection.extend({
-        model: SegmentModel,
+    var DocumentComponentCollection = Backbone.Collection.extend({
+        model: DocumentComponentModel,
         url: '/items',
 
         deepQueryById: function(id) { },
@@ -16,11 +16,11 @@ define(function(require) {
                 if (value.cid === cid) {
                     return value;
                 }
-                if (value.segments) {
-                    value.segments.deepQueryByCid(id);
+                if (value.componentCollection) {
+                    value.componentCollection.deepQueryByCid(id);
                 }
             }, this);
         }
     });
-    return SegmentsCollection;
+    return DocumentComponentCollection;
 });

@@ -3,7 +3,7 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var SegmentModel = Backbone.Model.extend({
+    var DocumentComponentModel = Backbone.Model.extend({
         initialize: function(options) {
             _.bindAll(this, 'validate');
             //: TODO remove options when we finally pass in a true spec
@@ -16,5 +16,5 @@ define(function(require) {
             }
         }
     });
-    return SegmentModel;
+    return DocumentComponentModel;
 });

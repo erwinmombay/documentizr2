@@ -3,16 +3,16 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var AbstractTreeViewComponent = require('views/guicore/TreeView/AbstractTreeViewComponent');
-    var leafTemplate = require('text!templates/TreeView/LeafTemplate.html');
+    var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
+    var leafTemplate = require('text!templates/TreeView/leafTemplate.html');
 
-    var TreeViewLeaf = AbstractTreeViewComponent.extend({
+    var LeafComponent = AbstractComponent.extend({
         template: leafTemplate,
 
         initialize: function(options) {
             _.bindAll(this, 'render');
             this.$el.attr('id', this.model.cid);
-            this.model.on('change:qty', this.render);
+            this.model.on('change', this.render);
         },
 
         render: function() {
@@ -26,6 +26,7 @@ define(function(require) {
             return this;
         }
     });
-    return TreeViewLeaf;
+
+    return LeafComponent;
 });
 

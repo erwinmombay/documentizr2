@@ -11,15 +11,15 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var AbstractTreeViewComponent = Backbone.View.extend({
+    var AbstractComponent = Backbone.View.extend({
         tagName: 'li',
         className: 'tvc',
 
         initialize: function() {
-            throw Error('TreeViewComponent is non instantiable.');
+            throw Error('AbstractComponent is non instantiable.');
         }
     });
-    return AbstractTreeViewComponent;
+    return AbstractComponent;
 });
 
 
