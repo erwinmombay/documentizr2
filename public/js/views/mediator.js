@@ -5,8 +5,8 @@ define(function(require) {
     
     var LeafComponent = require('views/guicore/TreeView/LeafComponent');
     var CompositeComponent = require('views/guicore/TreeView/CompositeComponent');
-    var DocumentComponentModel = require('models/DocumentComponentModel');
-    var DocumentComponentCollection = require('collections/DocumentComponentCollection');
+    var ComponentModel = require('models/ComponentModel');
+    var ComponentCollection = require('collections/ComponentCollection');
     var modalEditorView = require('views/modalEditorView');
     var treeViewComponentContextMenuView = require('views/treeViewContextMenuView');
 
@@ -21,13 +21,12 @@ define(function(require) {
     mediator.editor.render();
     mediator.editor.$el.modal('hide');
     var $body = $('body');
-    $body.on('mousedown', function(e) {
-    });
+    //$body.on('mousedown', function(e) {
+    //});
 
     var curContextMenu = null;
 
     mediator.on('drop:composite', function(spec) {
-        console.log('drop');
         //: make sure to reset border since onhover events trigger first
         //: before drop.
         spec.context.$el.css({ 'border-color': '' });
@@ -49,8 +48,8 @@ define(function(require) {
                     var qty = itemTreeModel.get('qty');  
                     if (qty > 0) {
                         itemTreeModel.set({ qty: 0 });
-                        var model = new DocumentComponentModel({ qty: qty });
-                        //model.componentCollection = new DocumentComponentCollection();
+                        var model = new ComponentModel({ qty: qty });
+                        //model.componentCollection = new ComponentCollection();
                         model.cid = 'st-' + model.cid;
                         spec.context.componentCollection.add(model);
                     }
@@ -68,6 +67,12 @@ define(function(require) {
     });
 
     mediator.on('rightClick:composite', function(spec) {
+        //: doing a return false on the on.contextmenu event
+        //: prevents the default browser's contextmenu to pop up
+        spec.context.$el.on('contextmenu', function(e) {
+            spec.context.$el.css({ 'border-color': 'blue' });
+            return false; 
+        });
     });
 
     mediator.on('doubleClick:composite', function(spec) {
@@ -100,13 +105,11 @@ define(function(require) {
     });
 
     mediator.on('addOneView:composite', function(spec) {
-        console.log('addOneView');
-        try {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
             view = new CompositeComponent({ 
                 model: spec.model,
-                observer: spec.context.subscriber
+                observer: spec.context.observer
             });
             view.$el.droppable({
                 drop: view.onDrop,
@@ -122,18 +125,15 @@ define(function(require) {
                     handle: '.handle',
                     placeholder: 'ui-state-highlight'
                 })
-                .selectable();
+                .selectable({ distance: 1 });
         } else {
             view = new LeafComponent({
                 model: spec.model,
-                observer: spec.context.subscriber
+                observer: spec.context.observer
             });
             view.render();
         }
         spec.context.$componentCollection.append(view.el);
-        } catch (e) {
-            console.log(e.message);
-        }
     });
 
     return mediator;

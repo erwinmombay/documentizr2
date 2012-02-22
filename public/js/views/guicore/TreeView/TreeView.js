@@ -5,12 +5,12 @@ define(function(require) {
     
     var CompositeComponent = require('views/guicore/TreeView/CompositeComponent');
     var LeafComponent = require('views/guicore/TreeView/LeafComponent');
-    var DocumentComponentCollection = require('collections/DocumentComponentCollection');
+    var ComponentCollection = require('collections/ComponentCollection');
 
     var TreeView = Backbone.View.extend({
         initialize: function(options) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
-            this.componentCollection = options.collection || new DocumentComponentCollection();
+            this.componentCollection = options.collection || new ComponentCollection();
             this.componentCollection.bind('add', this.addOne);
             this.observer = options.observer || { trigger: function() { /** no op **/ } };
             this.$componentCollection = $('<ul/>', { 'class': 'tvc' });
@@ -41,7 +41,7 @@ define(function(require) {
                         handle: '.handle',
                         placeholder: 'ui-state-highlight'
                     })
-                    .selectable();
+                    .selectable({ distance: 1 });
             } else {
                 view = new LeafComponent({ model: model, observer: this.observer });
                 view.render();

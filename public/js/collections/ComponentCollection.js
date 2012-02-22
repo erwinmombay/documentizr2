@@ -3,10 +3,10 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var DocumentComponentModel = require('models/DocumentComponentModel');
+    var ComponentModel = require('models/ComponentModel');
 
-    var DocumentComponentCollection = Backbone.Collection.extend({
-        model: DocumentComponentModel,
+    var ComponentCollection = Backbone.Collection.extend({
+        model: ComponentModel,
         url: '/items',
 
         deepQueryById: function(id) { },
@@ -22,5 +22,5 @@ define(function(require) {
             }, this);
         }
     });
-    return DocumentComponentCollection;
+    return ComponentCollection;
 });
