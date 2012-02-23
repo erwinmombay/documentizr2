@@ -43,7 +43,7 @@ define(function(require) {
                         return selected.length ? selected.clone().empty() : ui.clone().empty();
                     }
 				})
-				.selectable({ distance: 1 });
+				.selectable();
             this.mediator.itemTree.componentCollection.fetch({ success: this.mediator.itemTree.render });
             var shipmentHL = new ComponentModel();
             shipmentHL.componentCollection = new ComponentCollection();
