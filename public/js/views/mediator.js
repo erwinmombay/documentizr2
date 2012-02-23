@@ -7,7 +7,7 @@ define(function(require) {
     var CompositeComponent = require('views/guicore/TreeView/CompositeComponent');
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
-    var modalEditorView = require('views/modalEditorView');
+    //var modalEditorView = require('views/modalEditorView');
 
     var mediator = new Backbone.View({
        tagName: 'div', id: 'main-panel', className: 'row span12' 
@@ -16,9 +16,9 @@ define(function(require) {
     //: into a message dispatcher while it also listens/subscribes to the
     //: components of the treeview we pass it into.
     _.extend(mediator, Backbone.Events);
-    mediator.editor = modalEditorView;
-    mediator.editor.render();
-    mediator.editor.$el.modal('hide');
+    //mediator.editor = modalEditorView;
+    //mediator.editor.render();
+    //mediator.editor.$el.modal('hide');
 
     mediator.on('drop:composite', function(spec) {
         //: make sure to reset border since onhover events trigger first

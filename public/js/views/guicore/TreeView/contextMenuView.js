@@ -19,10 +19,14 @@ define(function(require) {
         },
 
         render: function(spec) {
+            spec.event.stopPropagation();
             this.$el.empty();
+            //: call hide ahead of replacing the old cached view
+            //: this makes sure that we can reset the old cached view's state
+            //: if needed.
             this.hide();
-            var template = Handlebars.compile(this.template);
             this._cachedView = spec.context;
+            var template = Handlebars.compile(this.template);
             spec.context.$el.css({ 'border-color': 'blue' });
             this.isVisible = true;
         },
