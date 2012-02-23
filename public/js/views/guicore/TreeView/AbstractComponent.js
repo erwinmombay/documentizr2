@@ -95,7 +95,7 @@ define(function(require) {
                             //: when rightClick context menu is turned on, we stop propagation since
                             //: the singleton contextMenuView attaches a mousedown listener to the body
                             //: that makes the contextMenuView clear/hide itself when its current state `isVisible`
-                            e.stopPropagation();
+                           //e.stopPropagation();
                            this.observer.trigger('rightClick:' + this._type, { context: this, event: e });
                            this.observer.trigger('rightClick', { context: this, event: e });
             //: 2 is a middle click event
