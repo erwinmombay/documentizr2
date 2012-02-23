@@ -8,7 +8,6 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
     var modalEditorView = require('views/modalEditorView');
-    var treeViewComponentContextMenuView = require('views/treeViewContextMenuView');
 
     var mediator = new Backbone.View({
        tagName: 'div', id: 'main-panel', className: 'row span12' 
@@ -20,11 +19,6 @@ define(function(require) {
     mediator.editor = modalEditorView;
     mediator.editor.render();
     mediator.editor.$el.modal('hide');
-    var $body = $('body');
-    //$body.on('mousedown', function(e) {
-    //});
-
-    var curContextMenu = null;
 
     mediator.on('drop:composite', function(spec) {
         //: make sure to reset border since onhover events trigger first
@@ -66,13 +60,14 @@ define(function(require) {
         }
     });
 
-    mediator.on('rightClick:composite', function(spec) {
+    mediator.on('rightClick', function(spec) {
+        //spec.event.stopPropagation();
         //: doing a return false on the on.contextmenu event
         //: prevents the default browser's contextmenu to pop up
         spec.context.$el.on('contextmenu', function(e) {
-            spec.context.$el.css({ 'border-color': 'blue' });
             return false; 
         });
+        spec.context.contextMenu.render(spec);
     });
 
     mediator.on('doubleClick:composite', function(spec) {
@@ -109,15 +104,16 @@ define(function(require) {
         if (spec.model && spec.model.componentCollection) {
             view = new CompositeComponent({ 
                 model: spec.model,
-                observer: spec.context.observer
+                observer: spec.context.observer,
+                contextMenu: spec.context.contextMenu
             });
             view.$el.droppable({
-                drop: view.onDrop,
+                drop: view._onDrop,
                 greedy: true,
                 accept: '.tvc',
                 tolerance: 'pointer',
-                over: view.onHoverEnter,
-                out: view.onHoverExit
+                over: view._onHoverEnter,
+                out: view._onHoverExit
             });
             view.render().$componentCollection
                 .sortable({
@@ -125,11 +121,12 @@ define(function(require) {
                     handle: '.handle',
                     placeholder: 'ui-state-highlight'
                 })
-                .selectable({ distance: 1 });
+                .selectable();
         } else {
             view = new LeafComponent({
                 model: spec.model,
-                observer: spec.context.observer
+                observer: spec.context.observer,
+                contextMenu: spec.context.contextMenu
             });
             view.render();
         }

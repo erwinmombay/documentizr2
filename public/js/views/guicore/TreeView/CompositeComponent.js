@@ -5,10 +5,10 @@ define(function(require) {
 
     var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
     var ComponentCollection = require('collections/ComponentCollection');
-    var compositeTemplate = require('text!templates/TreeView/CompositeTemplate.html');
+    var CompositeTemplate = require('text!templates/TreeView/CompositeTemplate.html');
 
     var CompositeComponent = AbstractComponent.extend({
-        template: compositeTemplate,
+        template: CompositeTemplate,
 
         initialize: function(options) {
             //: rebind all the inherited methods from AbstractComponent to
@@ -22,6 +22,7 @@ define(function(require) {
             this.observer = options.observer;
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
+            this.contextMenu = options.contextMenu;
         },
 
         render: function() {
@@ -52,6 +53,31 @@ define(function(require) {
             this.observer.trigger('addAllViews:composite', this);
             return this;
         }
+
+        //droppable: function(spec) {
+            //this.$el.droppable({
+                //drop: view.onDrop,
+                //greedy: true,
+                //accept: '.tvc',
+                //tolerance: 'pointer',
+                //over: this.onHoverEnter,
+                //out: this.onHoverExit
+            //});
+            //return this;
+        //},
+
+        //sortable: function(spec) {
+            //this.$el.sortable({
+                //helper: 'clone',
+                //handle: '.handle',
+                //placeholder: 'ui-state-highlight'
+            //});
+            //return this;
+        //},
+
+        //selectable: function(spec) {
+            //this.$el.selectable();
+        //}
     });
 
     return CompositeComponent;

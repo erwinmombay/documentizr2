@@ -4,10 +4,10 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
-    var leafTemplate = require('text!templates/TreeView/LeafTemplate.html');
+    var LeafTemplate = require('text!templates/TreeView/LeafTemplate.html');
 
     var LeafComponent = AbstractComponent.extend({
-        template: leafTemplate,
+        template: LeafTemplate,
 
         initialize: function(options) {
             //: rebind all the inherited methods from AbstractComponent to
@@ -18,6 +18,7 @@ define(function(require) {
             this.observer = options.observer;
             this.$el.attr('id', this.model.cid);
             this.model.on('change', this.render);
+            this.contextMenu = options.contextMenu;
         },
 
         render: function() {
