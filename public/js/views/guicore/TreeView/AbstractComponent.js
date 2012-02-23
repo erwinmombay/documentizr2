@@ -92,10 +92,9 @@ define(function(require) {
             //: 3 is a mouse right click event
             } else if (e.which == 3 && ($target.is(this.$el) || $target.parent().is(this.$el) ||
                        $target.parent().parent().is(this.$el))) {
-                            //: when rightClick context menu is turned on, we stop propagation since
-                            //: the singleton contextMenuView attaches a mousedown listener to the body
-                            //: that makes the contextMenuView clear/hide itself when its current state `isVisible`
-                           //e.stopPropagation();
+                           //: when rightClick context menu is turned on, we stop propagation since
+                           //: the singleton contextMenuView attaches a mousedown listener to the body
+                           //: that makes the contextMenuView clear/hide itself when its current state `isVisible`
                            this.observer.trigger('rightClick:' + this._type, { context: this, event: e });
                            this.observer.trigger('rightClick', { context: this, event: e });
             //: 2 is a middle click event
