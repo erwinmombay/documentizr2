@@ -64,9 +64,6 @@ define(function(require) {
         //spec.event.stopPropagation();
         //: doing a return false on the on.contextmenu event
         //: prevents the default browser's contextmenu to pop up
-        spec.context.$el.on('contextmenu', function(e) {
-            return false; 
-        });
         spec.context.contextMenu.render(spec);
     });
 

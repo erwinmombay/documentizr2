@@ -8,34 +8,56 @@ define(function(require) {
     var contextMenuView = Backbone.View.extend({
         tagName: 'div',
         id: 'context-menu',
-        className: 'context-menu',
+        className: 'cmenu',
         template: ContextMenuTemplate,
 
         initialize: function(options) {
             _.bindAll(this, 'render', '_onMouseDown', 'hide');
             this.$body = $('body').on('mousedown', this._onMouseDown);
             this._isVisible = false;
-            this._cachedView = null;
+            this._cachedTargetView = null;
+            //$('#ship-tree').append(this.$el);
         },
 
         render: function(spec) {
-            spec.event.stopPropagation();
+            var e = spec.event;
+            console.log(e);
+            //: stopPropagation() here to prevent $body triggering an
+            //: onmousedown which causes the contextmenu to be hidden
+            //: doing a return false on the on.contextmenu event
+            //: prevents the default browser's contextmenu to pop up
+            spec.context.$el.on('contextmenu', function(e) {
+                return false; 
+            });
+            e.stopPropagation();
+            this.$el.hide();
             this.$el.empty();
             //: call hide ahead of replacing the old cached view
             //: this makes sure that we can reset the old cached view's state
             //: if needed.
-            this.hide();
-            this._cachedView = spec.context;
+            this._cachedTargetView = spec.context;
             var template = Handlebars.compile(this.template);
-            spec.context.$el.css({ 'border-color': 'blue' });
+            this.$el.append(template());
+            this.$el.css({
+                'display': '',
+                'position': 'absolute',
+                'z-index': '999',
+                'left': e.pageX + 'px',
+                'top': e.pageY + 'px',
+                'height': '50px',
+                'width': '50px'
+            });
+            //: bad idea, find somewhere to anchor on
+            spec.context.$el.append(this.$el);
+            console.log(this.$el);
             this.isVisible = true;
         },
 
         hide: function() {
-            if (this._cachedView) {
-                this._cachedView.$el.css({ 'border-color': 'black' });
+            if (this._cachedTargetView) {
+                this.$el.hide();
             }
-            this._cachedView = null;
+            this._cachedTargetView = null;
         },
 
         _onMouseDown: function(e) {
