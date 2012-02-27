@@ -128,7 +128,6 @@ define(function(require) {
                     var model = new ComponentModel({ qty: qty });
                     model.cid = 'st-' + model.cid;
                     view.model.componentCollection.add(model);
-                    console.log('added');
                 }
             };
         } else {

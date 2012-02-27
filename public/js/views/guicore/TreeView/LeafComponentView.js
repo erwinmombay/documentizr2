@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
@@ -12,6 +13,7 @@ define(function(require) {
         initialize: function(options) {
             //: rebind all the inherited methods from AbstractComponentView to
             //: `this` LeafComponentView instance.
+            //: this is like calling super() in javascript
             AbstractComponentView.prototype.initialize.call(this);
             _.bindAll(this, 'render');
             this._type = 'leaf';

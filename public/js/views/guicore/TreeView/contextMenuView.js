@@ -1,11 +1,12 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
 
     var contextMenuView = Backbone.View.extend({
         tagName: 'div',
-        id: 'context-menu',
+        id: 'cmenu',
         className: 'cmenu',
         isVisible: false,
         _cachedTargetView: null,
@@ -44,8 +45,8 @@ define(function(require) {
                 'z-index': '1000',
                 'left': spec.event.pageX + 'px',
                 'top': spec.event.pageY + 'px',
-                'min-height': '50px',
-                'min-width': '50px'
+                'height': '350px',
+                'width': '150px'
             });
             this.isVisible = true;
         },

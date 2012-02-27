@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
@@ -13,14 +14,17 @@ define(function(require) {
         initialize: function(options) {
             //: rebind all the inherited methods from AbstractComponentView to
             //: `this` CompositeComponent instance.
+            //: this is like calling super() in javascript
             AbstractComponentView.prototype.initialize.call(this);
-            _.bindAll(this, 'render', 'addOneView', 'addAllViews', 'foldToggle');
+            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle');
             this._type = 'composite';
             this.model.componentCollection = options.collection || new ComponentCollection();
-            this.model.componentCollection.on('add', this.addOneView);
+            //: bind the models' componentCollection `add` event to `addOne` 
+            //: so that when we add models to the collection
+            //: it automatically adds the nested views as well
+            this.model.componentCollection.on('add', this.addOne);
             //: models have componentCollection while views have
-            //: $componentCollection which are the nested views which
-            //: we attach this current view
+            //: $componentCollection which are the dom elements we dynamically attach
             this.$componentCollection = null;
             this.observer = options.observer;
             this.template = Handlebars.compile(this.template);
@@ -33,7 +37,7 @@ define(function(require) {
             this.$el.append(this.template({ label: this.model.cid }));
             this.$componentCollection = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
-            this.addAllViews();
+            this.addAll();
             return this;
         },
 
@@ -47,12 +51,12 @@ define(function(require) {
             this.observer.trigger('foldToggle:composite', this);
         },
 
-        addOneView: function(model) {
+        addOne: function(model) {
             this.observer.trigger('addOneView:composite', { viewContext: this, model: model });
         },
 
-        addAllViews: function() {
-            this.model.componentCollection.each(this.addOneView);
+        addAll: function() {
+            this.model.componentCollection.each(this.addOne);
             this.observer.trigger('addAllViews:composite', this);
             return this;
         }

@@ -30,6 +30,7 @@ require.config({
 
 //: we use the order plugin the load the library's synchronously
 define(function(require) {
+    'use strict';
     var $ = require('order!jquery');
     var _ = require('order!underscore');
     var Backbone = require('order!backbone');
