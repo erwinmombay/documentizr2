@@ -13,7 +13,9 @@ define(function(require) {
         initialize: function(options) {
             _.bindAll(this, 'render', '_onMouseDown', 'hide', 'createMenuOptions');
             this.$body = $('body').on('mousedown', this._onMouseDown);
-            this.$body.append(this.$el);
+            //: we append to the body so and not on the contextView
+            //: so that we only need to append once
+            this.$body.append(this.$el.hide());
             this.$options = $('<ul/>', { 'class': 'cmenu-options' });
             this.$el.append(this.$options);
         },
@@ -21,7 +23,7 @@ define(function(require) {
         render: function(spec) {
             //: doing a return false on the on.contextmenu event
             //: prevents the default browser's contextmenu to pop up
-            spec.context.$el.on('contextmenu', function(e) {
+            spec.viewContext.$el.on('contextmenu', function(e) {
                 return false; 
             });
             //: stopPropagation() here to prevent $body triggering an
@@ -33,7 +35,7 @@ define(function(require) {
             //: if needed.
             this.$el.hide(spec.event);
             this.$options.empty();
-            this._cachedTargetView = spec.context;
+            this._cachedTargetView = spec.viewContext;
             this.createMenuOptions(this._cachedTargetView.menu);
             //: recalculate position by using e.pageX/pageY
             this.$el.css({
