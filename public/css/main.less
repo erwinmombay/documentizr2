@@ -1,4 +1,5 @@
 @import "bootstrap/mixins.less";
+@import "bootstrap/variables.less";
 
 @green: #8fc829;
 @pink: #be1a8d;
@@ -11,7 +12,7 @@
   margin: 0;
   padding: 0.3em;
   list-style-type: none;
-  background-color: white;
+  background-color: @gray;
 } 
 
 .cmenu li:hover {
@@ -19,7 +20,7 @@
 
 .cmenu hr {
   border: 0;
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid @gray;
   margin: 3px 0px 3px 0px; width: 10em;
 } 
 
@@ -33,7 +34,7 @@
 
 .cmenu .topSep {
   font-size: 90%;
-  border-top: 1px solid gray;
+  border-top: 1px solid @gray;
   margin-top: 0.3em;
   padding-top: 0.3em;
 }

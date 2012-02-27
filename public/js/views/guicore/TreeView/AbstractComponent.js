@@ -53,7 +53,6 @@ define(function(require) {
         },
 
         _onDoubleClick: function(e) {
-            console.log('double click');
             this.observer.trigger('doubleClick:' + this._type, { context: this, event: e });
             this.observer.trigger('doubleClick', { context: this, event: e });
         },

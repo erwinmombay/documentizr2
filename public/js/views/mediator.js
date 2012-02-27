@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
@@ -15,12 +16,13 @@ define(function(require) {
     //: we mixin Backbone.Events to turn the mediator object
     //: into a message dispatcher while it also listens/subscribes to the
     //: components of the treeview we pass it into.
-    _.extend(mediator, Backbone.Events);
+    _.defaults(mediator, Backbone.Events);
     //mediator.editor = modalEditorView;
     //mediator.editor.render();
     //mediator.editor.$el.modal('hide');
 
     mediator.on('drop:composite', function(spec) {
+        var i;
         //: make sure to reset border since onhover events trigger first
         //: before drop.
         spec.context.$el.css({ 'border-color': '' });
@@ -71,6 +73,7 @@ define(function(require) {
     });
 
     mediator.on('hoverEnter:composite', function(spec) {
+        var i;
         //: this if statement handles internal onhover during sort/drag.
         //: we usually just want to return early unless we need to do something.
         if ($(spec.ui.helper).attr('id').substring(0, 2) == 'st') {
@@ -127,6 +130,11 @@ define(function(require) {
             });
             view.render();
         }
+        view.menu = { 
+            'add one item': function(e) {
+                //view.model.componentCollection();
+            }
+        };
         spec.context.$componentCollection.append(view.el);
     });
 
