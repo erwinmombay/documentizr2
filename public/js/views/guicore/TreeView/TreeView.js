@@ -1,10 +1,11 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
     
-    var CompositeComponent = require('views/guicore/TreeView/CompositeComponent');
-    var LeafComponent = require('views/guicore/TreeView/LeafComponent');
+    var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
+    var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
     var ComponentCollection = require('collections/ComponentCollection');
     var contextMenuView = require('views/guicore/TreeView/contextMenuView');
 
@@ -28,7 +29,7 @@ define(function(require) {
         addOne: function(model) {
             var view = null;
             if (model.componentCollection) {
-                view = new CompositeComponent({
+                view = new CompositeComponentView({
                     model: model,
                     observer: this.observer,
                     contextMenu: this.contextMenu
@@ -49,7 +50,7 @@ define(function(require) {
                     })
                     .selectable();
             } else {
-                view = new LeafComponent({
+                view = new LeafComponentView({
                     model: model,
                     observer: this.observer,
                     contextMenu: this.contextMenu

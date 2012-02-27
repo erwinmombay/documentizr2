@@ -1,10 +1,11 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
     
-    var LeafComponent = require('views/guicore/TreeView/LeafComponent');
-    var CompositeComponent = require('views/guicore/TreeView/CompositeComponent');
+    var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
+    var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
     //var modalEditorView = require('views/modalEditorView');
@@ -15,17 +16,18 @@ define(function(require) {
     //: we mixin Backbone.Events to turn the mediator object
     //: into a message dispatcher while it also listens/subscribes to the
     //: components of the treeview we pass it into.
-    _.extend(mediator, Backbone.Events);
+    _.defaults(mediator, Backbone.Events);
     //mediator.editor = modalEditorView;
     //mediator.editor.render();
     //mediator.editor.$el.modal('hide');
 
     mediator.on('drop:composite', function(spec) {
+        var i;
         //: make sure to reset border since onhover events trigger first
         //: before drop.
-        spec.context.$el.css({ 'border-color': '' });
+        spec.viewContext.$el.css({ 'border-color': '' });
 
-        if (spec.context && spec.event && spec.ui) {
+        if (spec.viewContext && spec.event && spec.ui) {
             //: this condition makes sure that when the sortable
             //: inside this current object fires an onDrop event
             //: we dont keep on creating a new segment model.
@@ -43,9 +45,9 @@ define(function(require) {
                     if (qty > 0) {
                         itemTreeModel.set({ qty: 0 });
                         var model = new ComponentModel({ qty: qty });
-                        //model.componentCollection = new ComponentCollection();
+                        model.componentCollection = new ComponentCollection();
                         model.cid = 'st-' + model.cid;
-                        spec.context.componentCollection.add(model);
+                        spec.viewContext.model.componentCollection.add(model);
                     }
                 }
             }
@@ -53,10 +55,10 @@ define(function(require) {
     });
 
     mediator.on('leftClick:composite', function(spec) {
-        spec.context.$el.children('div').addClass('tvc-selected');
+        spec.viewContext.$el.children('div').addClass('tvc-selected');
         //: toggle the folding when the leftClick target is the $tvcPlusMinus region
-        if ($(spec.event.target).is(spec.context.$tvcPlusMinus)) {
-            spec.context.foldToggle();
+        if ($(spec.event.target).is(spec.viewContext.$tvcPlusMinus)) {
+            spec.viewContext.foldToggle();
         }
     });
 
@@ -64,16 +66,14 @@ define(function(require) {
         //spec.event.stopPropagation();
         //: doing a return false on the on.contextmenu event
         //: prevents the default browser's contextmenu to pop up
-        spec.context.$el.on('contextmenu', function(e) {
-            return false; 
-        });
-        spec.context.contextMenu.render(spec);
+        spec.viewContext.contextMenu.render(spec);
     });
 
     mediator.on('doubleClick:composite', function(spec) {
     });
 
     mediator.on('hoverEnter:composite', function(spec) {
+        var i;
         //: this if statement handles internal onhover during sort/drag.
         //: we usually just want to return early unless we need to do something.
         if ($(spec.ui.helper).attr('id').substring(0, 2) == 'st') {
@@ -87,25 +87,25 @@ define(function(require) {
                 //: and return early to not waste looping.
                 var qty = itemTreeModel.get('qty');  
                 if (qty <= 0) {
-                    spec.context.$el.css({ 'border-color': 'red' });
+                    spec.viewContext.$el.css({ 'border-color': 'red' });
                 } else {
-                    spec.context.$el.css({ 'border-color': 'green' });
+                    spec.viewContext.$el.css({ 'border-color': 'green' });
                 }
             }
         }
     });
 
     mediator.on('hoverExit:composite', function(spec) {
-        spec.context.$el.css({ 'border-color': '' });
+        spec.viewContext.$el.css({ 'border-color': '' });
     });
 
     mediator.on('addOneView:composite', function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
-            view = new CompositeComponent({ 
+            view = new CompositeComponentView({ 
                 model: spec.model,
-                observer: spec.context.observer,
-                contextMenu: spec.context.contextMenu
+                observer: spec.viewContext.observer,
+                contextMenu: spec.viewContext.contextMenu
             });
             view.$el.droppable({
                 drop: view._onDrop,
@@ -122,15 +122,23 @@ define(function(require) {
                     placeholder: 'ui-state-highlight'
                 })
                 .selectable();
+            view.menu = { 
+                'add one item': function(e) {
+                    var qty = 10;
+                    var model = new ComponentModel({ qty: qty });
+                    model.cid = 'st-' + model.cid;
+                    view.model.componentCollection.add(model);
+                }
+            };
         } else {
-            view = new LeafComponent({
+            view = new LeafComponentView({
                 model: spec.model,
-                observer: spec.context.observer,
-                contextMenu: spec.context.contextMenu
+                observer: spec.viewContext.observer,
+                contextMenu: spec.viewContext.contextMenu
             });
             view.render();
         }
-        spec.context.$componentCollection.append(view.el);
+        spec.viewContext.$componentCollection.append(view.el);
     });
 
     return mediator;

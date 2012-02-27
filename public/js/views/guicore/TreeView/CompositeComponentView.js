@@ -1,23 +1,30 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
+    var AbstractComponentView = require('views/guicore/TreeView/AbstractComponentView');
     var ComponentCollection = require('collections/ComponentCollection');
     var CompositeTemplate = require('text!templates/TreeView/CompositeTemplate.html');
 
-    var CompositeComponent = AbstractComponent.extend({
+    var CompositeComponentView = AbstractComponentView.extend({
         template: CompositeTemplate,
 
         initialize: function(options) {
-            //: rebind all the inherited methods from AbstractComponent to
+            //: rebind all the inherited methods from AbstractComponentView to
             //: `this` CompositeComponent instance.
-            AbstractComponent.prototype.initialize.call(this);
-            _.bindAll(this, 'render', 'addOneView', 'addAllViews', 'foldToggle');
+            //: this is like calling super() in javascript
+            AbstractComponentView.prototype.initialize.call(this);
+            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle');
             this._type = 'composite';
-            this.componentCollection = options.collection || new ComponentCollection();
-            this.componentCollection.on('add', this.addOneView);
+            this.model.componentCollection = options.collection || new ComponentCollection();
+            //: bind the models' componentCollection `add` event to `addOne` 
+            //: so that when we add models to the collection
+            //: it automatically adds the nested views as well
+            this.model.componentCollection.on('add', this.addOne);
+            //: models have componentCollection while views have
+            //: $componentCollection which are the dom elements we dynamically attach
             this.$componentCollection = null;
             this.observer = options.observer;
             this.template = Handlebars.compile(this.template);
@@ -30,7 +37,7 @@ define(function(require) {
             this.$el.append(this.template({ label: this.model.cid }));
             this.$componentCollection = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
-            this.addAllViews();
+            this.addAll();
             return this;
         },
 
@@ -44,12 +51,12 @@ define(function(require) {
             this.observer.trigger('foldToggle:composite', this);
         },
 
-        addOneView: function(model) {
-            this.observer.trigger('addOneView:composite', { context: this, model: model });
+        addOne: function(model) {
+            this.observer.trigger('addOneView:composite', { viewContext: this, model: model });
         },
 
-        addAllViews: function() {
-            this.componentCollection.each(this.addOneView);
+        addAll: function() {
+            this.model.componentCollection.each(this.addOne);
             this.observer.trigger('addAllViews:composite', this);
             return this;
         }
@@ -80,5 +87,5 @@ define(function(require) {
         //}
     });
 
-    return CompositeComponent;
+    return CompositeComponentView;
 });

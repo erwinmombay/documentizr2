@@ -1,18 +1,20 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var AbstractComponent = require('views/guicore/TreeView/AbstractComponent');
+    var AbstractComponentView = require('views/guicore/TreeView/AbstractComponentView');
     var LeafTemplate = require('text!templates/TreeView/LeafTemplate.html');
 
-    var LeafComponent = AbstractComponent.extend({
+    var LeafComponentView = AbstractComponentView.extend({
         template: LeafTemplate,
 
         initialize: function(options) {
-            //: rebind all the inherited methods from AbstractComponent to
-            //: `this` LeafComponent instance.
-            AbstractComponent.prototype.initialize.call(this);
+            //: rebind all the inherited methods from AbstractComponentView to
+            //: `this` LeafComponentView instance.
+            //: this is like calling super() in javascript
+            AbstractComponentView.prototype.initialize.call(this);
             _.bindAll(this, 'render');
             this._type = 'leaf';
             this.observer = options.observer;
@@ -33,6 +35,6 @@ define(function(require) {
         }
     });
 
-    return LeafComponent;
+    return LeafComponentView;
 });
 
