@@ -55,11 +55,11 @@ define(function(require) {
             //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this._type = 'component';
             if (this.contextMenu) {
+                var that = this;
                 //: doing a return false on the on.contextmenu event
                 //: prevents the default browser's contextmenu to pop up
                 this.$el.on('contextmenu', function(e) {
-                    console.log('RETURN FALSE');
-                    this.contextMenu.render({ viewContext: this, event: e });
+                    that.contextMenu.render({ viewContext: that, event: e });
                     return false; 
                 });
             }
