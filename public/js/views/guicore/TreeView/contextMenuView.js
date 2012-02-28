@@ -25,6 +25,8 @@ define(function(require) {
             //: doing a return false on the on.contextmenu event
             //: prevents the default browser's contextmenu to pop up
             spec.viewContext.$el.on('contextmenu', function(e) {
+                //: TODO check this if this prevents the browser context menu on ie7
+                e.preventDefault();
                 return false; 
             });
             //: stopPropagation() here to prevent $body triggering an
