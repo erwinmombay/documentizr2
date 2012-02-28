@@ -63,9 +63,6 @@ define(function(require) {
     });
 
     mediator.on('rightClick', function(spec) {
-        //spec.event.stopPropagation();
-        //: doing a return false on the on.contextmenu event
-        //: prevents the default browser's contextmenu to pop up
     });
 
     mediator.on('doubleClick:composite', function(spec) {
