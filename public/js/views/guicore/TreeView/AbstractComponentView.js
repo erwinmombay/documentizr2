@@ -35,22 +35,34 @@ define(function(require) {
             'mousedown': '_onMouseDown'
         },
 
+        constructor: function(options) {
+            //: we make our own constructor so that we can assign
+            //: the object specifier before `initialize` is called. sometimes
+            //: we create conditions inside the initialize that relies on properties
+            //: passed to the object specifier. (ex. contextMenu object)
+            _.each(options, function(value, key) {
+                if (!this.hasOwnProperty(key)) {
+                    this[key] = value;
+                }
+            }, this);
+            return Backbone.View.apply(this, arguments);
+        },
+
         initialize: function() {
-            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown',
-                /*'droppable', 'sortable', 'selectable',*/ '_getType');
+            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown'
+                /*'droppable', 'sortable', 'selectable',*/);
             this.observer = { trigger: function() { /** no op **/ } };
             //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this._type = 'component';
-            this._getType();
-        },
-
-        _getType: function() {
-            //: when called this should rebind the private _type property for classes inheriting from
-            //: AbstractComponent. we use the _type to namespace the trigger event,
-            //: so that for example Composite's doubleClick event is `doubleClick:composite`
-            //: while Leaf's doubleClick event is `doubleClick:leaf`.
-            //: If the inheriting class does not implement a _type it will fallback to `event:component`.
-            this._type = this._type;
+            if (this.contextMenu) {
+                //: doing a return false on the on.contextmenu event
+                //: prevents the default browser's contextmenu to pop up
+                this.$el.on('contextmenu', function(e) {
+                    //: TODO check this if this prevents the browser context menu on ie7
+                    console.log('doing this');
+                    return false; 
+                });
+            }
         },
 
         _onDoubleClick: function(e) {

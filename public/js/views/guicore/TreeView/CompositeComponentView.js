@@ -29,7 +29,6 @@ define(function(require) {
             this.observer = options.observer;
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
-            this.contextMenu = options.contextMenu;
         },
 
         render: function() {
