@@ -20,7 +20,7 @@ define(function(require) {
             this.observer = options.observer;
             this.$el.attr('id', this.model.cid);
             this.model.on('change', this.render);
-            this.contextMenu = options.contextMenu;
+            this.contextMenu = options.contextMenu || null;
         },
 
         render: function() {

@@ -4,6 +4,7 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
+    var contextMenuView = require('views/guicore/TreeView/contextMenuView');
     var mediator = require('views/mediator');
     var ComponentModel = require('models/ComponentModel');
     var TreeView = require('views/guicore/TreeView/TreeView');
@@ -20,7 +21,8 @@ define(function(require) {
             this.mediator.shipTree = new TreeView({
                 tagName: 'div', id: 'ship-tree',
                 className: 'tree-panel span4',
-                observer: this.mediator
+                observer: this.mediator,
+                contextMenu: contextMenuView
             }).render();
 			this.mediator.itemTree.$componentCollection
 				.sortable({ 

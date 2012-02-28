@@ -7,7 +7,6 @@ define(function(require) {
     var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
     var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
     var ComponentCollection = require('collections/ComponentCollection');
-    var contextMenuView = require('views/guicore/TreeView/contextMenuView');
 
     var TreeView = Backbone.View.extend({
         initialize: function(options) {
@@ -16,7 +15,7 @@ define(function(require) {
             this.componentCollection.bind('add', this.addOne);
             this.observer = options.observer || { trigger: function() { /** no op **/ } };
             this.$componentCollection = $('<ul/>', { 'class': 'tvc' });
-            this.contextMenu = contextMenuView;
+            this.contextMenu = options.contextMenu || null;
         },
 
         render: function() {

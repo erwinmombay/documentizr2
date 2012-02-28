@@ -22,13 +22,8 @@ define(function(require) {
         },
 
         render: function(spec) {
-            //: doing a return false on the on.contextmenu event
-            //: prevents the default browser's contextmenu to pop up
-            spec.viewContext.$el.on('contextmenu', function(e) {
-                return false; 
-            });
             //: stopPropagation() here to prevent $body triggering an
-            //: onmousedown which causes the contextmenu(when we want to show it)
+            //: onmousedown which causes the contextmenu(when we actually want to show it)
             //: to be hidden
             spec.event.stopPropagation();
             //: call hide ahead of replacing the old cached view
