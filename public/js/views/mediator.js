@@ -3,7 +3,7 @@ define(function(require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    
+
     var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
     var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
     var ComponentModel = require('models/ComponentModel');
@@ -95,7 +95,7 @@ define(function(require) {
         spec.viewContext.$el.css({ 'border-color': '' });
     });
 
-    mediator.on('addOneView:composite', function(spec) {
+    mediator.on('addOne:composite', function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
             view = new CompositeComponentView({ 
@@ -119,11 +119,14 @@ define(function(require) {
                 })
                 .selectable();
             view.menu = { 
-                'add one item': function(e) {
+                'add': function(e) {
                     var qty = 10;
                     var model = new ComponentModel({ qty: qty });
                     model.cid = 'st-' + model.cid;
                     view.model.componentCollection.add(model);
+                },
+                'delete': function(e) {
+                    view.model.destroy({ cascade: true });
                 }
             };
         } else {
@@ -133,6 +136,11 @@ define(function(require) {
                 contextMenu: spec.viewContext.contextMenu
             });
             view.render();
+            view.menu = { 
+                'delete': function(e) {
+                    view.model.destroy();
+                }
+            };
         }
         spec.viewContext.$componentCollection.append(view.el);
     });

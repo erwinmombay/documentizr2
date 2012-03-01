@@ -1,5 +1,5 @@
 define(function(require) {
-    'use strict';
+    //'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
@@ -53,7 +53,7 @@ define(function(require) {
             this.mediator.itemTree.componentCollection.fetch({ 
                 success: this.mediator.itemTree.render
             });
-            var shipmentHL = new ComponentModel();
+            shipmentHL = new ComponentModel();
             shipmentHL.componentCollection = new ComponentCollection();
             this.mediator.shipTree.componentCollection.add(shipmentHL);
         },

@@ -51,12 +51,12 @@ define(function(require) {
         },
 
         addOne: function(model) {
-            this.observer.trigger('addOneView:composite', { viewContext: this, model: model });
+            this.observer.trigger('addOne:composite', { viewContext: this, model: model });
         },
 
         addAll: function() {
             this.model.componentCollection.each(this.addOne);
-            this.observer.trigger('addAllViews:composite', this);
+            this.observer.trigger('addAll:composite', this);
             return this;
         }
 
