@@ -1,5 +1,5 @@
 define(function(require) {
-    //'use strict';
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
@@ -15,14 +15,17 @@ define(function(require) {
             _.bindAll(this, 'render');
             this.mediator = mediator;
             this.mediator.itemTree = new TreeView({
-                tagName: 'div', id: 'item-tree',
-                className: 'tree-panel span4'
+                tagName: 'div',
+                id: 'item-tree',
+                className: 'tree-panel span4',
+                observer: this.mediator
             });
             this.mediator.shipTree = new TreeView({
-                tagName: 'div', id: 'ship-tree',
+                tagName: 'div',
+                id: 'ship-tree',
                 className: 'tree-panel span4',
                 observer: this.mediator,
-                contextMenu: contextMenuView
+                contextMenu: contextMenuView,
             }).render();
 			this.mediator.itemTree.$componentCollection
 				.sortable({ 
@@ -53,8 +56,7 @@ define(function(require) {
             this.mediator.itemTree.componentCollection.fetch({ 
                 success: this.mediator.itemTree.render
             });
-            shipmentHL = new ComponentModel();
-            shipmentHL.componentCollection = new ComponentCollection();
+            var shipmentHL = new ComponentModel({ componentCollection: new ComponentCollection() });
             this.mediator.shipTree.componentCollection.add(shipmentHL);
         },
 

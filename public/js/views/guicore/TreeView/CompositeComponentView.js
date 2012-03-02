@@ -18,7 +18,6 @@ define(function(require) {
             AbstractComponentView.prototype.initialize.call(this);
             _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle');
             this._type = 'composite';
-            this.model.componentCollection = options.collection || new ComponentCollection();
             //: bind the models' componentCollection `add` event to `addOne` 
             //: so that when we add models to the collection
             //: it automatically adds the nested views as well
@@ -59,31 +58,6 @@ define(function(require) {
             this.observer.trigger('addAll:composite', this);
             return this;
         }
-
-        //droppable: function(spec) {
-            //this.$el.droppable({
-                //drop: view.onDrop,
-                //greedy: true,
-                //accept: '.tvc',
-                //tolerance: 'pointer',
-                //over: this.onHoverEnter,
-                //out: this.onHoverExit
-            //});
-            //return this;
-        //},
-
-        //sortable: function(spec) {
-            //this.$el.sortable({
-                //helper: 'clone',
-                //handle: '.handle',
-                //placeholder: 'ui-state-highlight'
-            //});
-            //return this;
-        //},
-
-        //selectable: function(spec) {
-            //this.$el.selectable();
-        //}
     });
 
     return CompositeComponentView;

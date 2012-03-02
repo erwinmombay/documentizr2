@@ -1,13 +1,15 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
 
     var ComponentModel = Backbone.Model.extend({
-        initialize: function(options) {
+        initialize: function(attr) {
             _.bindAll(this, 'destroy');
-            //: TODO remove options when we finally pass in a true spec
-            this.blueprint = options && options.blueprint;
+            if (attr && attr.componentCollection) {
+                this.componentCollection = attr.componentCollection;
+            }
         },
 
         destroy: function(options) {
@@ -17,14 +19,8 @@ define(function(require) {
                     this.componentCollection.models[0].destroy();
                 }
             }
-            Backbone.Model.prototype.destroy.call(this);
+            Backbone.Model.prototype.destroy.call(this, options);
         }
-
-        //validate: function() {
-            //if (this.blueprint && this.blueprint.valdation) {
-                //this.blueprint.validation.call(this);
-            //}
-        //}
     });
     return ComponentModel;
 });

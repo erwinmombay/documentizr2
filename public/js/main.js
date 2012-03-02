@@ -6,6 +6,7 @@
  * @author erwin.mombay
  */
 
+'use strict';
 //: we set up aliases for our most frequently used imported files/modules/dir
 require.config({
     paths: {
@@ -24,7 +25,7 @@ require.config({
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal'
+        modal: 'libs/bootstrap/bootstrap-modal',
     }
 });
 
