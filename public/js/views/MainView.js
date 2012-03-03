@@ -25,7 +25,7 @@ define(function(require) {
                 id: 'ship-tree',
                 className: 'tree-panel span4',
                 observer: this.mediator,
-                contextMenu: contextMenuView,
+                contextMenu: contextMenuView
             }).render();
 			this.mediator.itemTree.$componentCollection
 				.sortable({ 
