@@ -2,11 +2,6 @@ var express = require('express');
 var routes = require('./routes');
 
 var app = module.exports = express.createServer();
-var backboneio = require('backbone.io');
-
-var backend = backboneio.createBackend();
-backend.use(backboneio.middleware.memoryStore());
-backboneio.listen(app, { mybackend: backend });
 
 // Configuration
 app.configure(function() {
