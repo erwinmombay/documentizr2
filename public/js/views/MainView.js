@@ -10,7 +10,7 @@ define(function(require) {
     var TreeView = require('views/guicore/TreeView/TreeView');
     var ComponentCollection = require('collections/ComponentCollection');
 
-    var AppView = Backbone.View.extend({
+    var MainView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
             this.mediator = mediator; 
@@ -33,5 +33,5 @@ define(function(require) {
         }
     });
 
-    return AppView;
+    return MainView;
 });
