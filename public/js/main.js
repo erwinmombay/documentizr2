@@ -6,6 +6,7 @@
  * @author erwin.mombay
  */
 
+'use strict';
 //: we set up aliases for our most frequently used imported files/modules/dir
 require.config({
     paths: {

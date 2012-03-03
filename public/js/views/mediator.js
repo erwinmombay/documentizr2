@@ -3,7 +3,7 @@ define(function(require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    
+
     var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
     var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
     var ComponentModel = require('models/ComponentModel');
@@ -20,9 +20,63 @@ define(function(require) {
     //mediator.editor = modalEditorView;
     //mediator.editor.render();
     //mediator.editor.$el.modal('hide');
+    
+    mediator.createViewFromSpec = function(spec) {
+        var view = null;
+        if (spec.model && spec.model.componentCollection) {
+            view = new CompositeComponentView({ 
+                model: spec.model,
+                observer: spec.viewContext.observer,
+                contextMenu: spec.viewContext.contextMenu
+            });
+            view.$el.droppable({
+                drop: view._onDrop,
+                greedy: true,
+                accept: '.tvc',
+                tolerance: 'pointer',
+                over: view._onHoverEnter,
+                out: view._onHoverExit
+            });
+            view.render().$componentCollection
+                .sortable({
+                    helper: 'clone',
+                    handle: '.handle',
+                    placeholder: 'ui-state-highlight'
+                })
+                .selectable();
+            if (spec.viewContext.id != 'item-tree') {
+                view.menu = { 
+                    'add': function(e) {
+                        var qty = 10;
+                        var model = new ComponentModel({ qty: qty });
+                        model.cid = 'st-' + model.cid;
+                        view.model.componentCollection.add(model);
+                    },
+                    'delete': function(e) {
+                        view.model.destroy({ cascade: true });
+                    }
+                };
+            }
+        } else {
+            view = new LeafComponentView({
+                model: spec.model,
+                observer: spec.viewContext.observer,
+                contextMenu: spec.viewContext.contextMenu
+            });
+            view.render();
+            if (spec.viewContext.id != 'item-tree') {
+                view.menu = { 
+                    'delete': function(e) {
+                        view.model.destroy();
+                    }
+                };
+            }
+        }
+        spec.viewContext.$componentCollection.append(view.el);
+ 
+    };
 
     mediator.on('drop:composite', function(spec) {
-        var i;
         //: make sure to reset border since onhover events trigger first
         //: before drop.
         spec.viewContext.$el.css({ 'border-color': '' });
@@ -37,15 +91,17 @@ define(function(require) {
                 return;
             } else {
                 //: make sure to create the number of helpers dropped.
-                for (i = 0; i < spec.ui.helper.length; i++) {
+                for (var i = 0; i < spec.ui.helper.length; i++) {
                     var helperCid = $(spec.ui.helper[i]).attr('id');
                     var itemTreeModel = mediator.itemTree.componentCollection.getByCid(helperCid);
                     //: if the itemTreeModel's qty is not > 0 then do nothing
                     var qty = itemTreeModel.get('qty');  
                     if (qty > 0) {
                         itemTreeModel.set({ qty: 0 });
-                        var model = new ComponentModel({ qty: qty });
-                        model.componentCollection = new ComponentCollection();
+                        var model = new ComponentModel({
+                            qty: qty,
+                            componentCollection: new ComponentCollection()
+                        });
                         model.cid = 'st-' + model.cid;
                         spec.viewContext.model.componentCollection.add(model);
                     }
@@ -69,13 +125,12 @@ define(function(require) {
     });
 
     mediator.on('hoverEnter:composite', function(spec) {
-        var i;
         //: this if statement handles internal onhover during sort/drag.
         //: we usually just want to return early unless we need to do something.
         if ($(spec.ui.helper).attr('id').substring(0, 2) == 'st') {
             return;
         }
-        for (i = 0; i < spec.ui.helper.length; i++) {
+        for (var i = 0; i < spec.ui.helper.length; i++) {
             var helperCid = $(spec.ui.helper[i]).attr('id');
             var itemTreeModel = mediator.itemTree.componentCollection.getByCid(helperCid);
             if (itemTreeModel) {
@@ -95,46 +150,12 @@ define(function(require) {
         spec.viewContext.$el.css({ 'border-color': '' });
     });
 
-    mediator.on('addOneView:composite', function(spec) {
-        var view = null;
-        if (spec.model && spec.model.componentCollection) {
-            view = new CompositeComponentView({ 
-                model: spec.model,
-                observer: spec.viewContext.observer,
-                contextMenu: spec.viewContext.contextMenu
-            });
-            view.$el.droppable({
-                drop: view._onDrop,
-                greedy: true,
-                accept: '.tvc',
-                tolerance: 'pointer',
-                over: view._onHoverEnter,
-                out: view._onHoverExit
-            });
-            view.render().$componentCollection
-                .sortable({
-                    helper: 'clone',
-                    handle: '.handle',
-                    placeholder: 'ui-state-highlight'
-                })
-                .selectable();
-            view.menu = { 
-                'add one item': function(e) {
-                    var qty = 10;
-                    var model = new ComponentModel({ qty: qty });
-                    model.cid = 'st-' + model.cid;
-                    view.model.componentCollection.add(model);
-                }
-            };
-        } else {
-            view = new LeafComponentView({
-                model: spec.model,
-                observer: spec.viewContext.observer,
-                contextMenu: spec.viewContext.contextMenu
-            });
-            view.render();
-        }
-        spec.viewContext.$componentCollection.append(view.el);
+    mediator.on('addOne:composite', function(spec) {
+        mediator.createViewFromSpec(spec);
+    });
+
+    mediator.on('addOne:tree', function(spec) {
+        mediator.createViewFromSpec(spec);
     });
 
     return mediator;

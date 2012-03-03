@@ -25,6 +25,9 @@ app.configure('production', function() {
 });
 
 // Routes
+app.get('/*.(js|css)', function(req, res) {
+    res.sendfile('./' + req.url);
+});
 app.get('/', routes.index);
 app.get('/items', routes.items);
 
