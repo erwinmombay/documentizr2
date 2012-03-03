@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
@@ -9,18 +10,14 @@ define(function(require) {
         model: ComponentModel,
         url: '/items',
 
-        deepQueryById: function(id) { },
+        initialize: function(models, options) {
+            _.bindAll(this, 'reset');
+        },
 
-        deepQueryByCid: function(cid) {
-            this.each(function(value, key) {
-                if (value.cid === cid) {
-                    return value;
-                }
-                if (value.componentCollection) {
-                    value.componentCollection.deepQueryByCid(id);
-                }
-            }, this);
+        reset: function(options) {
+            Backbone.Collection.prototype.reset.call(this, options);
         }
+
     });
     return ComponentCollection;
 });

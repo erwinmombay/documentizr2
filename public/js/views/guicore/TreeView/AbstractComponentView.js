@@ -54,6 +54,7 @@ define(function(require) {
             this.observer = { trigger: function() { /** no op **/ } };
             //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this._type = 'component';
+            this.model.on('destroy', function() { this.remove(); }, this);
             if (this.contextMenu) {
                 var that = this;
                 //: doing a return false on the on.contextmenu event
