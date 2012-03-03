@@ -1,44 +1,43 @@
-var pg = require('pg');
-
-var conString = 'postgresql+psycopg2://postgres:1q2w3e@localhost:5432/postgres';
+var client = require('../database').client;
 
 exports.index = function(req, res) {
-  res.render('index', {
-    title: 'Documentizr2'
-  });
+    var results = [];
+    var query = client.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no LIMIT 100');
+    query.on('row', function(row) {
+        results.push(row);
+        console.log(row);
+    });
+    query.on('end', function() {
+        res.render('index', {
+            title: 'Documentizr2',
+            data: JSON.stringify(results)
+        });
+    });
 };
 
 exports.segments = function(req, res) {
-  var db = pg.connect(process.env.DATABASE_URL || conString, function(err, client) {
-    var query = client.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no');
     var results = [];
-
+    var query = client.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no');
     query.on('row', function(row) {
-      results.push(row);
+        results.push(row);
     });
-
     query.on('end', function() {
-      res.contentType('json');
-      res.send(JSON.stringify(results));
+        res.contentType('json');
+        res.send(JSON.stringify(results));
     });
-  });
 };
 
 exports.elements = function(req, res) {
-  if (req.query.name) {
-    var db = pg.connect(process.env.DATABASE_URL || conString, function(err, client) {
-      var query = client.query('SELECT * FROM "SegElemDef" WHERE segment = $1 ORDER BY ref', [req.query.name]);
-      var results = [];
-
-      query.on('row', function(row) {
-        results.push(row);
-      });
-
-      query.on('end', function() {
-        res.contentType('json');
-        res.send(JSON.stringify(results));
-      });
-    });
-  }
+	if (req.query.name) {
+        var results = [];
+        var query = client.query('SELECT * FROM "SegElemDef" WHERE segment = $1 ORDER BY ref', [req.query.name]);
+        query.on('row', function(row) {
+            results.push(row);
+        });
+        query.on('end', function() {
+            res.contentType('json');
+            res.send(JSON.stringify(results));
+        });
+	}
 };
 

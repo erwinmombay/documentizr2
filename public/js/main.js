@@ -6,7 +6,10 @@
  * @author erwin.mombay
  */
 
+
+
 'use strict';
+
 //: we set up aliases for our most frequently used imported files/modules/dir
 require.config({
     paths: {
@@ -22,7 +25,8 @@ require.config({
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal'
+        modal: 'libs/bootstrap/bootstrap-modal',
+        prettify: 'libs/prettify'
     }
 });
 
@@ -36,6 +40,10 @@ define(function(require) {
     var jqui = require('order!jqueryui');
     var App = require('order!app');
     var modal = require('order!modal');
+    var prettify = require('order!prettify');
 
+    $(document).ready(function() {
+        prettyPrint();
+    });
     App.initialize();
 });

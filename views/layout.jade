@@ -9,6 +9,7 @@ html(lang="eng")
     //if lt IE 9
       script(src="http://html5shim.googlecode.com/svn/trunk/html5.js")
     link(rel="stylesheet", type="text/css", href="/css/jquery-ui-1.8.17.custom.css")
+    link(rel="stylesheet", type="text/css", href="/css/prettify.css")
     link(rel="stylesheet/less", href="/css/bootstrap/bootstrap.less")
     link(rel="stylesheet/less", href="/css/custom.less")
     //link(rel="stylesheet", type="text/css", href="/css/bootstrap.css")
@@ -16,6 +17,10 @@ html(lang="eng")
     
     script(type="text/javascript")
       if(!window.console) { console = { log: function(){ } } }; 
+    
+    //- bootstrap our json data on html render instead of doing an ajax request
+    - var bootstrapData= '<script type="text/javascript">bootstrapData = ' + data + '</script>'
+      | !{bootstrapData}
     script(type="text/javascript", src="/js/libs/less/less.min.js")
     script(data-main="js/main", src="js/libs/require/require.min.js")
     
@@ -25,4 +30,5 @@ html(lang="eng")
       }
     
     body!= body
+ 
 

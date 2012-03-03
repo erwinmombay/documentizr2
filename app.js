@@ -2,6 +2,10 @@ var express = require('express');
 var routes = require('./routes');
 
 var app = module.exports = express.createServer();
+var db = require('./database');
+
+//: initialize db connection to be used
+db.client.connect();
 
 // Configuration
 app.configure(function() {
