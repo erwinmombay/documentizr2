@@ -57,7 +57,31 @@ define(function(require) {
             this.model.componentCollection.each(this.addOne);
             this.observer.trigger('addAll:composite', this);
             return this;
+        },
+
+        selectable: function(spec) {
+            if (this.$componentCollection) {
+                if (spec) {
+                    this.$componentCollection.selectable(spec);
+                } else {
+                    this.$componentCollection.selectable();
+                }
+            }
+            return this;
+        },
+
+        sortable: function(spec) {
+            var options = _.defaults(spec || {}, {
+                helper: 'clone',
+                handle: '.handle',
+                placeholder: 'ui-state-highlight'
+            });
+            if (this.$componentCollection) {
+                this.$componentCollection.sortable(options);
+            }
+            return this;
         }
+
     });
 
     return CompositeComponentView;

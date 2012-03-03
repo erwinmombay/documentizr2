@@ -116,6 +116,21 @@ define(function(require) {
                            this.observer.trigger('middleClick:' + this._type, { viewContext: this, event: e });
                            this.observer.trigger('middleClick', { viewContext: this, event: e });
             }
+        },
+
+        droppable: function(spec) {
+            var options = _.defaults(spec || {}, {
+                greedy: true,
+                accept: '.tvc',
+                tolerance: 'pointer'
+            });
+            _.extend(options, {
+                drop: this._onDrop,
+                over: view._onHoverEnter,
+                out: view._onHoverExit
+            });
+            this.$el.droppable(options);
+            return this;
         }
     });
 
