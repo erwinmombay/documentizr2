@@ -2,7 +2,7 @@ var client = require('../database').client;
 
 exports.index = function(req, res) {
     var results = [];
-    var query = client.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no LIMIT 100');
+    var query = client.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no');
     query.on('row', function(row) {
         results.push(row);
         console.log(row);

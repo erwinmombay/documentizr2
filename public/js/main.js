@@ -6,8 +6,6 @@
  * @author erwin.mombay
  */
 
-
-
 'use strict';
 
 //: we set up aliases for our most frequently used imported files/modules/dir
@@ -41,7 +39,6 @@ define(function(require) {
     var App = require('order!app');
     var modal = require('order!modal');
     var prettify = require('order!prettify');
-
     $(document).ready(function() {
         prettyPrint();
     });

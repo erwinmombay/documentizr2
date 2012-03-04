@@ -64,7 +64,8 @@ define(function(require) {
             while(queue.length) {
                 var curItem = queue.pop();
                 var loop = null;
-                var queuedLoop = loops.length ? loops[loops.length - 1] : null;
+                var queuedLoop = loops.length && loops[loops.length - 1];
+                var siblingQueuedLoop = loops.length && loops[loops.length - 2];
                 //: if not part of a loop directly attach to the table
                 console.log(curItem.segment + ' ' + curItem.pos_no);
                 if (curItem.parent_loop_pos === 'n/a' && curItem.loop === 'None') {
@@ -76,32 +77,40 @@ define(function(require) {
                     this.popAppend(loops, curTable);
                     curTable.collection[curItem.segment] = this.buildSegment(curItem);
                 //: else if under a loop
-                } else if (curItem.parent_loop_pos === 'n/a') {
+                } else if (curItem.parent_loop_pos === 'n/a' && curItem.loop !== 'None') {
                     console.log('2');
                     //: check if a loop exists
                     if (queuedLoop) {
-                    console.log('2-a');
+                        console.log('2-a');
                         if (queuedLoop.initiator === curItem.loop) {
+                            console.log('2-a-1');
                             queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
                             queuedLoop = null;
                         } else {
-                    console.log('2-b');
+                            console.log(queuedLoop);
+                            console.log(siblingQueuedLoop);
+                            if (queuedLoop && siblingQueuedLoop && curItem.loop === siblingQueuedLoop.initiator) {
+                            console.log('2-a-2');
+                                siblingQueuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                                loops.pop();
+                            } else {
+                            console.log('2-a-3');
                             loop = this.buildLoop(curItem);
                             loop.collection[curItem.segment] = this.buildSegment(curItem);
-                            loops.push(loop); 
                             this.popAppend(loops, curTable);
+                            loops.push(loop); 
                             loop = null;
+                            }
                         }
-                    //: else create the loop
                     } else {
-                    console.log('2-c');
+                    console.log('2-b');
                         loop = this.buildLoop(curItem);
                         loop.collection[curItem.segment] = this.buildSegment(curItem);
                         loops.push(loop);
                         loop = null;
                     }
-                } else if (curItem.parent_loop_pos == queuedLoop.posNo) {
-                    console.log('3');
+                } else if (queuedLoop && curItem.parent_loop_pos == queuedLoop.posNo) {
+                    console.log('3-a');
                     var nestedLoop = this.buildLoop(curItem);
                     console.log(JSON.stringify(nestedLoop));
                     queuedLoop.collection[nestedLoop.fullName] = nestedLoop;
@@ -110,7 +119,6 @@ define(function(require) {
                     queuedLoop = null;
                 } else {
                     console.log('4');
-                    var siblingQueuedLoop = loops.length && loops[loops.length - 2];
                     if (queuedLoop && siblingQueuedLoop && queuedLoop.parentPosNo === siblingQueuedLoop.posNo &&
                         curItem.loop === queuedLoop.initiator) {
                             console.log('4-a');
@@ -133,6 +141,7 @@ define(function(require) {
         popAppend: function(popTarget, appendTarget) {
             var dequeuedItem = popTarget.pop();
             if (dequeuedItem) {
+                console.log('popping ' + dequeuedItem.fullName + ' append to ' + appendTarget.name);
                 appendTarget.collection[dequeuedItem.fullName] = dequeuedItem;
             }
         },

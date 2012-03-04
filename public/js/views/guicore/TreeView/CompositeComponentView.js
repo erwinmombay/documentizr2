@@ -16,7 +16,7 @@ define(function(require) {
             //: `this` CompositeComponent instance.
             //: this is like calling super() in javascript
             AbstractComponentView.prototype.initialize.call(this);
-            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle');
+            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle', 'selectable', 'sortable');
             this._type = 'composite';
             //: bind the models' componentCollection `add` event to `addOne` 
             //: so that when we add models to the collection
