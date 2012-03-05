@@ -60,81 +60,84 @@ define(function(require) {
             //: push any loop object we create to this array so we can
             //: keep appending to it for any segment that is a part of the loop
             var loops = [];
-
+            var loop, curItem, queuedLoop, parentLoop;
             while(queue.length) {
-                var curItem = queue.pop();
-                var loop = null;
-                var queuedLoop = loops.length && loops[loops.length - 1];
-                var siblingQueuedLoop = loops.length && loops[loops.length - 2];
-                //: if not part of a loop directly attach to the table
-                console.log(curItem.segment + ' ' + curItem.pos_no);
-                if (curItem.parent_loop_pos === 'n/a' && curItem.loop === 'None') {
-                    console.log('1');
-                    //: meeting the conditions on the above if statement means
-                    //: it is safe to dequeue the last loop if any exists because we
-                    //: are now outside any nesting and the curItem is directly
-                    //: under the table.
+                loop = null;
+                curItem = queue.pop();
+                queuedLoop = loops.length && loops[loops.length - 1];
+                parentLoop = loops.length && loops[loops.length - 2];
+
+                console.log(curItem.segment);
+                console.log(JSON.stringify(loops));
+                //: direct child of a table
+                if (curItem.loop === 'None' && curItem.parent_loop_pos === 'n/a') {
+                    console.log('a');
                     this.popAppend(loops, curTable);
                     curTable.collection[curItem.segment] = this.buildSegment(curItem);
-                //: else if under a loop
-                } else if (curItem.parent_loop_pos === 'n/a' && curItem.loop !== 'None') {
-                    console.log('2');
-                    //: check if a loop exists
-                    if (queuedLoop) {
-                        console.log('2-a');
-                        if (queuedLoop.initiator === curItem.loop) {
-                            console.log('2-a-1');
-                            queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
-                            queuedLoop = null;
-                        } else {
-                            console.log(queuedLoop);
-                            console.log(siblingQueuedLoop);
-                            if (queuedLoop && siblingQueuedLoop && curItem.loop === siblingQueuedLoop.initiator) {
-                            console.log('2-a-2');
-                                siblingQueuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
-                                loops.pop();
-                            } else {
-                            console.log('2-a-3');
-                            loop = this.buildLoop(curItem);
-                            loop.collection[curItem.segment] = this.buildSegment(curItem);
-                            this.popAppend(loops, curTable);
-                            loops.push(loop); 
-                            loop = null;
-                            }
-                        }
+                    //: safe to pop any queued item in `loops` as we are outside any nesting
+                //: segment is in a loop but not a nested loop
+                } else if (curItem.loop !== 'None' && curItem.parent_loop_pos === 'n/a') {
+                    console.log('b');
+                    //:  current queuedLoop is the current items parent
+                    if (queuedLoop && queuedLoop.initiator === curItem.loop) {
+                    console.log('b-1');
+                        queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                    //: else if the parentLoop is the matching loop then attach to the parentLoop
+                    //: and pop the queuedLoop
+                    } else if (queuedLoop && parentLoop && parentLoop.initiator === curItem.loop) {
+                    console.log('b-2');
+                        parentLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                        //: we pop the queuedLoop because we are no longer under the scope of that loop
+                        loops.pop();
+                    //: else create a loop
                     } else {
-                    console.log('2-b');
+                    console.log('b-3');
                         loop = this.buildLoop(curItem);
+                        if (queuedLoop && loop.parentPosNo !== queuedLoop.posNo) {
+                            this.popAppend(loops, curTable);
+                        }
                         loop.collection[curItem.segment] = this.buildSegment(curItem);
-                        loops.push(loop);
-                        loop = null;
+                        loops.push(loop); 
                     }
-                } else if (queuedLoop && curItem.parent_loop_pos == queuedLoop.posNo) {
-                    console.log('3-a');
-                    var nestedLoop = this.buildLoop(curItem);
-                    console.log(JSON.stringify(nestedLoop));
-                    queuedLoop.collection[nestedLoop.fullName] = nestedLoop;
-                    nestedLoop.collection[curItem.segment] = this.buildSegment(curItem);
-                    loops.push(nestedLoop);
-                    queuedLoop = null;
-                } else {
-                    console.log('4');
-                    if (queuedLoop && siblingQueuedLoop && queuedLoop.parentPosNo === siblingQueuedLoop.posNo &&
-                        curItem.loop === queuedLoop.initiator) {
-                            console.log('4-a');
-                            queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
-                            queuedLoop = null;
-                    } else if (queuedLoop && siblingQueuedLoop && queuedLoop.parentPosNo === siblingQueuedLoop.posNo) {
-                        console.log('4-b');
-                        this.popAppend(loops, siblingQueuedLoop);
+                //: segment is in a loop but the loop is also nested to a parent loop
+                } else if (curItem.loop !== 'None' && curItem.parent_loop_pos !== 'n/a') {
+                    console.log('c');
+                    //: attach to the parent if they are under the same loop
+                    if (queuedLoop && queuedLoop.initiator === curItem.loop) {
+                    console.log('c-1');
+                        queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                        if (!queue.length) {
+                            loops.pop();
+                        }
+                    //: create a new loop and push it to the queue
                     } else {
-                        this.popAppend(loops, curTable); 
+                        var nestedLoop = this.buildLoop(curItem);
+                        console.log(nestedLoop);
+                        if (nestedLoop.parentPosNo === queuedLoop.posNo) {
+                            console.log('c-1-a');
+                            queuedLoop.collection[nestedLoop.fullName] = nestedLoop;
+                            nestedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                            loops.push(nestedLoop);
+                        } else {
+                            console.log('c-1-b');
+                            parentLoop.collection[nestedLoop.fullName] = nestedLoop;
+                            nestedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                            //: pop the queuedLoop because we are starting a new loop under the same
+                            //: parent(they are true siblings);
+                            loops.pop();
+                            loops.push(nestedLoop);
+                        }
                     }
                 }
             }
-            //: attach the main loop under a table(if it exists) when the queue is exhausted
-            if (loops.length) {
-                this.popAppend(loops, curTable); 
+                while (loops.length) {
+                    queuedLoop = loops.length && loops[loops.length - 1];
+                    parentLoop = loops.length && loops[loops.length - 2];
+                    if (queuedLoop && parentLoop && queuedLoop.parentPosNo === parentLoop.posNo) {
+                        loops.pop();
+                    } else {
+                        this.popAppend(loops, curTable); 
+                    }
             }
         },
 
