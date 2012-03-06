@@ -47,6 +47,10 @@ define(function(require) {
                 }
             };
         }
+        if (view.model.get('schema').req === 'M' ||
+            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
+            view.$el.find('.tvc-label').css({ 'color': 'red' });
+        }
         spec.viewContext.$componentCollection.append(view.el);
     };
 
