@@ -33,7 +33,6 @@ define(function(require) {
             var $code = $('<code/>', { 'class': 'language-js' });
             $code.append(JSON.stringify(this.data, null, 4));
             $('.span9').append($pre.append($code));
-            modalEditorView.render();
             return this;
         }
     });

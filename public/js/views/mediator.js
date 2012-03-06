@@ -28,7 +28,7 @@ define(function(require) {
             view.render().sortable({ handle: '' });
                 view.menu = { 
                 'add new node': function(e) {
-
+                    modalEditorView.render(spec).show();
                     //var model = new ComponentModel({
                         //componentCollection: new ComponentCollection()
                         //});
@@ -79,6 +79,11 @@ define(function(require) {
 
     mediator.on('addOne:tree', function(spec) {
         mediator.createViewFromSpec(spec);
+    });
+
+    modalEditorView.on('click:modalEditor', function(spec) {
+        var targetId = $(spec.event.target).attr('id');
+        console.log(targetId);
     });
 
     return mediator;
