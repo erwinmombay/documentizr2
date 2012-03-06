@@ -26,14 +26,23 @@ define(function(require) {
             this.$el.empty();
             this._cachedTargetView = spec.viewContext;
             var template = Handlebars.compile(this.template);
-            var options = [];
+            template = template({ curNode: spec.viewContext.model.get('name') });
+            this.$el.append(template);
+            var $body = this.$el.find('div.modal-body');
+            console.log($body);
             _.each(spec.viewContext.model.get('schema').collection, function(value) {
-                options.push({ name: value.name, fullName: value.fullName || value.name });
+                //push({ name: value.name, fullName: value.fullName || value.name });
+                var $link = $('<a/>', {
+                    'href': '#',
+                    'id': value.fullName || value.name,
+                    'class': 'btn option',
+                    'text': value.name
+                });
+                if (value.req === 'M' || _.include(['810', 'Table_1', 'Table_2', 'Table_3'], value.name)) {
+                    $link.addClass('btn-danger');
+                }
+                $body.append($link);
             }, this);
-            this.$el.append(template({
-                curNode: spec.viewContext.model.get('name'),
-                options: options
-            }));
             this.trigger('render:modalEditor');
             return this;
         },

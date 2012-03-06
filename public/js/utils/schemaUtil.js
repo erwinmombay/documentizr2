@@ -143,7 +143,8 @@ define(function(require) {
                 name: curItem.segment,
                 fullName: curItem.segment + '_' + curItem.pos_no,
                 posNo: curItem.pos_no,
-                maxOccurs: curItem.max_count
+                maxOccurs: curItem.max_count,
+                req: curItem.req_des
             };
         },
 
