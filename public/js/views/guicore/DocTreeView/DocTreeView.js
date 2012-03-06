@@ -9,7 +9,6 @@ define(function(require) {
     var ComponentCollection = require('collections/ComponentCollection');
 
     var DocTreeView = TreeView.extend({
-        
         initialize: function(options) {
             TreeView.prototype.initialize.call(this, options);
             _.bindAll(this, 'render');
