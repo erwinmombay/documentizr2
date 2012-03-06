@@ -19,16 +19,16 @@ define(function(require) {
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',
-                classame: 'tree-panel',
+                className: 'tree-panel',
                 observer: this.mediator,
                 contextMenu: contextMenuView,
                 schema: this.data,
-                root: '810'
+                root: 'TS_810'
             }).render();
         },
 
         render: function() {
-            $('.sidebar-nav').append(this.doctree.el);
+            $('.sidebar-nav').append(this.doctree.el);  
             var $pre = $('<pre/>', { 'class': 'prettyprint' });
             var $code = $('<code/>', { 'class': 'language-js' });
             $code.append(JSON.stringify(this.data, null, 4));

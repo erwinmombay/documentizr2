@@ -3393,8 +3393,7 @@ a.thumbnail:hover {
 
   /*min-width: 400px;*/
 
-  /*height: 610px;*/
-
+  min-height: 610px;
   /*overflow-y: scroll;*/
 
   overflow-x: scroll;

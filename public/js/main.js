@@ -17,7 +17,6 @@ require.config({
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
         handlebars: 'libs/handlebars/handlebars-1.0.0.beta.4',
-        //modals: 'libs/bootstrap/bootstrap-modal',
         text: 'libs/require/text.min',
         templates: '../templates',
         models: 'models',

@@ -48,7 +48,6 @@ define(function(require) {
             };
         }
         spec.viewContext.$componentCollection.append(view.el);
- 
     };
 
     mediator.on('drop:composite', function(spec) {
