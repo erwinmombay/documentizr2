@@ -55,7 +55,6 @@ define(function(require) {
         },
 
         _onMouseDown: function(e) {
-            console.log(this);
             if (this.isVisible) {
                 this.hide(e);
             }

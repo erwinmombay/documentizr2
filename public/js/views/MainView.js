@@ -4,185 +4,37 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
+    var utils = require('utils/schemaUtil');
     var mediator = require('views/mediator');
     var contextMenuView = require('views/guicore/contextMenuView');
-    var ComponentModel = require('models/ComponentModel');
-    var TreeView = require('views/guicore/TreeView/TreeView');
-    var ComponentCollection = require('collections/ComponentCollection');
+    var modalEditorView = require('views/guicore/Modals/modalEditorView');
+
+    var DocTreeView = require('views/guicore/DocTreeView/DocTreeView');
 
     var MainView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
+            this.data = utils.buildDocLevelSchema(bootstrapData);
             this.mediator = mediator; 
-            this.doctree = new TreeView({
+            this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',
-                className: 'tree-panel',
+                classame: 'tree-panel',
                 observer: this.mediator,
-                contextMenu: contextMenuView
+                contextMenu: contextMenuView,
+                schema: this.data,
+                root: '810'
             }).render();
-            var shipmentHL = new ComponentModel({
-                componentCollection: new ComponentCollection()
-            });
-            this.doctree.componentCollection.add(shipmentHL);
         },
 
         render: function() {
             $('.sidebar-nav').append(this.doctree.el);
             var $pre = $('<pre/>', { 'class': 'prettyprint' });
             var $code = $('<code/>', { 'class': 'language-js' });
-            var data = this.buildDocLevelSchema(bootstrapData);
-            $code.append(data);
+            $code.append(JSON.stringify(this.data, null, 4));
             $('.span9').append($pre.append($code));
+            modalEditorView.render();
             return this;
-        },
-
-        buildDocLevelSchema: function(data) {
-            var tsets = {}; //: root
-            var tsetName = data[0].document;
-            tsets[tsetName] = { name: tsetName, collection: {} };
-            var tables = _.uniq(_.pluck(data, 'doc_table'));
-            _.each(tables, function(value) {
-                var tableName = 'Table_' + value;
-                var curTable = { name: tableName, collection: {} };
-                var curTableSegments = _.filter(data, function(segment) {
-                    return segment.doc_table == value;
-                }, this);
-                this.buildTableLevelSchema(curTable, curTableSegments);
-                tsets[tsetName].collection[tableName] = curTable;
-            }, this);
-            return JSON.stringify(tsets, null, 4);
-        },
-        
-        buildTableLevelSchema: function(curTable, curTableSegments) {
-            //: make a copy of the original array and reverse the order
-            var queue = curTableSegments.slice(0).reverse();
-            //: push any loop object we create to this array so we can
-            //: keep appending to it for any segment that is a part of the loop
-            var loops = [];
-            var loop, curItem, lookahead, queuedLoop;
-            var getQueuedLoop = function(offset) {
-                return loops[loops.length - (1 + (_.isNumber(offset) ? offset : 0))];
-            };
-            while(queue.length) {
-                loop = null;
-                queuedLoop = getQueuedLoop();
-                curItem = queue.pop();
-                lookahead = queue[queue.length - 1];
-
-                //console.log(curItem.segment + ' ' + curItem.pos_no);
-                //: direct child of a table
-                if (curItem.loop === 'None' && curItem.parent_loop_pos === 'n/a') {
-                    //console.log('a');
-                    curTable.collection[curItem.segment] = this.buildSegment(curItem);
-                //: segment is in a loop but not a nested loop
-                } else if (curItem.loop !== 'None'  && curItem.parent_loop_pos === 'n/a') {
-                    //console.log('b');
-                    if (queuedLoop && queuedLoop.initiator === curItem.loop) {
-                    //console.log('b-1');
-                        queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
-                        this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
-                    } else {
-                    //console.log('b-2');
-                        loop = this.buildLoop(curItem);
-                        loop.collection[curItem.segment] = this.buildSegment(curItem);
-                        curTable.collection[loop.fullName] = loop;
-                        loops.push(loop); 
-                        this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
-                    }
-                //: else this item must be part of a nested loop
-                } else {
-                    //console.log('c');
-                    if (queuedLoop.initiator === curItem.loop) {
-                        queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
-                        this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
-                    } else if (queuedLoop.posNo === curItem.parent_loop_pos) {
-                        //console.log('c-1');
-                        if (queuedLoop.initiator === curItem.loop) {
-                        //console.log('c-1-a');
-                            queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
-                            this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
-                        } else {
-                            //console.log('c-1-b');
-                            loop = this.buildLoop(curItem);
-                            loop.collection[curItem.segment] = this.buildSegment(curItem);
-                            queuedLoop.collection[loop.fullName] = loop;
-                            loops.push(loop);
-                            this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
-                        }
-                    } else {
-                        //console.log('c-2');
-                        loops.pop();
-                        loop = this.buildLoop(curItem);
-                        loop.collection[curItem.segment] = this.buildSegment(curItem);
-                        //: keep on popping the loops array until we find the parent.
-                        //: we usually need to do this if we just exited deeply nested loops.
-                        while (loops.length) {
-                            queuedLoop = getQueuedLoop();
-                            if (queuedLoop.posNo === loop.parentPosNo) {
-                                queuedLoop.collection[loop.fullName] = loop;
-                                loops.push(loop);
-                                break;
-                            }
-                            loops.pop();
-                        }
-                    }
-                }
-            }
-        },
-
-        checkIfLoopsArrayShouldPop: function(lookahead, loopsArray, queue) {
-            if (!this.isNextItemInScope(lookahead, loopsArray)) {
-                loopsArray.pop();
-            //: else if the queue has been depleted popAppend to table
-            } else if (queue.length === 0) {
-                loopsArray.pop();
-            }
-        },
-        
-        /**
-         * checks the `lookahead` if it is still part of the scope of the `queuedLoop`
-         * wether it be a part of the same loop or actually a child/nested loop
-         */
-        isNextItemInScope: function(lookahead, loopsArray) {
-            //TODO fix logic here
-            var queuedLoop = loopsArray.length && loopsArray[loopsArray.length - 1];
-            if (lookahead && queuedLoop && lookahead.loop !== queuedLoop.initiator) {
-                //: if it actually is a child scope then return true
-                if (lookahead.parent_loop_pos === queuedLoop.posNo) {
-                    return true;
-                }
-                return false;
-            }
-            return true;
-        },
-
-        popAppend: function(popTarget, appendTarget) {
-            var dequeuedItem = popTarget.pop();
-            if (dequeuedItem) {
-                appendTarget.collection[dequeuedItem.fullName] = dequeuedItem;
-            }
-        },
-
-        buildSegment: function(curItem) {
-            return {
-                name: curItem.segment,
-                fullName: curItem.segment + '_' + curItem.pos_no,
-                posNo: curItem.pos_no,
-                maxOccurs: curItem.max_count
-            };
-        },
-
-        buildLoop: function(curItem) {
-            return {
-                name: 'Loop_' + curItem.segment,
-                fullName: 'Loop_' + curItem.segment + '_' + curItem.pos_no,
-                posNo: curItem.pos_no,
-                initiator: curItem.segment,
-                parentPosNo: curItem.parent_loop_pos,
-                maxOccurs: curItem.loop_rep,
-                collection: {}
-            };
         }
     });
 

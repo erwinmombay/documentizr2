@@ -32,7 +32,7 @@ define(function(require) {
 
         render: function() {
             this.$el.empty();
-            this.$el.append(this.template({ label: this.model.cid }));
+            this.$el.append(this.template({ label: this.model.get('name') }));
             this.$componentCollection = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
             this.addAll();

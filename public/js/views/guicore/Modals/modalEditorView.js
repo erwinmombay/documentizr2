@@ -17,11 +17,13 @@ define(function(require) {
 
         render: function(spec) {
             var template = Handlebars.compile(this.template);
-            if (!spec) {
-                this.$el.empty();
-                this.$el.append(template);
-                return this;
-            }
+            this.$el.append(template);
+            this.$el.modal('show');
+            return this;
+        },
+
+        hide: function() {
+            this.$el.modal('hide');
         }
     });
     return new modalEditorView();

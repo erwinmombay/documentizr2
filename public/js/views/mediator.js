@@ -4,8 +4,10 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
-    var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
+    var modalEditorView = require('views/guicore/Modals/modalEditorView');
+
+    var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
+    var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
     //var modalEditorView = require('views/modalEditorView');
@@ -18,34 +20,33 @@ define(function(require) {
     mediator.createViewFromSpec = function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
-            view = new CompositeComponentView({ 
+            view = new DocCompositeComponentView({ 
                 model: spec.model,
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
             });
             view.render().sortable({ handle: '' });
                 view.menu = { 
-                'add': function(e) {
-                    var qty = 10;
-                    var model = new ComponentModel({
-                        qty: qty,
-                        componentCollection: new ComponentCollection()
-                        });
-                    view.model.componentCollection.add(model);
+                'add new node': function(e) {
+
+                    //var model = new ComponentModel({
+                        //componentCollection: new ComponentCollection()
+                        //});
+                    //view.model.componentCollection.add(model);
                 },
-                'delete': function(e) {
+                'delete node': function(e) {
                     view.model.destroy({ cascade: true });
                 }
             };
         } else {
-            view = new LeafComponentView({
+            view = new DocLeafComponentView({
                 model: spec.model,
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
             });
             view.render();
             view.menu = { 
-                'delete': function(e) {
+                'delete node': function(e) {
                     view.model.destroy();
                 }
             };
