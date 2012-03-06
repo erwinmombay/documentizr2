@@ -26,11 +26,7 @@ define(function(require) {
         render: function() {
             this.$el.empty();
             var template = Handlebars.compile(this.template); 
-            this.$el.append(template({
-                label: this.model.cid,
-                qty: this.model.get('qty'),
-                per: this.model.get('per')
-            }));
+            this.$el.append(template({ label: this.model.get('name') }));
             return this;
         }
     });

@@ -14,8 +14,8 @@ define(function(require) {
             this.componentCollection = options.componentCollection || new ComponentCollection();
             this.componentCollection.on('add', this.addOne);
             this.observer = options.observer || { trigger: function() { /** no op **/ } };
-            this.$componentCollection = $('<ul/>', { 'class': 'tvc' });
             this.contextMenu = options.contextMenu || null;
+            this.$componentCollection = $('<ul/>', { 'class': 'tvc' });
         },
 
         render: function() {

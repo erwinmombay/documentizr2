@@ -2,6 +2,10 @@ var express = require('express');
 var routes = require('./routes');
 
 var app = module.exports = express.createServer();
+var db = require('./database');
+
+//: initialize db connection to be used
+db.client.connect();
 
 // Configuration
 app.configure(function() {
@@ -25,11 +29,7 @@ app.configure('production', function() {
 });
 
 // Routes
-app.get('/*.(js|css)', function(req, res) {
-    res.sendfile('./' + req.url);
-});
 app.get('/', routes.index);
-app.get('/items', routes.items);
 
 app.listen(process.env.PORT || 5000);
 console.log("Express server listening on port %d in %s mode",

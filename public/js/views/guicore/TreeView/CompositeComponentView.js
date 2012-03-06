@@ -16,7 +16,7 @@ define(function(require) {
             //: `this` CompositeComponent instance.
             //: this is like calling super() in javascript
             AbstractComponentView.prototype.initialize.call(this);
-            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle');
+            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle', 'selectable', 'sortable');
             this._type = 'composite';
             //: bind the models' componentCollection `add` event to `addOne` 
             //: so that when we add models to the collection
@@ -32,7 +32,7 @@ define(function(require) {
 
         render: function() {
             this.$el.empty();
-            this.$el.append(this.template({ label: this.model.cid }));
+            this.$el.append(this.template({ label: this.model.get('name') }));
             this.$componentCollection = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
             this.addAll();
@@ -57,7 +57,31 @@ define(function(require) {
             this.model.componentCollection.each(this.addOne);
             this.observer.trigger('addAll:composite', this);
             return this;
+        },
+
+        selectable: function(spec) {
+            if (this.$componentCollection) {
+                if (spec) {
+                    this.$componentCollection.selectable(spec);
+                } else {
+                    this.$componentCollection.selectable();
+                }
+            }
+            return this;
+        },
+
+        sortable: function(spec) {
+            var options = _.defaults(spec || {}, {
+                helper: 'clone',
+                handle: '.handle',
+                placeholder: 'ui-state-highlight'
+            });
+            if (this.$componentCollection) {
+                this.$componentCollection.sortable(options);
+            }
+            return this;
         }
+
     });
 
     return CompositeComponentView;

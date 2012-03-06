@@ -11,18 +11,50 @@ define(function(require) {
         className: 'modal fade',
         template: modalTemplate,
 
+        events: {
+            'click #modal-close': 'hide',
+            'click #modal-save': 'hide',
+            'click a.option': '_onOptionClick'
+        },
+
         initialize: function(options) {
-            _.bindAll(this, 'render');
+            _.bindAll(this, 'render', 'show', 'hide', '_onOptionClick');
+            this._cachedTargetView = null;
         },
 
         render: function(spec) {
+            this.$el.empty();
+            this._cachedTargetView = spec.viewContext;
             var template = Handlebars.compile(this.template);
-            if (!spec) {
-                this.$el.empty();
-                this.$el.append(template);
-                return this;
-            }
+            var options = [];
+            _.each(spec.viewContext.model.get('schema').collection, function(value) {
+                options.push({ name: value.name, fullName: value.fullName || value.name });
+            }, this);
+            this.$el.append(template({
+                curNode: spec.viewContext.model.get('name'),
+                options: options
+            }));
+            this.trigger('render:modalEditor');
+            return this;
+        },
+
+        show: function() {
+            this.$el.modal('show');
+            this.trigger('show:modalEditor');
+            return this;
+        },
+
+        hide: function() {
+            this.$el.modal('hide');
+            this.trigger('show:modalEditor');
+            this._cachedTargetView = null;
+            return this;
+        },
+
+        _onOptionClick: function(e) {
+            this.trigger('optionClick:modalEditor', { viewContext: this._cachedTargetView, event: e });
+            this.hide();
         }
-    });
+    }, Backbone.Events);
     return new modalEditorView();
 });

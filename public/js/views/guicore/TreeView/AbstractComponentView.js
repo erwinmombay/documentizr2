@@ -49,18 +49,22 @@ define(function(require) {
         },
 
         initialize: function() {
-            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown'
-                /*'droppable', 'sortable', 'selectable',*/);
+            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown',
+                'droppable', 'initEvents');
             this.observer = { trigger: function() { /** no op **/ } };
             //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this._type = 'component';
-            this.model.on('destroy', function() { this.remove(); }, this);
+            this.initEvents();
+        },
+
+        initEvents: function() {
+            var self = this;
+            this.model.on('destroy', this.remove, this);
             if (this.contextMenu) {
-                var that = this;
                 //: doing a return false on the on.contextmenu event
                 //: prevents the default browser's contextmenu to pop up
                 this.$el.on('contextmenu', function(e) {
-                    that.contextMenu.render({ viewContext: that, event: e });
+                    self.contextMenu.render({ viewContext: self, event: e });
                     return false; 
                 });
             }
@@ -116,6 +120,21 @@ define(function(require) {
                            this.observer.trigger('middleClick:' + this._type, { viewContext: this, event: e });
                            this.observer.trigger('middleClick', { viewContext: this, event: e });
             }
+        },
+
+        droppable: function(spec) {
+            var options = _.defaults(spec || {}, {
+                greedy: true,
+                accept: '.tvc',
+                tolerance: 'pointer'
+            });
+            _.extend(options, {
+                drop: this._onDrop,
+                over: view._onHoverEnter,
+                out: view._onHoverExit
+            });
+            this.$el.droppable(options);
+            return this;
         }
     });
 
