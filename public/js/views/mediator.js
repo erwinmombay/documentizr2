@@ -64,7 +64,9 @@ define(function(require) {
     });
 
     mediator.on('doubleClick:composite', function(spec) {
-        spec.viewContext.foldToggle();
+    });
+
+    mediator.on('doubleClick', function(spec) {
     });
 
     mediator.on('hoverEnter:composite', function(spec) {
