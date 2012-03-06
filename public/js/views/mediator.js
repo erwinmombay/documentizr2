@@ -25,7 +25,8 @@ define(function(require) {
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
             });
-            view.render().sortable({ handle: '' });
+            //view.render().sortable({ handle: '' });
+            view.render();
                 view.menu = { 
                 'add new node': function(e) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
