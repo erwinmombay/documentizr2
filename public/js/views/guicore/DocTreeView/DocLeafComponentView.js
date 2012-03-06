@@ -7,7 +7,6 @@ define(function(require) {
     var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
 
     var DocLeafComponentView = LeafComponentView.extend({
-        
         initialize: function(options) {
             LeafComponentView.prototype.initialize.call(this, options);
             _.bindAll(this, 'render');

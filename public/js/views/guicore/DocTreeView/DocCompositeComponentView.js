@@ -7,7 +7,6 @@ define(function(require) {
     var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
 
     var DocCompositeComponentView = CompositeComponentView.extend({
-        
         initialize: function(options) {
             CompositeComponentView.prototype.initialize.call(this, options);
             this.schema = options.schema || {};
