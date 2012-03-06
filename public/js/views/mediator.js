@@ -67,6 +67,8 @@ define(function(require) {
     });
 
     mediator.on('doubleClick', function(spec) {
+        spec.event.stopPropagation();
+        spec.viewContext.foldToggle();
     });
 
     mediator.on('hoverEnter:composite', function(spec) {
