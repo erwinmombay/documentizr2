@@ -12,7 +12,7 @@ define(function(require) {
             var tables = _.uniq(_.pluck(data, 'doc_table'));
             _.each(tables, function(value) {
                 var tableName = 'Table_' + value;
-                var curTable = { name: tableName, collection: {} };
+                var curTable = { name: tableName, fullName: tableName, collection: {} };
                 var curTableSegments = _.filter(data, function(segment) {
                     return segment.doc_table == value;
                 }, this);
@@ -35,25 +35,25 @@ define(function(require) {
             while(queue.length) {
                 loop = null;
                 queuedLoop = getQueuedLoop();
-                lookahead = queue[queue.length - 1];
                 curItem = queue.pop();
+                lookahead = queue[queue.length - 1];
 
-                //console.log(curItem.segment + ' ' + curItem.pos_no);
+                //console.log(curItem.segment + '_' + curItem.pos_no);
                 //: direct child of a table
                 if (curItem.loop === 'None' && curItem.parent_loop_pos === 'n/a') {
                     //console.log('a');
-                    curTable.collection[curItem.segment] = this.buildSegment(curItem);
+                    curTable.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
                 //: segment is in a loop but not a nested loop
                 } else if (curItem.loop !== 'None'  && curItem.parent_loop_pos === 'n/a') {
                     //console.log('b');
                     if (queuedLoop && queuedLoop.initiator === curItem.loop) {
                     //console.log('b-1');
-                        queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                        queuedLoop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
                         this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                     } else {
                     //console.log('b-2');
                         loop = this.buildLoop(curItem);
-                        loop.collection[curItem.segment] = this.buildSegment(curItem);
+                        loop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
                         curTable.collection[loop.fullName] = loop;
                         loops.push(loop); 
                         this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
@@ -62,18 +62,19 @@ define(function(require) {
                 } else {
                     //console.log('c');
                     if (queuedLoop.initiator === curItem.loop) {
-                        queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                        //console.log('c-333');
+                        queuedLoop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
                         this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                     } else if (queuedLoop.posNo === curItem.parent_loop_pos) {
                         //console.log('c-1');
                         if (queuedLoop.initiator === curItem.loop) {
                         //console.log('c-1-a');
-                            queuedLoop.collection[curItem.segment] = this.buildSegment(curItem);
+                            queuedLoop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
                             this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                         } else {
                             //console.log('c-1-b');
                             loop = this.buildLoop(curItem);
-                            loop.collection[curItem.segment] = this.buildSegment(curItem);
+                            loop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
                             queuedLoop.collection[loop.fullName] = loop;
                             loops.push(loop);
                             this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
@@ -101,9 +102,11 @@ define(function(require) {
 
         checkIfLoopsArrayShouldPop: function(lookahead, loopsArray, queue) {
             if (!this.isNextItemInScope(lookahead, loopsArray)) {
+                //console.log('t');
                 loopsArray.pop();
             //: else if the queue has been depleted popAppend to table
             } else if (queue.length === 0) {
+                //console.log('t-a');
                 loopsArray.pop();
             }
         },
@@ -118,10 +121,13 @@ define(function(require) {
             if (lookahead && queuedLoop && lookahead.loop !== queuedLoop.initiator) {
                 //: if it actually is a child scope then return true
                 if (lookahead.parent_loop_pos === queuedLoop.posNo) {
+                    //console.log('z');
                     return true;
                 }
+                //console.log('x');
                 return false;
             }
+            //console.log('w');
             return true;
         },
 
@@ -146,7 +152,7 @@ define(function(require) {
                 name: 'Loop_' + curItem.segment,
                 fullName: 'Loop_' + curItem.segment + '_' + curItem.pos_no,
                 posNo: curItem.pos_no,
-                initiator: curItem.segment,
+                initiator: curItem.loop,
                 parentPosNo: curItem.parent_loop_pos,
                 maxOccurs: curItem.loop_rep,
                 collection: {}

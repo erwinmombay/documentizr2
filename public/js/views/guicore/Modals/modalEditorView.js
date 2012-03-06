@@ -14,17 +14,26 @@ define(function(require) {
         events: {
             'click #modal-close': 'hide',
             'click #modal-save': 'hide',
-            'click a.option': '_onClick'
+            'click a.option': '_onOptionClick'
         },
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'show', 'hide', '_onClick');
+            _.bindAll(this, 'render', 'show', 'hide', '_onOptionClick');
+            this._cachedTargetView = null;
         },
 
         render: function(spec) {
             this.$el.empty();
+            this._cachedTargetView = spec.viewContext;
             var template = Handlebars.compile(this.template);
-            this.$el.append(template);
+            var options = [];
+            _.each(spec.viewContext.model.get('schema').collection, function(value) {
+                options.push({ name: value.name, fullName: value.fullName || value.name });
+            }, this);
+            this.$el.append(template({
+                curNode: spec.viewContext.model.get('name'),
+                options: options
+            }));
             this.trigger('render:modalEditor');
             return this;
         },
@@ -38,11 +47,13 @@ define(function(require) {
         hide: function() {
             this.$el.modal('hide');
             this.trigger('show:modalEditor');
+            this._cachedTargetView = null;
             return this;
         },
 
-        _onClick: function(e) {
-            this.trigger('click:modalEditor', { contextView: this, event: e });
+        _onOptionClick: function(e) {
+            this.trigger('optionClick:modalEditor', { viewContext: this._cachedTargetView, event: e });
+            this.hide();
         }
     }, Backbone.Events);
     return new modalEditorView();

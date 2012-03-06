@@ -28,11 +28,7 @@ define(function(require) {
             view.render().sortable({ handle: '' });
                 view.menu = { 
                 'add new node': function(e) {
-                    modalEditorView.render(spec).show();
-                    //var model = new ComponentModel({
-                        //componentCollection: new ComponentCollection()
-                        //});
-                    //view.model.componentCollection.add(model);
+                    modalEditorView.render({ viewContext: view, event: e }).show();
                 },
                 'delete node': function(e) {
                     view.model.destroy({ cascade: true });
@@ -81,9 +77,16 @@ define(function(require) {
         mediator.createViewFromSpec(spec);
     });
 
-    modalEditorView.on('click:modalEditor', function(spec) {
+    modalEditorView.on('optionClick:modalEditor', function(spec) {
         var targetId = $(spec.event.target).attr('id');
-        console.log(targetId);
+        var schema = spec.viewContext.model.get('schema').collection[targetId];
+        var model = new ComponentModel({
+            name: schema.name,
+            fullName: schema.fullName,
+            schema: schema,
+            componentCollection: schema.collection && new ComponentCollection() || null
+        });
+        spec.viewContext.model.componentCollection.add(model);
     });
 
     return mediator;
