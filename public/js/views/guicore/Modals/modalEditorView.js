@@ -26,7 +26,7 @@ define(function(require) {
             this.$el.empty();
             this._cachedTargetView = spec.viewContext;
             var template = Handlebars.compile(this.template);
-            template = template({ curNode: spec.viewContext.model.get('name') });
+            template = template({ curNode: spec.viewContext.model.get('name') + '. Choose a child node below.' });
             this.$el.append(template);
             var $body = this.$el.find('div.modal-body');
             console.log($body);
