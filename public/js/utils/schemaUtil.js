@@ -8,7 +8,7 @@ define(function(require) {
         buildDocLevelSchema: function(data) {
             var tsets = {}; //: root
             var tsetName = data[0].document;
-            tsets[tsetName] = { name: tsetName, collection: {} };
+            tsets['TS_' + tsetName] = { name: tsetName, fullName: 'TS_' + tsetName, collection: {} };
             var tables = _.uniq(_.pluck(data, 'doc_table'));
             _.each(tables, function(value) {
                 var tableName = 'Table_' + value;
@@ -17,7 +17,7 @@ define(function(require) {
                     return segment.doc_table == value;
                 }, this);
                 this.buildTableLevelSchema(curTable, curTableSegments);
-                tsets[tsetName].collection[tableName] = curTable;
+                tsets['TS_' + tsetName].collection[tableName] = curTable;
             }, this);
             return tsets;
         },
