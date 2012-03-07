@@ -1,4 +1,5 @@
 var client = require('../database').client;
+var utils = require('../utils/schemaUtil');
 
 exports.index = function(req, res) {
     var results = [];
@@ -10,7 +11,7 @@ exports.index = function(req, res) {
     query.on('end', function() {
         res.render('index', {
             title: 'Documentizr2',
-            data: JSON.stringify(results)
+            data: JSON.stringify(utils.buildDocLevelSchema(results))
         });
     });
 };

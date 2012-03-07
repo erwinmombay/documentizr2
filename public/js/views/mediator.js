@@ -64,6 +64,10 @@ define(function(require) {
     });
 
     mediator.on('doubleClick:composite', function(spec) {
+    });
+
+    mediator.on('doubleClick', function(spec) {
+        spec.event.stopPropagation();
         spec.viewContext.foldToggle();
     });
 

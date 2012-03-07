@@ -26,12 +26,11 @@ define(function(require) {
             this.$el.empty();
             this._cachedTargetView = spec.viewContext;
             var template = Handlebars.compile(this.template);
-            template = template({ curNode: spec.viewContext.model.get('name') });
+            template = template({ curNode: spec.viewContext.model.get('name') + '. Choose a child node below.' });
             this.$el.append(template);
             var $body = this.$el.find('div.modal-body');
             console.log($body);
             _.each(spec.viewContext.model.get('schema').collection, function(value) {
-                //push({ name: value.name, fullName: value.fullName || value.name });
                 var $link = $('<a/>', {
                     'href': '#',
                     'id': value.fullName || value.name,
