@@ -7,7 +7,7 @@ define(function(require) {
     var contextMenuView = Backbone.View.extend({
         tagName: 'div',
         id: 'cmenu',
-        className: 'cmenu',
+        className: '',
         isVisible: false,
         _cachedTargetView: null,
 
