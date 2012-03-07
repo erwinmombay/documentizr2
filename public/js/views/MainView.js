@@ -4,7 +4,6 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var utils = require('utils/schemaUtil');
     var mediator = require('views/mediator');
     var contextMenuView = require('views/guicore/contextMenuView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
@@ -14,8 +13,8 @@ define(function(require) {
     var MainView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
-            this.data = utils.buildDocLevelSchema(bootstrapData);
-            this.mediator = mediator; 
+            this.data = bootstrapData;
+            this.mediator = mediator;
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',
@@ -28,11 +27,11 @@ define(function(require) {
         },
 
         render: function() {
-            $('.sidebar-nav').append(this.doctree.el);  
-            var $pre = $('<pre/>', { 'class': 'prettyprint' });
-            var $code = $('<code/>', { 'class': 'language-js' });
-            $code.append(JSON.stringify(this.data, null, 4));
-            $('.span9').append($pre.append($code));
+            $('.sidebar-nav').append(this.doctree.el);
+            //var $pre = $('<pre/>', { 'class': 'prettyprint' });
+            //var $code = $('<code/>', { 'class': 'language-js' });
+            //$code.append(JSON.stringify(this.data, null, 4));
+            //$('.span9').append($pre.append($code));
             return this;
         }
     });
