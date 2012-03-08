@@ -3,9 +3,8 @@ var routes = require('./routes');
 
 var app = module.exports = express.createServer();
 var db = require('./database');
-
-//: initialize db connection to be used
-db.client.connect();
+var pgClient = db.pgClient;
+var redClient = db.redClient;
 
 // Configuration
 app.configure(function() {
@@ -34,3 +33,9 @@ app.get('/', routes.index);
 app.listen(process.env.PORT || 5000);
 console.log("Express server listening on port %d in %s mode",
             app.address().port, app.settings.env);
+
+
+//: redis stuff
+redClient.on('error', function(err) {
+    console.log('Error ' + err);
+});
