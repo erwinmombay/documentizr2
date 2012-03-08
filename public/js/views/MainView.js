@@ -28,10 +28,6 @@ define(function(require) {
 
         render: function() {
             $('.sidebar-nav').append(this.doctree.el);
-            //var $pre = $('<pre/>', { 'class': 'prettyprint' });
-            //var $code = $('<code/>', { 'class': 'language-js' });
-            //$code.append(JSON.stringify(this.data, null, 4));
-            //$('.span9').append($pre.append($code));
             return this;
         }
     });
