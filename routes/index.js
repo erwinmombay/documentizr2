@@ -34,3 +34,7 @@ exports.elements = function(req, res) {
         });
 	}
 };
+
+exports.setComponent = function(req, res) {
+
+};

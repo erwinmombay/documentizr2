@@ -8,7 +8,7 @@ define(function(require) {
 
     var ComponentCollection = Backbone.Collection.extend({
         model: ComponentModel,
-        url: '/items',
+        url: '/component',
 
         initialize: function(models, options) {
         }

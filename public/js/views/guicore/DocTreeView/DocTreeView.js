@@ -17,6 +17,8 @@ define(function(require) {
             this.schema = options.schema || null;
             this.editor = options.editor;
             this.root = options.root;
+            //: on create display a spinner since DocTreeView
+            //: does an ajax fetch for its content
             this.$el.append(Handlebars.compile(spinner));
         },
 

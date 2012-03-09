@@ -18,10 +18,8 @@ define(function(require) {
     var mediator = _.extend({}, Backbone.Events);
     
     mediator.createViewFromSpec = function(spec) {
-        console.log(spec);
         var view = null;
         if (spec.model && spec.model.componentCollection) {
-            console.log('true');
             view = new DocCompositeComponentView({ 
                 model: spec.model,
                 observer: spec.viewContext.observer,
@@ -36,7 +34,6 @@ define(function(require) {
                     view.model.destroy({ cascade: true });
                 }
             };
-            console.log(view);
         } else {
             view = new DocLeafComponentView({
                 model: spec.model,
@@ -104,6 +101,7 @@ define(function(require) {
             schema: schema,
             componentCollection: schema.collection && new ComponentCollection() || null
         });
+        model.save();
         spec.viewContext.model.componentCollection.add(model);
     });
 
