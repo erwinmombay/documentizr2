@@ -6,12 +6,12 @@ define(function(require) {
 
     var ComponentModel = require('models/ComponentModel');
 
-    var ComponentCollection = Backbone.Collection.extend({
+    var TreeViewCollection = Backbone.Collection.extend({
         model: ComponentModel,
-        url: '/component',
+        url: '/document',
 
         initialize: function(models, options) {
         }
     });
-    return ComponentCollection;
+    return TreeViewCollection;
 });
