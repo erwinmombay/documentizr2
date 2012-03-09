@@ -98,10 +98,10 @@ define(function(require) {
         var model = new ComponentModel({
             name: schema.name,
             fullName: schema.fullName,
-            schema: schema,
-            componentCollection: schema.collection && new ComponentCollection() || null
+            schema: schema || null,
+            componentCollection: schema && schema.collection && new ComponentCollection() || null
         });
-        model.save();
+        //model.save();
         spec.viewContext.model.componentCollection.add(model);
     });
 
