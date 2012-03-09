@@ -6,12 +6,12 @@ define(function(require) {
     
     var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
     var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
-    var ComponentCollection = require('collections/ComponentCollection');
+    var TreeViewCollection = require('collections/TreeViewCollection');
 
     var TreeView = Backbone.View.extend({
         initialize: function(options) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
-            this.componentCollection = options.componentCollection || new ComponentCollection();
+            this.componentCollection = options.componentCollection || new TreeViewCollection();
             this.componentCollection.on('add', this.addOne);
             this.observer = options.observer || { trigger: function() { /** no op **/ } };
             this.contextMenu = options.contextMenu || null;

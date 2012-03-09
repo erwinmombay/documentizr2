@@ -19,11 +19,15 @@ html(lang="eng")
       if(!window.console) { console = { log: function(){ } } }; 
     
     //- bootstrap our json data on html render instead of doing an ajax request
-    - var bootstrapData= '<script type="text/javascript">bootstrapData = ' + data + '</script>'
-      | !{bootstrapData}
+    //- var bootstrapData= '<script type="text/javascript">bootstrapData = ' + data + '</script>'
+      //| !{bootstrapData}
     //- script(type="text/javascript", src="/js/libs/less/less.min.js")
     script(data-main="js/main", src="js/libs/require/require.min.js")
-    
+
+    script(src="/socket.io/socket.io.js")
+    script
+      var socket = io.connect('http://localhost');
+
     style
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */

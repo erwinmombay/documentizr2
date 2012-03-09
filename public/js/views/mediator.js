@@ -82,7 +82,14 @@ define(function(require) {
     });
 
     mediator.on('addOne:tree', function(spec) {
-        mediator.createViewFromSpec(spec);
+        var schema = spec.model.get(spec.viewContext.root);
+        var model = new ComponentModel({
+            name: schema.name,
+            fullName: schema.fullName,
+            schema: schema,
+            componentCollection: schema.collection && new ComponentCollection() || null
+        });
+        mediator.createViewFromSpec({ viewContext: spec.viewContext, model: model });
     });
 
     modalEditorView.on('optionClick:modalEditor', function(spec) {
@@ -94,6 +101,7 @@ define(function(require) {
             schema: schema,
             componentCollection: schema.collection && new ComponentCollection() || null
         });
+        model.save();
         spec.viewContext.model.componentCollection.add(model);
     });
 
