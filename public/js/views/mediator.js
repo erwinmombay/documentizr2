@@ -18,8 +18,10 @@ define(function(require) {
     var mediator = _.extend({}, Backbone.Events);
     
     mediator.createViewFromSpec = function(spec) {
+        console.log(spec);
         var view = null;
         if (spec.model && spec.model.componentCollection) {
+            console.log('true');
             view = new DocCompositeComponentView({ 
                 model: spec.model,
                 observer: spec.viewContext.observer,
@@ -34,6 +36,7 @@ define(function(require) {
                     view.model.destroy({ cascade: true });
                 }
             };
+            console.log(view);
         } else {
             view = new DocLeafComponentView({
                 model: spec.model,
@@ -82,7 +85,14 @@ define(function(require) {
     });
 
     mediator.on('addOne:tree', function(spec) {
-        mediator.createViewFromSpec(spec);
+        var schema = spec.model.get(spec.viewContext.root);
+        var model = new ComponentModel({
+            name: schema.name,
+            fullName: schema.fullName,
+            schema: schema,
+            componentCollection: schema.collection && new ComponentCollection() || null
+        });
+        mediator.createViewFromSpec({ viewContext: spec.viewContext, model: model });
     });
 
     modalEditorView.on('optionClick:modalEditor', function(spec) {

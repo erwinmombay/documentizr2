@@ -4,29 +4,20 @@ var redClient = db.redCient;
 var utils = require('../utils/schemaUtil');
 
 exports.index = function(req, res) {
-    var results = [];
-    var query = pgClient.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no');
-    query.on('row', function(row) {
-        results.push(row);
-        console.log(row);
-    });
-    query.on('end', function() {
-        res.render('index', {
-            title: 'Documentizr2',
-            data: JSON.stringify(utils.buildDocLevelSchema(results))
-        });
+    res.render('index', {
+        title: 'Documentizr2'
     });
 };
 
-exports.segments = function(req, res) {
+exports.getdocument = function(req, res) {
     var results = [];
     var query = pgClient.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no');
     query.on('row', function(row) {
         results.push(row);
     });
     query.on('end', function() {
-        res.contentType('json');
-        res.send(JSON.stringify(results));
+            res.contentType('json');
+            res.send(JSON.stringify(utils.buildDocLevelSchema(results)));
     });
 };
 

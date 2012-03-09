@@ -8,23 +8,20 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
+    var spinner = require('text!templates/spinner.html');
+
     var DocTreeView = TreeView.extend({
         initialize: function(options) {
             TreeView.prototype.initialize.call(this, options);
             _.bindAll(this, 'render');
-            this.schema = options.schema || {};
+            this.schema = options.schema || null;
             this.editor = options.editor;
             this.root = options.root;
+            this.$el.append(Handlebars.compile(spinner));
         },
 
-        render: function() {
+        render: function(data) {
             TreeView.prototype.render.call(this);
-            var root = new ComponentModel({
-                name: this.root,
-                schema: this.schema[this.root],
-                componentCollection: new ComponentCollection()
-            });
-            this.componentCollection.add(root);
             return this;
         }
     });

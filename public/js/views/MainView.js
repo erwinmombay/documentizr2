@@ -13,7 +13,7 @@ define(function(require) {
     var MainView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
-            this.data = bootstrapData;
+            //this.data = bootstrapData;
             this.mediator = mediator;
             this.doctree = new DocTreeView({
                 tagName: 'div',
@@ -21,13 +21,15 @@ define(function(require) {
                 className: 'tree-panel',
                 observer: this.mediator,
                 contextMenu: contextMenuView,
-                schema: this.data,
+                //schema: this.data,
                 root: 'TS_810'
-            }).render();
+            });
+            this.doctree.componentCollection.fetch({ success: this.doctree.render });
         },
 
         render: function() {
             $('.sidebar-nav').append(this.doctree.el);
+            //$('#content').append(this.spinner);
             return this;
         }
     });
