@@ -101,7 +101,7 @@ define(function(require) {
             schema: schema,
             componentCollection: schema.collection && new ComponentCollection() || null
         });
-        model.save();
+        //model.save();
         spec.viewContext.model.componentCollection.add(model);
     });
 
