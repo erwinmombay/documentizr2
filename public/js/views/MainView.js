@@ -4,7 +4,7 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var mediator = require('views/mediator');
+    var appEventMediator = require('views/appEventMediator');
     var contextMenuView = require('views/guicore/contextMenuView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
@@ -14,7 +14,7 @@ define(function(require) {
         initialize: function() {
             _.bindAll(this, 'render');
             //this.data = bootstrapData;
-            this.mediator = mediator;
+            this.mediator = appEventMediator;
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',

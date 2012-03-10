@@ -6,7 +6,7 @@ define(function(require) {
 
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
-    var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
+    var SegmentComponentView = require('views/guicore/DocTreeView/SegmentComponentView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
@@ -35,7 +35,7 @@ define(function(require) {
                 }
             };
         } else {
-            view = new DocLeafComponentView({
+            view = new SegmentComponentView({
                 model: spec.model,
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
