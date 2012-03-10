@@ -32,6 +32,7 @@ app.configure('production', function() {
 // Routes
 app.get('/', routes.index);
 app.get('/document', routes.getdocument);
+app.get('/segments', routes.getelements);
 
 app.post('/component', routes.component);
 

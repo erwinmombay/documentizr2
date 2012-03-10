@@ -21,7 +21,7 @@ exports.getdocument = function(req, res) {
     });
 };
 
-exports.elements = function(req, res) {
+exports.getelements = function(req, res) {
 	if (req.query.name) {
         var results = [];
         var query = pgClient.query('SELECT * FROM "SegElemDef" WHERE segment = $1 ORDER BY ref', [req.query.name]);
