@@ -10,7 +10,7 @@ define(function(require) {
             //: i want componentCollection to be a direct property
             //: of the javascript object instead of being an attribute of
             //: Backbone.Model
-            if (attr && attr.componentCollection) {
+            if (attr && (attr.componentCollection || attr.componentCollection === null)) {
                 this.componentCollection = attr.componentCollection;
                 this.unset('componentCollection', { silent: true });
             }
