@@ -13,13 +13,18 @@ define(function(require) {
             //this._type = 'segment';
         },
 
-        render: function() {
+        render: function(options) {
             DocCompositeComponentView.prototype.render.call(this);
             if (this.model.has('elements')) {
                 _.each(this.model.get('elements'), function(value, key) {
                     var $element = $('<li/>').append(key + ': ' + value);
                     this.$componentCollection.append($element);
                 }, this);
+            }
+            if (options) {
+                if (options.callback) {
+                    options.callback();
+                }
             }
             return this;
         }

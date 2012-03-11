@@ -19,6 +19,13 @@ define(function(require) {
     //: components of the treeview we pass it into.
     appEventMediator = mediator = _.extend({}, Backbone.Events);
 
+    mediator.changeComponentColorReq = function(view) {
+        if (view.model.get('schema').req === 'M' ||
+            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
+            view.$el.find('.tvc-label').css({ 'color': 'red' });
+        }
+    };
+
     mediator.createViewFromSpec = function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
@@ -36,6 +43,7 @@ define(function(require) {
                     view.model.destroy({ cascade: true });
                 }
             };
+            mediator.changeComponentColorReq(view);
         } else {
             //: we could treat the Segment as a Composite as well, but since
             //: i think creating a leaf component for each element might get expensive
@@ -45,7 +53,7 @@ define(function(require) {
                 model: spec.model,
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
-            });
+           });
             view.menu = {
                 'delete node': function(e) {
                     view.model.destroy();
@@ -59,12 +67,16 @@ define(function(require) {
                     success: function(data, status, xhr) {
                         var elements = {};
                         _.each(data, function(value) {
-                            var elemName = value.ref.length >= 2 ? value.ref : '0' + value.ref;
+                            console.log(value.ref);
+                            var elemName = String(value.ref).length < 2 ? '0' + value.ref : value.ref;
                             elements[elemName] = value.element_name;
                         }, this);
                         this.model.set('elements', elements);
                         segmentsCache[segmentName] = elements;
-                        this.render();
+                        this.render({
+                            callback: function() {
+                                mediator.changeComponentColorReq(view);
+                        }});
                     },
                     error: function(xhr, status, errObj) {
                         alert('an error has occured while requesting elements.');
@@ -73,10 +85,6 @@ define(function(require) {
             } else {
                 view.model.set('elements', segmentsCache[segmentName]);
             }
-        }
-        if (view.model.get('schema').req === 'M' ||
-            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
-            view.$el.find('.tvc-label').css({ 'color': 'red' });
         }
         spec.viewContext.$componentCollection.append(view.el);
     };

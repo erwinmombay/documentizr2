@@ -28,8 +28,10 @@ define(function(require) {
                         });
                         this.add(model, { silent: true });
                     }, this);
-                    if (spec && spec.success) {
-                        spec.success();    
+                    if (spec) {
+                        if (spec.success) {
+                            spec.success();
+                        }
                     }
                 }, this),
                 error: _.bind(function(xhr, status, errObj) {
