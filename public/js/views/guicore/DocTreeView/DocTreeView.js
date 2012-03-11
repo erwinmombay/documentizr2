@@ -15,14 +15,14 @@ define(function(require) {
             TreeView.prototype.initialize.call(this, options);
             _.bindAll(this, 'render');
             this.schema = options.schema || null;
-            this.editor = options.editor;
-            this.root = options.root;
+            this.rootName = options.rootName;
+            this.rootFullName = options.rootFullName;
             //: on create display a spinner since DocTreeView
             //: does an ajax fetch for its content
             this.$el.append(Handlebars.compile(spinner));
         },
 
-        render: function(data) {
+        render: function() {
             TreeView.prototype.render.call(this);
             return this;
         }

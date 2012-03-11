@@ -7,20 +7,25 @@ define(function(require) {
     var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
     var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
     var TreeViewCollection = require('collections/TreeViewCollection');
+    var TreeViewTemplate = require('text!templates/TreeView/TreeView.html');
 
     var TreeView = Backbone.View.extend({
+        template: TreeViewTemplate,
+
         initialize: function(options) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.componentCollection = options.componentCollection || new TreeViewCollection();
             this.componentCollection.on('add', this.addOne);
             this.observer = options.observer || { trigger: function() { /** no op **/ } };
             this.contextMenu = options.contextMenu || null;
-            this.$componentCollection = $('<ul/>', { 'class': 'tvc' });
+            this.template = Handlebars.compile(this.template);
+            this.$componentCollection = null;
         },
 
         render: function() {
-            $(this.el).empty();
-            $(this.el).append(this.$componentCollection);
+            this.$el.empty();
+            this.$el.append(this.template);
+            this.$componentCollection = this.$el.children('.tvc-ul');
             this.addAll();
             return this;
         },

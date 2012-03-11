@@ -14,7 +14,6 @@ define(function(require) {
                 this.componentCollection = attr.componentCollection;
                 this.unset('componentCollection', { silent: true });
             }
-            socket.emit('register', { modelCid: this.cid });
         },
 
         destroy: function(options) {
