@@ -9,6 +9,8 @@ define(function(require) {
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
     var DocTreeView = require('views/guicore/DocTreeView/DocTreeView');
+    var ComponentModel = require('models/ComponentModel');
+    var ComponentCollection = require('collections/ComponentCollection');
 
     var MainView = Backbone.View.extend({
         initialize: function() {
@@ -26,7 +28,7 @@ define(function(require) {
             this.doctree.componentCollection.fetch({
                 context: this.doctree,
                 success: _.bind(function() {
-                    this.walkTreeView(this.doctree.componentCollection);
+                    this.walkTreeView(this.doctree.componentCollection.at(0));
                 }, this)
             });
         },
@@ -37,7 +39,21 @@ define(function(require) {
         },
 
         walkTreeView: function(model) {
-            console.log(model);
+            if (model && model.componentCollection && model.has('schema')) {
+                _.each(model.get('schema').collection, function(value) {
+                    if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || value.req === 'M') {
+                        var schema = model.get('schema').collection[value.fullName];
+                        var newModel = new ComponentModel({
+                            name: schema.name,
+                            fullName: schema.fullName,
+                            schema: schema || null,
+                            componentCollection: schema && schema.collection && new ComponentCollection() || null
+                        });
+                        model.componentCollection.add(newModel);
+                        this.walkTreeView(newModel);
+                    }
+                }, this);
+            }
         }
     });
 
