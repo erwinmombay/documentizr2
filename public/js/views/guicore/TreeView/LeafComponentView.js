@@ -6,7 +6,6 @@ define(function(require) {
 
     var AbstractComponentView = require('views/guicore/TreeView/AbstractComponentView');
     var LeafTemplate = require('text!templates/TreeView/LeafTemplate.html');
-    var spinner = require('text!templates/spinner.html');
 
     var LeafComponentView = AbstractComponentView.extend({
         template: LeafTemplate,
