@@ -24,7 +24,7 @@ require.config({
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
         dropdown: 'libs/bootstrap/bootstrap-dropdown',
-        prettify: 'libs/prettify'
+        prettify: 'libs/prettify/prettify'
     }
 });
 

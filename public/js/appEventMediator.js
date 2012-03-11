@@ -67,6 +67,7 @@ define(function(require) {
                         this.render();
                     },
                     error: function(xhr, status, errObj) {
+                        alert('an error has occured while requesting elements.');
                     }
                 });
             } else {

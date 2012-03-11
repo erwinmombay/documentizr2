@@ -26,13 +26,14 @@ define(function(require) {
                             schema: value,
                             componentCollection: new ComponentCollection()
                         });
-                        this.add(model);
+                        this.add(model, { silent: true });
                     }, this);
                     if (spec && spec.success) {
                         spec.success();    
                     }
                 }, this),
                 error: _.bind(function(xhr, status, errObj) {
+                    alert('an error has occured while requesting document.');
                 }, this)
             };
             $.ajax(newSpec);

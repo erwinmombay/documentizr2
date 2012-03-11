@@ -8,8 +8,8 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
-    var spinner = require('text!templates/spinner.html');
-
+    var spinner = require('text!templates/loading.html');
+    
     var DocTreeView = TreeView.extend({
         initialize: function(options) {
             TreeView.prototype.initialize.call(this, options);
@@ -17,9 +17,7 @@ define(function(require) {
             this.schema = options.schema || null;
             this.rootName = options.rootName;
             this.rootFullName = options.rootFullName;
-            //: on create display a spinner since DocTreeView
-            //: does an ajax fetch for its content
-            this.$el.append(Handlebars.compile(spinner));
+            this.$el.append(spinner);
         },
 
         render: function() {

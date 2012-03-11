@@ -17,7 +17,9 @@ exports.getdocument = function(req, res) {
     });
     query.on('end', function() {
             res.contentType('json');
+            //setTimeout(function() {
             res.send(JSON.stringify(utils.buildDocLevelSchema(results)));
+            //}, 15000);
     });
 };
 

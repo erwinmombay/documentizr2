@@ -24,10 +24,11 @@ define(function(require) {
                 contextMenu: contextMenuView,
                 rootFullName: 'TS_810',
                 rootName: '810'
-            }).render();
+            });
             this.doctree.componentCollection.fetch({
                 context: this.doctree,
                 success: _.bind(function() {
+                    this.doctree.render();
                     this.walkTreeView(this.doctree.componentCollection.at(0));
                 }, this)
             });
