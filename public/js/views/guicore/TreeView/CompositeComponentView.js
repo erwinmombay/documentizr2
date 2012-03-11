@@ -16,18 +16,25 @@ define(function(require) {
             //: `this` CompositeComponent instance.
             //: this is like calling super() in javascript
             AbstractComponentView.prototype.initialize.call(this);
-            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle', 'selectable', 'sortable');
+            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle', 'selectable',
+                'sortable', 'bindCollection');
             this._type = 'composite';
-            //: bind the models' componentCollection `add` event to `addOne` 
-            //: so that when we add models to the collection
-            //: it automatically adds the nested views as well
-            this.model.componentCollection.on('add', this.addOne);
             //: models have componentCollection while views have
             //: $componentCollection which are the dom elements we dynamically attach
             this.$componentCollection = null;
             this.observer = options.observer;
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
+            this.bindCollection();
+        },
+
+        bindCollection: function() {
+            //: bind the models' componentCollection `add` event to `addOne` 
+            //: so that when we add models to the collection
+            //: it automatically adds the nested views as well
+            if (this.model.componentCollection) {
+                this.model.componentCollection.on('add', this.addOne);
+            }
         },
 
         render: function() {
@@ -35,7 +42,9 @@ define(function(require) {
             this.$el.append(this.template({ label: this.model.get('name') }));
             this.$componentCollection = this.$el.children('.tvc-ul');
             this.$tvcPlusMinus = this.$('.tvc-minus');
-            this.addAll();
+            if (this.model.componentCollection) {
+                this.addAll();
+            }
             return this;
         },
 
@@ -74,7 +83,8 @@ define(function(require) {
             var options = _.defaults(spec || {}, {
                 helper: 'clone',
                 handle: '.handle',
-                placeholder: 'ui-state-highlight'
+                placeholder: 'ui-state-highlight',
+                delay: 100
             });
             if (this.$componentCollection) {
                 this.$componentCollection.sortable(options);

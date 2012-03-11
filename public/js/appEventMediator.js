@@ -18,17 +18,17 @@ define(function(require) {
     //: into a message dispatcher while it also listens/subscribes to the
     //: components of the treeview we pass it into.
     appEventMediator = mediator = _.extend({}, Backbone.Events);
-    
+
     mediator.createViewFromSpec = function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
-            view = new DocCompositeComponentView({ 
+            view = new DocCompositeComponentView({
                 model: spec.model,
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
             });
             view.render().sortable({ handle: '' });
-                view.menu = { 
+                view.menu = {
                 'add new node': function(e) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
                 },
@@ -46,12 +46,12 @@ define(function(require) {
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
             });
-            view.menu = { 
+            view.menu = {
                 'delete node': function(e) {
                     view.model.destroy();
                 }
             };
-            var segmentName = view.model.get('name'); 
+            var segmentName = view.model.get('name');
             if (!segmentsCache[segmentName]) {
                 $.ajax({
                     url: 'elements?name=' + segmentName,
@@ -67,7 +67,6 @@ define(function(require) {
                         this.render();
                     },
                     error: function(xhr, status, errObj) {
-                        console.log(status);
                     }
                 });
             } else {
@@ -84,7 +83,7 @@ define(function(require) {
     mediator.on('drop:composite', function(spec) {
     });
 
-    mediator.on('leftClick:composite', function(spec) {
+    mediator.on('leftClick:segment', function(spec) {
     });
 
     mediator.on('rightClick', function(spec) {
@@ -109,14 +108,7 @@ define(function(require) {
     });
 
     mediator.on('addOne:tree', function(spec) {
-        var schema = spec.model.get(spec.viewContext.root);
-        var model = new ComponentModel({
-            name: schema.name,
-            fullName: schema.fullName,
-            schema: schema,
-            componentCollection: schema.collection && new ComponentCollection() || null
-        });
-        mediator.createViewFromSpec({ viewContext: spec.viewContext, model: model });
+        mediator.createViewFromSpec({ viewContext: spec.viewContext, model: spec.model });
     });
 
     modalEditorView.on('optionClick:modalEditor', function(spec) {
@@ -128,7 +120,6 @@ define(function(require) {
             schema: schema || null,
             componentCollection: schema && schema.collection && new ComponentCollection() || null
         });
-        //model.save();
         spec.viewContext.model.componentCollection.add(model);
     });
 
