@@ -36,16 +36,16 @@ define(function(require) {
 
         render: function() {
             $('.sidebar-nav').append(this.doctree.el);
-            $.ajax({
-                context: this,
-                url: '/document',
-                success: function(data) {
-                    var $pre = $('<pre/>', { 'class': 'prettyprint' });
-                    var $code = $('<code/>', { 'class': 'language-js' });
-                    $code.append(JSON.stringify(data, null, 4));
-                    $('#content').append($pre.append($code));
-                }
-            });
+            //$.ajax({
+                //context: this,
+                //url: '/document',
+                //success: function(data) {
+                    //var $pre = $('<pre/>', { 'class': 'prettyprint' });
+                    //var $code = $('<code/>', { 'class': 'language-js' });
+                    //$code.append(JSON.stringify(data, null, 4));
+                    //$('#content').append($pre.append($code));
+                //}
+            //});
             return this;
         },
 
