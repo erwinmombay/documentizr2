@@ -28,14 +28,15 @@ define(function(require) {
 
     mediator.createViewFromSpec = function(spec) {
         var view = null;
+        console.log(spec.model);
         if (spec.model && spec.model.componentCollection) {
-            view = new DocCompositeComponentView({
+            view = new SegmentComponentView({
                 model: spec.model,
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
             });
             view.render().sortable({ handle: '' });
-                view.menu = {
+            view.menu = {
                 'add new node': function(e) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
                 },
@@ -49,11 +50,6 @@ define(function(require) {
             //: i think creating a leaf component for each element might get expensive
             //: it might be better treating the segment as a leaf and the elements
             //: as being a properties.
-            view = new SegmentComponentView({
-                model: spec.model,
-                observer: spec.viewContext.observer,
-                contextMenu: spec.viewContext.contextMenu
-           });
             view.menu = {
                 'delete node': function(e) {
                     view.model.destroy();
@@ -61,28 +57,9 @@ define(function(require) {
             };
             var segmentName = view.model.get('name');
             if (!segmentsCache[segmentName]) {
-                $.ajax({
-                    url: 'elements?name=' + segmentName,
-                    context: view,
-                    success: function(data, status, xhr) {
-                        var elements = {};
-                        _.each(data, function(value) {
-                            console.log(value.ref);
-                            var elemName = String(value.ref).length < 2 ? '0' + value.ref : value.ref;
-                            elements[elemName] = value.element_name;
-                        }, this);
-                        this.model.set('elements', elements);
-                        segmentsCache[segmentName] = elements;
-                        this.render({
-                            callback: function() {
-                                mediator.changeComponentColorReq(view);
-                        }});
-                    },
-                    error: function(xhr, status, errObj) {
-                        alert('an error has occured while requesting elements.');
-                    }
-                });
-            } else {
+
+
+             } else {
                 view.model.set('elements', segmentsCache[segmentName]);
             }
         }

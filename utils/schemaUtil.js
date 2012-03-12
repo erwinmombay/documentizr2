@@ -1,4 +1,6 @@
 var _ = require('underscore')._;
+var db = require('../database');
+var pgClient = db.pgClient;
 
 exports.buildDocLevelSchema = function(data) {
     var tsets = {}; //: root
@@ -23,62 +25,56 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
     //: push any loop object we create to this array so we can
     //: keep appending to it for any segment that is a part of the loop
     var loops = [];
-    var loop, curItem, lookahead, queuedLoop;
+    var loop, curItem, lookahead, queuedLoop, segment;
     var getQueuedLoop = function(offset) {
         return loops[loops.length - (1 + (_.isNumber(offset) ? offset : 0))];
     };
     while(queue.length) {
         loop = null;
+        segment = null;
         queuedLoop = getQueuedLoop();
         curItem = queue.pop();
         lookahead = queue[queue.length - 1];
 
-        //console.log(curItem.segment + '_' + curItem.pos_no);
-        //: direct child of a table
         if (curItem.loop === 'None' && curItem.parent_loop_pos === 'n/a') {
-            //console.log('a');
-            curTable.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
-        //: segment is in a loop but not a nested loop
+            segment = this.buildSegment(curItem);
+            curTable.collection[segment.fullName] = segment;
         } else if (curItem.loop !== 'None'  && curItem.parent_loop_pos === 'n/a') {
-            //console.log('b');
             if (queuedLoop && queuedLoop.initiator === curItem.loop) {
-            //console.log('b-1');
-                queuedLoop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
+                segment = this.buildSegment(curItem);
+                queuedLoop.collection[segment.fullName] = segment;
                 this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
             } else {
-            //console.log('b-2');
                 loop = this.buildLoop(curItem);
-                loop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
+                segment = this.buildSegment(curItem);
+                loop.collection[segment.fullName] = segment;
                 curTable.collection[loop.fullName] = loop;
                 loops.push(loop); 
                 this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
             }
-        //: else this item must be part of a nested loop
         } else {
-            //console.log('c');
             if (queuedLoop.initiator === curItem.loop) {
-                //console.log('c-333');
-                queuedLoop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
+                segment = this.buildSegment(curItem);
+                queuedLoop.collection[segment.fullName] = segment;
                 this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
             } else if (queuedLoop.posNo === curItem.parent_loop_pos) {
-                //console.log('c-1');
                 if (queuedLoop.initiator === curItem.loop) {
-                //console.log('c-1-a');
-                    queuedLoop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
+                    segment = this.buildSegment(curItem);
+                    queuedLoop.collection[segment.fullName] = segment;
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                 } else {
-                    //console.log('c-1-b');
                     loop = this.buildLoop(curItem);
-                    loop.collection[curItem.segment + '_' + curItem.pos_no] = this.buildSegment(curItem);
+                    segment = this.buildSegment(curItem);
+                    loop.collection[segment.fullName] = segment;
                     queuedLoop.collection[loop.fullName] = loop;
                     loops.push(loop);
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                 }
             } else {
-                //console.log('c-2');
                 loops.pop();
                 loop = this.buildLoop(curItem);
-                loop.collection[curItem.segment] = this.buildSegment(curItem);
+                segment = this.buildSegment(curItem);
+                loop.collection[segment.fullName] = segment;
                 //: keep on popping the loops array until we find the parent.
                 //: we usually need to do this if we just exited deeply nested loops.
                 while (loops.length) {
@@ -97,11 +93,9 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
 
 exports.checkIfLoopsArrayShouldPop = function(lookahead, loopsArray, queue) {
     if (!this.isNextItemInScope(lookahead, loopsArray)) {
-        //console.log('t');
         loopsArray.pop();
-    //: else if the queue has been depleted popAppend to table
+    //: else if the queue has been depleted
     } else if (queue.length === 0) {
-        //console.log('t-a');
         loopsArray.pop();
     }
 };
@@ -116,13 +110,10 @@ exports.isNextItemInScope = function(lookahead, loopsArray) {
     if (lookahead && queuedLoop && lookahead.loop !== queuedLoop.initiator) {
         //: if it actually is a child scope then return true
         if (lookahead.parent_loop_pos === queuedLoop.posNo) {
-            //console.log('z');
             return true;
         }
-        //console.log('x');
         return false;
     }
-    //console.log('w');
     return true;
 };
 
@@ -139,8 +130,23 @@ exports.buildSegment = function(curItem) {
         fullName: curItem.segment + '_' + curItem.pos_no,
         posNo: curItem.pos_no,
         maxOccurs: curItem.max_count,
-        req: curItem.req_des
+        req: curItem.req_des,
+        collection: {}
     };
+};
+
+exports.buildElement = function(segment) {
+    var results = [];
+    var query = pgClient.query('SELECT * FROM "SegElemDef" WHERE segment = $1 ORDER BY ref', [segment.name]);
+    query.on('row', function(row) {
+        results.push(row);
+    });
+    query.on('end', function() {
+        _.each(results, function(value) {
+            console.log(value);
+            segment.collection[value.ref_no] = value;
+        }, this);
+    });
 };
 
 exports.buildLoop = function(curItem) {
@@ -154,3 +160,5 @@ exports.buildLoop = function(curItem) {
         collection: {}
     };
 };
+
+
