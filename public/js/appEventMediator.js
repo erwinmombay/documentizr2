@@ -13,7 +13,6 @@ define(function(require) {
 
 
     var appEventMediator, mediator;
-    var segmentsCache = {};
     //: we mixin Backbone.Events to turn the mediator object
     //: into a message dispatcher while it also listens/subscribes to the
     //: components of the treeview we pass it into.
@@ -55,13 +54,8 @@ define(function(require) {
                     view.model.destroy();
                 }
             };
-            var segmentName = view.model.get('name');
-            if (!segmentsCache[segmentName]) {
 
 
-             } else {
-                view.model.set('elements', segmentsCache[segmentName]);
-            }
         }
         spec.viewContext.$componentCollection.append(view.el);
     };
