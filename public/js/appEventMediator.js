@@ -8,6 +8,7 @@ define(function(require) {
 
     var SegmentComponentView = require('views/guicore/DocTreeView/SegmentComponentView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
+    var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
@@ -27,9 +28,8 @@ define(function(require) {
 
     mediator.createViewFromSpec = function(spec) {
         var view = null;
-        console.log(spec.model);
         if (spec.model && spec.model.componentCollection) {
-            view = new SegmentComponentView({
+            view = new DocCompositeComponentView({
                 model: spec.model,
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
@@ -43,8 +43,12 @@ define(function(require) {
                     view.model.destroy({ cascade: true });
                 }
             };
-            mediator.changeComponentColorReq(view);
         } else {
+            view = new DocLeafComponentView({
+                model: spec.model,
+                observer: spec.viewContext.observer,
+                contextMenu: spec.viewContext.contextMenu
+            }).render();
             //: we could treat the Segment as a Composite as well, but since
             //: i think creating a leaf component for each element might get expensive
             //: it might be better treating the segment as a leaf and the elements
@@ -54,9 +58,8 @@ define(function(require) {
                     view.model.destroy();
                 }
             };
-
-
         }
+        mediator.changeComponentColorReq(view);
         spec.viewContext.$componentCollection.append(view.el);
     };
 

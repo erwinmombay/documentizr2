@@ -42,7 +42,7 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
         lookahead = queue[queue.length - 1];
 
         if (queuedSegment && curItem.segment === queuedSegment.name) {
-            queuedSegment.collection[curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)] = {};
+            queuedSegment.collection[curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)] = this.buildElement(curItem);
             var item = queue && queue.length && queue[queue.length - 1];
             if (item && item.segment !== curItem.segment) {
                 segments.pop();
@@ -154,8 +154,17 @@ exports.buildSegment = function(curItem) {
         collection: {
         }
     };
-    segment.collection[curItem.segment + '0' + curItem.ref] = {};
+    segment.collection[curItem.segment + '0' + curItem.ref] = this.buildElement(curItem);
     return segment;
+};
+
+exports.buildElement = function(curItem) {
+    return {
+        name: curItem.element_name,
+        fullName: curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref),
+        req: curItem.seg_req_des,
+        type: curItem.elem_type
+    };
 };
 
 exports.buildLoop = function(curItem) {

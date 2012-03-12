@@ -25,17 +25,17 @@ define(function(require) {
                 rootFullName: 'TS_810',
                 rootName: '810'
             });
-            //this.doctree.componentCollection.fetch({
-                //context: this.doctree,
-                //success: _.bind(function() {
-                    //this.doctree.render();
-                    //this.walkTreeView(this.doctree.componentCollection.at(0));
-                //}, this)
-            //});
+            this.doctree.componentCollection.fetch({
+                context: this.doctree,
+                success: _.bind(function() {
+                    this.doctree.render();
+                    this.walkTreeView(this.doctree.componentCollection.at(0));
+                }, this)
+            });
         },
 
         render: function() {
-            //$('.sidebar-nav').append(this.doctree.el);
+            $('.sidebar-nav').append(this.doctree.el);
             $.ajax({
                 context: this,
                 url: '/document',
