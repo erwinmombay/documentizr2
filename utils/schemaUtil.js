@@ -41,7 +41,7 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
         curItem = queue.pop();
         lookahead = queue[queue.length - 1];
 
-        if (queuedSegment && curItem.segment === queuedSegment.name) {
+        if (queuedSegment && curItem.segment === queuedSegment.name && queuedSegment.collection.length === 1) {
             queuedSegment.collection[curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)] = this.buildElement(curItem);
             var item = queue && queue.length && queue[queue.length - 1];
             if (item && item.segment !== curItem.segment) {
