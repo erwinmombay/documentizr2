@@ -37,7 +37,7 @@ define(function(require) {
         },
 
         saveInput: function() {
-            //this._cachedModel.set('name', this.$el.find('#element').val());
+            this._cachedModel.set('name', this.$el.find('#element').val());
             componentDetailView.render(this._cachedSpec);
         }
     });
