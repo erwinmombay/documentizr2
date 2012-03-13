@@ -21,12 +21,13 @@ define(function(require) {
             this.$el.empty();
             this._cachedSpec = spec;
             this._cachedModel = spec.viewContext.model;
-            var template = Handlebars.compile(elementTemplate);
-            this.$el.append(template({
-                label: 'name',
-                name: this._cachedModel.get('name') ,
-                value: this._cachedModel.get('name')
-            }));
+            this.$el.append('<p>test</p>');
+            //var template = Handlebars.compile(elementTemplate);
+            //this.$el.append(template({
+                //label: 'name',
+                //name: this._cachedModel.get('name') ,
+                //value: this._cachedModel.get('name')
+            //}));
             return this;
         },
 
