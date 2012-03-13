@@ -5,6 +5,8 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
+    var componentDetailView = require('views/guicore/componentDetailView');
+    var componentEditorView = require('views/guicore/componentEditorView');
 
     var SegmentComponentView = require('views/guicore/DocTreeView/SegmentComponentView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
@@ -66,16 +68,17 @@ define(function(require) {
     mediator.on('drop:composite', function(spec) {
     });
 
-    mediator.on('leftClick:segment', function(spec) {
+    mediator.on('leftClick:composite', function(spec) {
+        componentEditorView.clear();
+        componentDetailView.render(spec);
     });
 
-    mediator.on('rightClick', function(spec) {
+    mediator.on('leftClick:leaf', function(spec) {
+        componentDetailView.render(spec);
+        componentEditorView.render(spec);
     });
 
     mediator.on('doubleClick:composite', function(spec) {
-    });
-
-    mediator.on('doubleClick', function(spec) {
         spec.event.stopPropagation();
         spec.viewContext.foldToggle();
     });

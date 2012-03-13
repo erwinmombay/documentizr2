@@ -30,22 +30,20 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
     var getQueuedLoop = function(offset) {
         return loops[loops.length - (1 + (_.isNumber(offset) ? offset : 0))];
     };
-    //var getQueuedSegment = function(offset) {
-        //return segments[segments.length - (1 + (_.isNumber(offset) ? offset : 0))];
-    //};
     while(queue.length) {
         loop = null;
         queuedLoop = getQueuedLoop();
         curItem = queue.pop();
         lookahead = queue[queue.length - 1];
-       
 
         //console.log('===========');
         //console.log(curItem);
         //console.log(curSegment);
         //console.log(lookahead);
         if (curSegment && curItem.segment === curSegment.name) {
-            curSegment.collection[curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)] = this.buildElement(curItem);
+            curSegment.collection[curItem.segment +
+                                  (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)
+                                 ] = this.buildElement(curItem);
             if (lookahead && lookahead.segment !== curItem.segment) {
                 curSegment = null;
             }
