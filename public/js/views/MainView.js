@@ -52,7 +52,7 @@ define(function(require) {
         walkTreeView: function(model) {
             if (model && model.componentCollection && model.has('schema')) {
                 _.each(model.get('schema').collection, function(value) {
-                    if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || value.req === 'M') {
+                    if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || _.include(['M', 'M/Z'], value.req)) {
                         var schema = model.get('schema').collection[value.fullName];
                         var newModel = new ComponentModel({
                             name: schema.name,

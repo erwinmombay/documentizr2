@@ -20,7 +20,7 @@ define(function(require) {
     appEventMediator = mediator = _.extend({}, Backbone.Events);
 
     mediator.changeComponentColorReq = function(view) {
-        if (view.model.get('schema').req === 'M' ||
+        if (_.include(['M', 'M/Z'], view.model.get('schema').req) ||
             _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
             view.$el.find('.tvc-label').css({ 'color': 'red' });
         }

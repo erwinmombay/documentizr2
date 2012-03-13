@@ -25,74 +25,98 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
     //: push any loop object we create to this array so we can
     //: keep appending to it for any segment that is a part of the loop
     var loops = [];
-    var segments = [];
+    var curSegment = null;
     var loop, curItem, lookahead, queuedLoop, segment;
     var getQueuedLoop = function(offset) {
         return loops[loops.length - (1 + (_.isNumber(offset) ? offset : 0))];
     };
-    var getQueuedSegment = function(offset) {
-        return segments[segments.length - (1 + (_.isNumber(offset) ? offset : 0))];
-    };
+    //var getQueuedSegment = function(offset) {
+        //return segments[segments.length - (1 + (_.isNumber(offset) ? offset : 0))];
+    //};
     while(queue.length) {
         loop = null;
-        segment = null;
         queuedLoop = getQueuedLoop();
-        queuedSegment = getQueuedSegment();
         curItem = queue.pop();
         lookahead = queue[queue.length - 1];
+       
 
-        if (queuedSegment && curItem.segment === queuedSegment.name && queuedSegment.collection.length === 1) {
-            queuedSegment.collection[curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)] = this.buildElement(curItem);
-            var item = queue && queue.length && queue[queue.length - 1];
-            if (item && item.segment !== curItem.segment) {
-                segments.pop();
+        //console.log('===========');
+        //console.log(curItem);
+        //console.log(curSegment);
+        //console.log(lookahead);
+        if (curSegment && curItem.segment === curSegment.name) {
+            curSegment.collection[curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)] = this.buildElement(curItem);
+            if (lookahead && lookahead.segment !== curItem.segment) {
+                curSegment = null;
             }
+            this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
         } else {
+            curSegment = null;
+            //console.log('BBBBB');
+            //: is under table and not part of any loop
             if (curItem.loop === 'None' && curItem.parent_loop_pos === 'n/a') {
+                //console.log('a');
                 segment = this.buildSegment(curItem);
-                segments.push(segment);
+                curSegment = segment;
                 curTable.collection[segment.fullName] = segment;
+            //: under table but part of a loop
             } else if (curItem.loop !== 'None'  && curItem.parent_loop_pos === 'n/a') {
+                //console.log('b');
+                //: current queuedLoops initiator matches the current rows loop(loop parent)
                 if (queuedLoop && queuedLoop.initiator === curItem.loop) {
+                //console.log('b-a');
                     segment = this.buildSegment(curItem);
-                    segments.push(segment);
+                    curSegment = segment;
                     queuedLoop.collection[segment.fullName] = segment;
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
+                //: loop does not exist create a loop and attach this segment
                 } else {
+                //console.log('b-b');
                     loop = this.buildLoop(curItem);
                     segment = this.buildSegment(curItem);
-                    segments.push(segment);
+                    curSegment = segment;
                     loop.collection[segment.fullName] = segment;
                     curTable.collection[loop.fullName] = loop;
                     loops.push(loop);
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                 }
+            //: not under table and is part of a loop (nested loops)
             } else {
+                //console.log('c');
+                //: item belongs to the current queuedLoop 
                 if (queuedLoop.initiator === curItem.loop) {
+                //console.log('c-a');
                     segment = this.buildSegment(curItem);
-                    segments.push(segment);
+                    curSegment = segment;
                     queuedLoop.collection[segment.fullName] = segment;
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                 } else if (queuedLoop.posNo === curItem.parent_loop_pos) {
+                //console.log('c-b');
+                    //TODO re evaluate this block, might not be needed
                     if (queuedLoop.initiator === curItem.loop) {
+                //console.log('d-a');
                         segment = this.buildSegment(curItem);
-                        segments.push(segment);
+                        curSegment = segment;
                         queuedLoop.collection[segment.fullName] = segment;
                         this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
+                    //: current item is a loop initiator
+                    //: build loop, then build segment then attach segment to loop
                     } else {
+                //console.log('d-b');
                         loop = this.buildLoop(curItem);
                         segment = this.buildSegment(curItem);
-                        segments.push(segment);
+                        curSegment = segment;
                         loop.collection[segment.fullName] = segment;
                         queuedLoop.collection[loop.fullName] = loop;
                         loops.push(loop);
                         this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                     }
                 } else {
+                //console.log('e');
                     loops.pop();
                     loop = this.buildLoop(curItem);
                     segment = this.buildSegment(curItem);
-                    segments.push(segment);
+                    curSegment = segment;
                     loop.collection[segment.fullName] = segment;
                     //: keep on popping the loops array until we find the parent.
                     //: we usually need to do this if we just exited deeply nested loops.
