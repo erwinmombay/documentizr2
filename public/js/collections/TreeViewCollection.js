@@ -15,22 +15,22 @@ define(function(require) {
             _.bindAll(this, 'fetch');
         },
 
-        fetch: function(spec) {
-            var newSpec = {
+        fetch: function(options) {
+            var newOptions = {
                 url: this.url,
                 success: _.bind(function(data, status, xhr) {
                     _.each(data, function(value) {
                         var model = new this.model({
-                            name: spec.context.rootName,
-                            fullName: spec.context.rootFullName,
+                            name: options.context.rootName,
+                            fullName: options.context.rootFullName,
                             schema: value,
                             componentCollection: new ComponentCollection()
                         });
                         this.add(model, { silent: true });
                     }, this);
-                    if (spec) {
-                        if (spec.success) {
-                            spec.success();
+                    if (options) {
+                        if (options.success) {
+                            options.success();
                         }
                     }
                 }, this),
@@ -38,7 +38,7 @@ define(function(require) {
                     alert('an error has occured while requesting document.');
                 }, this)
             };
-            $.ajax(newSpec);
+            $.ajax(newOptions);
         }
     });
     return TreeViewCollection;

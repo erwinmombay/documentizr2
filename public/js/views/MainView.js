@@ -36,13 +36,23 @@ define(function(require) {
 
         render: function() {
             $('.sidebar-nav').append(this.doctree.el);
+            //$.ajax({
+                //context: this,
+                //url: '/document',
+                //success: function(data) {
+                    //var $pre = $('<pre/>', { 'class': 'prettyprint' });
+                    //var $code = $('<code/>', { 'class': 'language-js' });
+                    //$code.append(JSON.stringify(data, null, 4));
+                    //$('#content').append($pre.append($code));
+                //}
+            //});
             return this;
         },
 
         walkTreeView: function(model) {
             if (model && model.componentCollection && model.has('schema')) {
                 _.each(model.get('schema').collection, function(value) {
-                    if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || value.req === 'M') {
+                    if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || _.include(['M', 'M/Z'], value.req)) {
                         var schema = model.get('schema').collection[value.fullName];
                         var newModel = new ComponentModel({
                             name: schema.name,
