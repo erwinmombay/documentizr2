@@ -6,17 +6,24 @@ define(function(require) {
     var componentDetailView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
-            this._cachedCollection = null;
+            this._cachedSpec = null;
         },
 
         render: function(spec) {
             this.$el.empty();
-            this._cachedCollection = spec.viewContext.model.collection;
+            this._cachedSpec = spec;
             var $ul = $('<ul/>');
-            _.each(this._cachedCollection.models, function(model) {
-                var $li = $('<li/>').append(JSON.stringify(model));
-                $ul.append($li);
-            }, this);
+            if (this._cachedSpec.viewContext.model.get('schema').nodeType === 'element') {
+                _.each(this._cachedSpec.viewContext.model.collection.models, function(model) {
+                    var $li = $('<li/>').append(JSON.stringify(model.toJSON(), null , 4));
+                    $ul.append($li);
+                }, this);
+            } else {
+                _.each(this._cachedSpec.viewContext.model.componentCollection.models, function(value) {
+                    var $li = $('<li/>').append(JSON.stringify(value, null, 4));
+                    $ul.append($li);
+                }, this);
+            }
             this.$el.append($ul);
             return this;
         }
