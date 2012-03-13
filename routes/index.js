@@ -11,7 +11,10 @@ exports.index = function(req, res) {
 
 exports.getdocument = function(req, res) {
     var results = [];
-    var query = pgClient.query('SELECT * FROM "EDIDocDef" ORDER BY doc_table, pos_no');
+    var query = pgClient.query('SELECT seg.segment, seg.ref, seg.elem_type, seg.req_des as seg_req_des, seg.element_name, seg.data_type, ' +
+        'seg.min_size, seg.max_size, doc.doc_table, doc.loop, doc.loop_rep, doc.pos_no, doc.req_des, ' +
+        'doc.parent_loop_pos, doc.document FROM "SegElemDef" as seg LEFT JOIN "EDIDocDef" as doc on seg.segment = doc.segment ' +
+        'order by doc.doc_table, doc.pos_no, seg.ref;');
     query.on('row', function(row) {
         results.push(row);
     });

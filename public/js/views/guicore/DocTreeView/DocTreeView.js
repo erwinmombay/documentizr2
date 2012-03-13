@@ -8,7 +8,7 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
-    var spinner = require('text!templates/loading.html');
+    var loading = require('text!templates/loading.html');
     
     var DocTreeView = TreeView.extend({
         initialize: function(options) {
@@ -17,7 +17,7 @@ define(function(require) {
             this.schema = options.schema || null;
             this.rootName = options.rootName;
             this.rootFullName = options.rootFullName;
-            this.$el.append(spinner);
+            this.$el.append(loading);
         },
 
         render: function() {

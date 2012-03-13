@@ -63,5 +63,6 @@ define(function(require) {
             this.hide();
         }
     }, Backbone.Events);
+
     return new modalEditorView();
 });
