@@ -21,11 +21,13 @@ define(function(require) {
     //: components of the treeview we pass it into.
     appEventMediator = mediator = _.extend({}, Backbone.Events);
 
-    mediator.changeComponentColorReq = function(view) {
+    mediator.checkComponentReq = function(view) {
         if (_.include(['M', 'M/Z'], view.model.get('schema').req) ||
             _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
             view.$el.find('.tvc-label').css({ 'color': 'red' });
+            return true;
         }
+        return false;
     };
 
     mediator.createViewFromSpec = function(spec) {
@@ -61,11 +63,21 @@ define(function(require) {
                 }
             };
         }
-        mediator.changeComponentColorReq(view);
+        mediator.checkComponentReq(view);
         spec.viewContext.$componentCollection.append(view.el);
     };
 
     mediator.on('drop:composite', function(spec) {
+    });
+
+    var _prevClickedView = null;
+    mediator.on('leftClick', function(spec) {
+        if (_prevClickedView) {
+            _prevClickedView.$el.find('i:first').css({ 'color': 'black' });
+        }
+        console.log(spec.viewContext.cid);
+        spec.viewContext.$el.find('i:first').css({ 'color': 'orange' });
+        _prevClickedView = spec.viewContext;
     });
 
     mediator.on('leftClick:composite', function(spec) {
