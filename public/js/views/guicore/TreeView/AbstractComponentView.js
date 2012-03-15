@@ -95,30 +95,25 @@ define(function(require) {
             //: Doing an event.stopPropagation() onmousedown causes $.selectable
             //: behavior to not trigger. Because of this our onmousedown sentinels are a little ugly
             //: and complicated. We make sure that the current event.target dom `is` this view.$el
-            //: or tvc-container(by doing $target.parent().is(this.$el)) 
-            //: or one of the dom elements under tvc-container(by doing $target.parent().parent().is(this.$el)).
             //: WARNING: if ever the standard composite and leaf html templates are changed, this
             //: sentinel/conditional might need to be updated to get the desired leftclick event.
             //:~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             //: 1 is a mouse left click event.
             var $target = $(e.target);
-            if (e.which == 1 && ($(e.target).is(this.$el) || $(e.target).parent().is(this.$el) ||
-                $(e.target).parent().parent().is(this.$el))) {
-                    this.observer.trigger('leftClick:' + this._type, { viewContext: this, event: e });
-                    this.observer.trigger('leftClick', { viewContext: this, event: e });
+            if (e.which == 1 && $target.closest('li').is(this.$el)) {
+                this.observer.trigger('leftClick:' + this._type, { viewContext: this, event: e });
+                this.observer.trigger('leftClick', { viewContext: this, event: e });
             //: 3 is a mouse right click event
-            } else if (e.which == 3 && ($target.is(this.$el) || $target.parent().is(this.$el) ||
-                       $target.parent().parent().is(this.$el))) {
-                           //: when rightClick viewContext menu is turned on, we stop propagation since
-                           //: the singleton contextMenuView attaches a mousedown listener to the body
-                           //: that makes the contextMenuView clear/hide itself when its current state `isVisible`
-                           this.observer.trigger('rightClick:' + this._type, { viewContext: this, event: e });
-                           this.observer.trigger('rightClick', { viewContext: this, event: e });
+            } else if (e.which == 3 && $target.closest('li').is(this.$el)) {
+                //: when rightClick viewContext menu is turned on, we stop propagation since
+                //: the singleton contextMenuView attaches a mousedown listener to the body
+                //: that makes the contextMenuView clear/hide itself when its current state `isVisible`
+                this.observer.trigger('rightClick:' + this._type, { viewContext: this, event: e });
+                this.observer.trigger('rightClick', { viewContext: this, event: e });
             //: 2 is a middle click event
-            } else if (e.which == 2 && ($target.is(this.$el) || $target.parent().is(this.$el) ||
-                       $target.parent().parent().is(this.$el))) {
-                           this.observer.trigger('middleClick:' + this._type, { viewContext: this, event: e });
-                           this.observer.trigger('middleClick', { viewContext: this, event: e });
+            } else if (e.which == 2 && $target.closest('li').is(this.$el)) {
+                this.observer.trigger('middleClick:' + this._type, { viewContext: this, event: e });
+                this.observer.trigger('middleClick', { viewContext: this, event: e });
             }
         },
 

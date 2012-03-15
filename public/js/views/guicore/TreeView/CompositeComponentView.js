@@ -41,7 +41,8 @@ define(function(require) {
             this.$el.empty();
             this.$el.append(this.template({ label: this.model.get('name') }));
             this.$componentCollection = this.$el.children('.tvc-ul');
-            this.$tvcPlusMinus = this.$('.tvc-minus');
+            this.$tvcHandle = this.$('.handle');
+            this.$tvcToggle = this.$tvcHandle.children('i');
             if (this.model.componentCollection) {
                 this.addAll();
             }
@@ -49,11 +50,13 @@ define(function(require) {
         },
 
         foldToggle: function() {
-            var that = this;
-            this.$tvcPlusMinus.toggleClass(function() {
-                return that.$tvcPlusMinus.is('.tvc-minus') ?
-                    'tvc-plus' : 'tvc-minus';
-            });
+            if (this.$tvcToggle.is('.icon-minus')) {
+                this.$tvcToggle.removeClass();
+                this.$tvcToggle.addClass('icon-plus');
+            } else {
+                this.$tvcToggle.removeClass();
+                this.$tvcToggle.addClass('icon-minus');
+            }
             this.$componentCollection.toggle();
             this.observer.trigger('foldToggle:composite', this);
         },

@@ -68,12 +68,9 @@
   .clearfix();
   border-radius: 3px 3px 3px 3px;
   display: block;
-  /*border: 1px solid #ddd;*/
-  /*min-width: 400px;*/
   height: 550px;
   /*overflow-y: scroll;*/
   overflow-x: scroll;
-  /*padding-left: 10px;*/
   padding-right: 24px;
 }
 
@@ -84,9 +81,23 @@
 }
 
 #editor-view {
-  /*position: absolute;*/
-  /*top: 550px;*/
-  /*left: 355px; */
   height: 150px;
-  /*min-width: 900px;*/
+}
+
+/* Tree View Components */
+li.tvc {
+  list-style-type: none;
+  span {
+    min-height: 5px;
+  }
+  span.tvc-label {
+    padding-left: 10px;
+  }
+  > div.tvc-container > span.handle {
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: center;
+    width: 5px;
+  }
 }

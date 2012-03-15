@@ -36,7 +36,7 @@ define(function(require) {
                 observer: spec.viewContext.observer,
                 contextMenu: spec.viewContext.contextMenu
             });
-            view.render().sortable({ handle: '' });
+            view.render().sortable();
             view.menu = {
                 'add new node': function(e) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
@@ -76,6 +76,10 @@ define(function(require) {
     mediator.on('leftClick:leaf', function(spec) {
         componentDetailView.render(spec);
         componentEditorView.render(spec);
+    });
+
+    mediator.on('doubleClick:leaf', function(spec) {
+        spec.event.stopPropagation();
     });
 
     mediator.on('doubleClick:composite', function(spec) {
