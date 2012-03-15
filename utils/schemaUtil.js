@@ -173,6 +173,7 @@ exports.buildSegment = function(curItem) {
         posNo: curItem.pos_no,
         maxOccurs: curItem.max_count,
         req: curItem.req_des,
+        nodeType: 'segment',
         collection: {
         }
     };
@@ -185,7 +186,8 @@ exports.buildElement = function(curItem) {
         name: curItem.element_name,
         fullName: curItem.segment + (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref),
         req: curItem.seg_req_des,
-        type: curItem.elem_type
+        type: curItem.elem_type,
+        nodeType: 'element'
     };
 };
 
@@ -197,6 +199,7 @@ exports.buildLoop = function(curItem) {
         initiator: curItem.loop,
         parentPosNo: curItem.parent_loop_pos,
         maxOccurs: curItem.loop_rep,
+        nodeType: 'loop',
         collection: {}
     };
 };
