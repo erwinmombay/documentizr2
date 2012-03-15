@@ -73,10 +73,10 @@ define(function(require) {
     var _prevClickedView = null;
     mediator.on('leftClick', function(spec) {
         if (_prevClickedView) {
-            _prevClickedView.$el.find('i:first').css({ 'color': 'black' });
+            $(_prevClickedView.$el.find('i')[0]).css({ 'color': 'black' });
         }
         console.log(spec.viewContext.cid);
-        spec.viewContext.$el.find('i:first').css({ 'color': 'orange' });
+        $(spec.viewContext.$el.find('i')[0]).css({ 'color': 'orange' });
         _prevClickedView = spec.viewContext;
     });
 
