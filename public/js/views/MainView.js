@@ -20,7 +20,7 @@ define(function(require) {
                 tagName: 'div',
                 id: 'doctree',
                 className: 'tree-panel',
-                observer: mediator,
+                observers: mediator,
                 contextMenu: contextMenuView,
                 rootFullName: 'TS_810',
                 rootName: '810'

@@ -51,7 +51,7 @@ define(function(require) {
         initialize: function() {
             _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown',
                 '_onContextMenu', 'droppable', 'bindEventHandlers', 'unbindEventHandlers');
-            this.observer = { trigger: function() { /** no op **/ } };
+            this.observers = { trigger: function() { /** no op **/ } };
             //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this._type = 'component';
             this.bindEventHandlers();
@@ -82,23 +82,19 @@ define(function(require) {
         },
 
         _onDoubleClick: function(e) {
-            this.observer.trigger('doubleClick:' + this._type, { viewContext: this, event: e });
-            this.observer.trigger('doubleClick', { viewContext: this, event: e });
+            this.observers.trigger('doubleClick:' + this._type, { viewContext: this, event: e });
         },
 
         _onDrop: function(e, ui) {
-            this.observer.trigger('drop:' + this._type, { viewContext: this, event: e, ui: ui });
-            this.observer.trigger('drop', { viewContext: this, event: e, ui: ui });
+            this.observers.trigger('drop:' + this._type, { viewContext: this, event: e, ui: ui });
         },
 
         _onHoverEnter: function(e, ui) {
-            this.observer.trigger('hoverEnter:' + this._type, { viewContext: this, event: e, ui: ui });
-            this.observer.trigger('hoverEnter', { viewContext: this, event: e, ui: ui });
+            this.observers.trigger('hoverEnter:' + this._type, { viewContext: this, event: e, ui: ui });
         },
 
         _onHoverExit: function(e, ui) {
-            this.observer.trigger('hoverExit:' + this._type, { viewContext: this, event: e, ui: ui });
-            this.observer.trigger('hoverExit', { viewContext: this, event: e, ui: ui });
+            this.observers.trigger('hoverExit:' + this._type, { viewContext: this, event: e, ui: ui });
         },
 
         _onMouseDown: function(e) {
@@ -112,19 +108,16 @@ define(function(require) {
             //: 1 is a mouse left click event.
             var $target = $(e.target);
             if (e.which == 1 && $target.closest('li').is(this.$el)) {
-                this.observer.trigger('leftClick:' + this._type, { viewContext: this, event: e });
-                this.observer.trigger('leftClick', { viewContext: this, event: e });
+                this.observers.trigger('leftClick:' + this._type, { viewContext: this, event: e });
             //: 3 is a mouse right click event
             } else if (e.which == 3 && $target.closest('li').is(this.$el)) {
                 //: when rightClick viewContext menu is turned on, we stop propagation since
                 //: the singleton contextMenuView attaches a mousedown listener to the body
                 //: that makes the contextMenuView clear/hide itself when its current state `isVisible`
-                this.observer.trigger('rightClick:' + this._type, { viewContext: this, event: e });
-                this.observer.trigger('rightClick', { viewContext: this, event: e });
+                this.observers.trigger('rightClick:' + this._type, { viewContext: this, event: e });
             //: 2 is a middle click event
             } else if (e.which == 2 && $target.closest('li').is(this.$el)) {
-                this.observer.trigger('middleClick:' + this._type, { viewContext: this, event: e });
-                this.observer.trigger('middleClick', { viewContext: this, event: e });
+                this.observers.trigger('middleClick:' + this._type, { viewContext: this, event: e });
             }
         },
 

@@ -9,7 +9,6 @@ define(function(require) {
     var DocLeafComponentView = LeafComponentView.extend({
         initialize: function(options) {
             LeafComponentView.prototype.initialize.call(this, options);
-            _.bindAll(this, 'render');
             this.schema = options.schema || {};
             this.editor = options.editor;
         }

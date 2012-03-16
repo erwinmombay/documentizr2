@@ -1,6 +1,26 @@
 define(function(require) {
     var permissions = {
-        
+        'addOne:tree': {
+            'treeAddOneSubViewHandler': true    
+        },
+        'addOne:composite': {
+            'compositeAddOneSubViewHandler': true
+        },
+        'doubleClick:composite': {
+            'compositeDoubleClickHandler': true
+        },
+        'doubleClick:leaf': {
+            'leafDoubleClickHandler': true
+        },
+        'leftClick:composite': {
+            'compositeLeftClickHandler': true
+        },
+        'leftClick:leaf': {
+            'leafLeftClickHandler': true
+        },
+        'drop:composite': {
+            'compositeDropHandler': false
+        }
     };
 
     permissions.validate = function(subscriber, channel) {

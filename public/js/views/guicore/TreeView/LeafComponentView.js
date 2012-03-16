@@ -17,7 +17,7 @@ define(function(require) {
             AbstractComponentView.prototype.initialize.call(this);
             _.bindAll(this, 'render');
             this._type = 'leaf';
-            this.observer = options.observer;
+            this.observers = options.observers;
             this.$el.attr('id', this.model.cid);
             this.model.on('change', this.render);
             this.contextMenu = options.contextMenu || null;
