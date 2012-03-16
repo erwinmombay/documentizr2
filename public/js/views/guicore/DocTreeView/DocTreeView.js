@@ -8,7 +8,7 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
-    var loading = require('text!templates/loading.html');
+    var progressBar = require('text!templates/ProgressBar.html');
     
     var DocTreeView = TreeView.extend({
         initialize: function(options) {
@@ -17,7 +17,7 @@ define(function(require) {
             this.schema = options.schema || null;
             this.rootName = options.rootName;
             this.rootFullName = options.rootFullName;
-            this.$el.append(loading);
+            this.$el.append(progressBar);
         },
 
         render: function() {

@@ -57,7 +57,7 @@ define(function(require) {
             };
         }
         checkComponentReq(view);
-        spec.viewContext.$componentCollection.append(view.el);
+        spec.viewContext.$componentCollection.append(view.$el.fadeIn('fast'));
     };
 
     mediator.on('drop:composite', 'compositeDropHandler', function(spec) {
