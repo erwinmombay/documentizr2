@@ -36,7 +36,8 @@ define(function(require) {
                     'class': 'btn option',
                     'text': value.name
                 });
-                if (value.req === 'M' || _.include(['810', 'Table_1', 'Table_2', 'Table_3'], value.name)) {
+                if (_.include(['M', 'M/Z'], value.req) ||
+                    _.include(['810', 'Table_1', 'Table_2', 'Table_3'], value.name)) {
                     $link.addClass('btn-danger');
                 }
                 $body.append($link);
