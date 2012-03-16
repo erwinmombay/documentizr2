@@ -9,7 +9,6 @@ define(function(require) {
     var componentDetailView = require('views/guicore/componentDetailView');
     var componentEditorView = require('views/guicore/componentEditorView');
 
-    var SegmentComponentView = require('views/guicore/DocTreeView/SegmentComponentView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
     var ComponentModel = require('models/ComponentModel');
@@ -29,7 +28,7 @@ define(function(require) {
         if (spec.model && spec.model.componentCollection) {
             view = new DocCompositeComponentView({
                 model: spec.model,
-                observer: spec.viewContext.observer,
+                observers: spec.viewContext.observers,
                 contextMenu: spec.viewContext.contextMenu
             });
             view.render().sortable();
@@ -44,7 +43,7 @@ define(function(require) {
         } else {
             view = new DocLeafComponentView({
                 model: spec.model,
-                observer: spec.viewContext.observer,
+                observers: spec.viewContext.observers,
                 contextMenu: spec.viewContext.contextMenu
             }).render();
             //: we could treat the Segment as a Composite as well, but since
@@ -61,48 +60,50 @@ define(function(require) {
         spec.viewContext.$componentCollection.append(view.el);
     };
 
-    mediator.on('drop:composite', 'dropCompositeHandler', function(spec) {
+    mediator.on('drop:composite', 'compositeDropHandler', function(spec) {
     });
 
     var _prevClickedView = null;
-    mediator.on('leftClick', 'leftClickHandler', function(spec) {
+    var highlighter = function(spec) {
         if (_prevClickedView) {
             _prevClickedView.$el.find('i:first').css({ 'color': 'black' });
         }
         spec.viewContext.$el.find('i:first').css({ 'color': 'orange' });
         _prevClickedView = spec.viewContext;
-    });
+    };
 
-    mediator.on('leftClick:composite', 'leftClickCompositeHandler', function(spec) {
+    mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
         componentEditorView.clear();
         componentDetailView.render(spec);
+        highlighter(spec);
     });
 
-    mediator.on('leftClick:leaf', 'leftClickLeafHandler', function(spec) {
+    mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
         componentDetailView.render(spec);
         componentEditorView.render(spec);
+        highlighter(spec);
     });
 
-    mediator.on('doubleClick:leaf', 'doubleClickLeafHandler', function(spec) {
+    mediator.on('doubleClick:leaf', 'leafDoubleClickHandler', function(spec) {
         spec.event.stopPropagation();
     });
 
-    mediator.on('doubleClick:composite', 'doubleClickCompositeHandler', function(spec) {
+    mediator.on('doubleClick:composite', 'compositeDoubleClickHandler', function(spec) {
         spec.event.stopPropagation();
         spec.viewContext.foldToggle();
     });
 
-    mediator.on('hoverEnter:composite', 'hoverEnterCompositeHandler', function(spec) {
+    mediator.on('hoverEnter:composite', 'compositeHoverEnterHandler', function(spec) {
     });
 
-    mediator.on('hoverExit:composite', 'hoverExitCompositeHandler', function(spec) {
+    mediator.on('hoverExit:composite', 'compositeHoverExitHandler', function(spec) {
     });
 
-    mediator.on('addOne:composite', 'addOneCompositeHandler', function(spec) {
+    mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
         createViewFromSpec(spec);
     });
 
-    mediator.on('addOne:tree', 'addOneTreeHandler', function(spec) {
+    mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
         createViewFromSpec({ viewContext: spec.viewContext, model: spec.model });
     });
 

@@ -7,7 +7,7 @@ define(function(require) {
     var permissions = require('permissions');
 
     //: we mixin Backbone.Events to turn the mediator object
-    //: into a message dispatcher while it also listens/subscribes to the
+    //: into a message dispatcher while it also publishes/subscribes to the
     //: components of the treeview we pass it into.
     var mediator = _.extend({}, Backbone.Events);
     mediator.on = function(channel, subscriber, callback, context) {

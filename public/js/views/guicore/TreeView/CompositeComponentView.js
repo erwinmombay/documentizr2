@@ -22,7 +22,7 @@ define(function(require) {
             //: models have componentCollection while views have
             //: $componentCollection which are the dom elements we dynamically attach
             this.$componentCollection = null;
-            this.observer = options.observer;
+            this.observers = options.observers;
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
             this.bindCollection();
@@ -58,16 +58,16 @@ define(function(require) {
                 this.$tvcToggle.addClass('icon-minus');
             }
             this.$componentCollection.slideToggle('fast');
-            this.observer.trigger('foldToggle:composite', this);
+            this.observers.trigger('foldToggle:composite', this);
         },
 
         addOne: function(model) {
-            this.observer.trigger('addOne:composite', { viewContext: this, model: model });
+            this.observers.trigger('addOne:composite', { viewContext: this, model: model });
         },
 
         addAll: function() {
             this.model.componentCollection.each(this.addOne);
-            this.observer.trigger('addAll:composite', this);
+            this.observers.trigger('addAll:composite', this);
             return this;
         },
 
