@@ -4,6 +4,7 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
+    var mediator = require('mediator');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var componentDetailView = require('views/guicore/componentDetailView');
     var componentEditorView = require('views/guicore/componentEditorView');
@@ -14,21 +15,16 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
-
-    var appEventMediator, mediator;
-    //: we mixin Backbone.Events to turn the mediator object
-    //: into a message dispatcher while it also listens/subscribes to the
-    //: components of the treeview we pass it into.
-    appEventMediator = mediator = _.extend({}, Backbone.Events);
-
-    mediator.changeComponentColorReq = function(view) {
+    var checkComponentReq = function(view) {
         if (_.include(['M', 'M/Z'], view.model.get('schema').req) ||
             _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
             view.$el.find('.tvc-label').css({ 'color': 'red' });
+            return true;
         }
+        return false;
     };
 
-    mediator.createViewFromSpec = function(spec) {
+    var createViewFromSpec = function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
             view = new DocCompositeComponentView({
@@ -61,44 +57,53 @@ define(function(require) {
                 }
             };
         }
-        mediator.changeComponentColorReq(view);
+        checkComponentReq(view);
         spec.viewContext.$componentCollection.append(view.el);
     };
 
-    mediator.on('drop:composite', function(spec) {
+    mediator.on('drop:composite', 'dropCompositeHandler', function(spec) {
     });
 
-    mediator.on('leftClick:composite', function(spec) {
+    var _prevClickedView = null;
+    mediator.on('leftClick', 'leftClickHandler', function(spec) {
+        if (_prevClickedView) {
+            _prevClickedView.$el.find('i:first').css({ 'color': 'black' });
+        }
+        spec.viewContext.$el.find('i:first').css({ 'color': 'orange' });
+        _prevClickedView = spec.viewContext;
+    });
+
+    mediator.on('leftClick:composite', 'leftClickCompositeHandler', function(spec) {
         componentEditorView.clear();
         componentDetailView.render(spec);
     });
 
-    mediator.on('leftClick:leaf', function(spec) {
+    mediator.on('leftClick:leaf', 'leftClickLeafHandler', function(spec) {
         componentDetailView.render(spec);
         componentEditorView.render(spec);
     });
 
-    mediator.on('doubleClick:leaf', function(spec) {
+    mediator.on('doubleClick:leaf', 'doubleClickLeafHandler', function(spec) {
         spec.event.stopPropagation();
     });
 
-    mediator.on('doubleClick:composite', function(spec) {
+    mediator.on('doubleClick:composite', 'doubleClickCompositeHandler', function(spec) {
         spec.event.stopPropagation();
         spec.viewContext.foldToggle();
     });
 
-    mediator.on('hoverEnter:composite', function(spec) {
+    mediator.on('hoverEnter:composite', 'hoverEnterCompositeHandler', function(spec) {
     });
 
-    mediator.on('hoverExit:composite', function(spec) {
+    mediator.on('hoverExit:composite', 'hoverExitCompositeHandler', function(spec) {
     });
 
-    mediator.on('addOne:composite', function(spec) {
-        mediator.createViewFromSpec(spec);
+    mediator.on('addOne:composite', 'addOneCompositeHandler', function(spec) {
+        createViewFromSpec(spec);
     });
 
-    mediator.on('addOne:tree', function(spec) {
-        mediator.createViewFromSpec({ viewContext: spec.viewContext, model: spec.model });
+    mediator.on('addOne:tree', 'addOneTreeHandler', function(spec) {
+        createViewFromSpec({ viewContext: spec.viewContext, model: spec.model });
     });
 
     modalEditorView.on('optionClick:modalEditor', function(spec) {
@@ -112,6 +117,4 @@ define(function(require) {
         });
         spec.viewContext.model.componentCollection.add(model);
     });
-
-    return mediator;
 });

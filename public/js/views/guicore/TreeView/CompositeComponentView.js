@@ -57,7 +57,7 @@ define(function(require) {
                 this.$tvcToggle.removeClass();
                 this.$tvcToggle.addClass('icon-minus');
             }
-            this.$componentCollection.toggle();
+            this.$componentCollection.slideToggle('fast');
             this.observer.trigger('foldToggle:composite', this);
         },
 

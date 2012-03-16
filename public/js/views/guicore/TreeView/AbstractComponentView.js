@@ -50,24 +50,35 @@ define(function(require) {
 
         initialize: function() {
             _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown',
-                'droppable', 'initEvents');
+                '_onContextMenu', 'droppable', 'bindEventHandlers', 'unbindEventHandlers');
             this.observer = { trigger: function() { /** no op **/ } };
             //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this._type = 'component';
-            this.initEvents();
+            this.bindEventHandlers();
         },
 
-        initEvents: function() {
-            var self = this;
-            this.model.on('destroy', this.remove, this);
+        destroy: function() {
+            this.off();
+            this.unbindEventHandlers();
+            this.remove();
+        },
+
+        bindEventHandlers: function() {
+            this.model.on('destroy', this.destroy, this);
             if (this.contextMenu) {
                 //: doing a return false on the on.contextmenu event
                 //: prevents the default browser's contextmenu to pop up
-                this.$el.on('contextmenu', function(e) {
-                    self.contextMenu.render({ viewContext: self, event: e });
-                    return false; 
-                });
+                this.$el.on('contextmenu', this._onContextMenu);
             }
+        },
+
+        unbindEventHandlers: function() {
+            this.$el.off('contextmenu', this._onContextMenu);
+        },
+
+        _onContextMenu: function(e) {
+            this.contextMenu.render({ viewContext: this, event: e });
+            return false; 
         },
 
         _onDoubleClick: function(e) {

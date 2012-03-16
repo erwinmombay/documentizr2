@@ -4,7 +4,8 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var appEventMediator = require('appEventMediator');
+    var mediator = require('mediator');
+    var modules = require('modules');
     var contextMenuView = require('views/guicore/contextMenuView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
@@ -15,12 +16,11 @@ define(function(require) {
     var MainView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render', 'walkTreeView');
-            this.mediator = appEventMediator;
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',
                 className: 'tree-panel',
-                observer: this.mediator,
+                observer: mediator,
                 contextMenu: contextMenuView,
                 rootFullName: 'TS_810',
                 rootName: '810'
