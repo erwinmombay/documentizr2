@@ -66,9 +66,11 @@ define(function(require) {
     var _prevClickedView = null;
     var highlighter = function(spec) {
         if (_prevClickedView) {
-            _prevClickedView.$el.find('i:first').css({ 'color': 'black' });
+            _prevClickedView.$el
+                .children('div:first').css({ 'background-color': '#F5F5F5' });
         }
-        spec.viewContext.$el.find('i:first').css({ 'color': 'orange' });
+        spec.viewContext.$el
+            .children('div:first').css({ 'background-color': '#D9EDF7' });
         _prevClickedView = spec.viewContext;
     };
 
