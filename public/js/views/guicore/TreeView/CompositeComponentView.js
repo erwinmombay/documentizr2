@@ -17,23 +17,26 @@ define(function(require) {
             //: this is like calling super() in javascript
             AbstractComponentView.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle', 'selectable',
-                'sortable', 'bindCollection');
+                'sortable', 'bindEventHandlers', 'unbindEventHandlers');
             this._type = 'composite';
             this.template = Handlebars.compile(this.template);
             //: models have componentCollection while views have
             //: $componentCollection which are the dom elements we dynamically attach
             this.$componentCollection = null;
             this.$el.attr('id', this.model.cid);
-            this.bindCollection();
         },
 
-        bindCollection: function() {
+        bindEventHandlers: function() {
+            AbstractComponentView.prototype.bindEventHandlers.call(this);
             //: bind the models' componentCollection `add` event to `addOne` 
             //: so that when we add models to the collection
             //: it automatically adds the nested views as well
-            if (this.model.componentCollection) {
-                this.model.componentCollection.on('add', this.addOne);
-            }
+            this.model.componentCollection.on('add', this.addOne, this);
+        },
+
+        unbindEventHandlers: function() {
+            AbstractComponentView.prototype.unbindEventHandlers.call(this);
+            this.model.componentCollection.off('add', this.addOne, this);
         },
 
         render: function() {
@@ -45,6 +48,16 @@ define(function(require) {
             if (this.model.componentCollection) {
                 this.addAll();
             }
+            return this;
+        },
+
+        addOne: function(model) {
+            this.trigger('addOne:composite', { viewContext: this, model: model });
+        },
+
+        addAll: function() {
+            this.model.componentCollection.each(this.addOne);
+            this.trigger('addAll:composite', this);
             return this;
         },
 
@@ -60,16 +73,6 @@ define(function(require) {
             this.trigger('foldToggle:composite', this);
         },
 
-        addOne: function(model) {
-            this.trigger('addOne:composite', { viewContext: this, model: model });
-        },
-
-        addAll: function() {
-            this.model.componentCollection.each(this.addOne);
-            this.trigger('addAll:composite', this);
-            return this;
-        },
-
         selectable: function(spec) {
             if (this.$componentCollection) {
                 if (spec) {
@@ -82,11 +85,8 @@ define(function(require) {
         },
 
         sortable: function(spec) {
-            var options = _.defaults(spec || {}, {
-                helper: 'clone',
-                handle: '.handle',
-                placeholder: 'ui-state-highlight',
-                delay: 100
+            var options = _.defaults(spec || {}, { 
+                helper: 'clone', handle: '.handle', placeholder: 'ui-state-highlight', delay: 100
             });
             if (this.$componentCollection) {
                 this.$componentCollection.sortable(options);

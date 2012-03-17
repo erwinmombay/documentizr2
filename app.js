@@ -39,24 +39,3 @@ app.post('/component', routes.component);
 app.listen(process.env.PORT || 5000);
 console.log("Express server listening on port %d in %s mode",
             app.address().port, app.settings.env);
-
-
-//: redis stuff
-//redClient.on('error', function(err) {
-    //console.log('Error ' + err);
-//});
-
-//: socketio stuff
-
-//: stack cedar does not support websockets
-//: code below forces io to use long polling
-//io.configure(function() {
-	//io.set('transports', ['xhr-polling']);
-	//io.set('polling duration', 15);
-//});
-
-//io.sockets.on('connection', function (socket) {
-    //socket.on('register', function (data) {
-
-    //});
-//});

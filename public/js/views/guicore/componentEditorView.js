@@ -34,6 +34,7 @@ define(function(require) {
             this.$el.empty();
             this._cachedSpec = null;
             this._cachedModel = null;
+            return this;
         },
 
         saveInput: function() {

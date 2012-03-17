@@ -8,13 +8,49 @@ define(function(require) {
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var componentDetailView = require('views/guicore/componentDetailView');
     var componentEditorView = require('views/guicore/componentEditorView');
+    var contextMenuView = require('views/guicore/contextMenuView');
 
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
+    //: proxy/handle all events that modalEditorView to mediator
     mediator.proxyAllEvents(modalEditorView);
+    
+    var createViewFromSpec = function(spec) {
+        var view = null;
+        if (spec.model.componentCollection) {
+            view = new DocCompositeComponentView({ model: spec.model });
+            view.render().sortable({ handle: '' }).menu = {
+                'add new node': function(e) {
+                    modalEditorView.render({ viewContext: view, event: e }).show();
+                },
+                'delete node': function(e) {
+                    view.model.destroy({ cascade: true });
+                    componentEditorView.clear();
+                    componentDetailView.clear();
+                }
+            };
+        } else {
+            view = new DocLeafComponentView({ model: spec.model });
+            view.render().menu = {
+                'delete node': function(e) {
+                    view.model.destroy();
+                    componentEditorView.clear();
+                    componentDetailView.clear();
+                }
+            };
+        }
+        //: change the label color based on requirement
+        checkComponentReq(view);
+        //: we override the normal contextmenu on right click and display our own
+        bindCustomContextMenu(view);
+        //: we proxy/handle all the events `view` triggers to mediator
+        mediator.proxyAllEvents(view);
+        //: append this new view to the previous viewContext
+        spec.viewContext.$componentCollection.append(view.el);
+    };
 
     var checkComponentReq = function(view) {
         if (_.include(['M', 'M/Z'], view.model.schema.req) ||
@@ -24,41 +60,12 @@ define(function(require) {
         }
         return false;
     };
-    
-    var createViewFromSpec = function(spec) {
-        var view = null;
-        if (spec.model && spec.model.componentCollection) {
-            view = new DocCompositeComponentView({
-                model: spec.model,
-                contextMenu: spec.viewContext.contextMenu
-            });
-            view.render().sortable({ handle: '' });
-            view.menu = {
-                'add new node': function(e) {
-                    modalEditorView.render({ viewContext: view, event: e }).show();
-                },
-                'delete node': function(e) {
-                    view.model.destroy({ cascade: true });
-                }
-            };
-        } else {
-            view = new DocLeafComponentView({
-                model: spec.model,
-                contextMenu: spec.viewContext.contextMenu
-            }).render();
-            //: we could treat the Segment as a Composite as well, but since
-            //: i think creating a leaf component for each element might get expensive
-            //: it might be better treating the segment as a leaf and the elements
-            //: as being a properties.
-            view.menu = {
-                'delete node': function(e) {
-                    view.model.destroy();
-                }
-            };
-        }
-        checkComponentReq(view);
-        spec.viewContext.$componentCollection.append(view.el);
-        mediator.proxyAllEvents(view);
+
+    var bindCustomContextMenu = function(view) {
+        view.$el.on('contextmenu', function(e) {
+            contextMenuView.render({ viewContext: view, event: e });
+            return false;
+        });
     };
 
     var _prevClickedView = null;
@@ -72,16 +79,29 @@ define(function(require) {
         _prevClickedView = spec.viewContext;
     };
 
-    mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
+    var selectComponent = function(spec) {
         componentDetailView.render(spec);
-        componentEditorView.render(spec);
         highlighter(spec);
+    };
+
+    mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
+        componentEditorView.render(spec);
+        selectComponent(spec);
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
         componentEditorView.clear();
-        componentDetailView.render(spec);
-        highlighter(spec);
+        selectComponent(spec);
+    });
+
+    mediator.on('rightClick:leaf', 'leafRightClickHandler', function(spec) {
+        componentEditorView.render(spec);
+        selectComponent(spec);
+    });
+
+    mediator.on('rightClick:composite', 'compositeRightClickHandler', function(spec) {
+        componentEditorView.clear();
+        selectComponent(spec);
     });
 
     mediator.on('doubleClick:leaf', 'leafDoubleClickHandler', function(spec) {
@@ -105,10 +125,9 @@ define(function(require) {
         var targetId = $(spec.event.target).attr('id');
         var schema = spec.viewContext.model.schema.collection[targetId];
         var model = new ComponentModel({
-            name: schema.name,
-            fullName: schema.fullName,
-            schema: schema || null,
-            componentCollection: schema && schema.collection && new ComponentCollection()
+            name: schema.name, fullName: schema.fullName, schema: schema || null,
+            componentCollection: schema && schema.collection && new ComponentCollection(),
+            data: ''
         });
         spec.viewContext.model.componentCollection.add(model);
     });

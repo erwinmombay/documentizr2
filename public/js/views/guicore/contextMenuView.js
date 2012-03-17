@@ -44,6 +44,7 @@ define(function(require) {
                 'width': '150px'
             });
             this.isVisible = true;
+            return this;
         },
 
         hide: function(e) {
@@ -52,6 +53,7 @@ define(function(require) {
                 this.isVisible = false;
             }
             this._cachedTargetView = null;
+            return this;
         },
 
         _onMouseDown: function(e) {

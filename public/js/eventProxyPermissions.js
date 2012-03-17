@@ -12,6 +12,12 @@ define(function(require) {
         'leftClick:composite': {
             'compositeLeftClickHandler': true
         },
+        'rightClick:leaf': {
+            'leafRightClickHandler': true
+        },
+        'rightClick:composite': {
+            'compositeRightClickHandler': true
+        },
         'doubleClick:leaf': {
             'leafDoubleClickHandler': true
         },

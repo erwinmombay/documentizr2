@@ -22,17 +22,11 @@
     },
     modules: [{
         name: 'main'
-        //include: ['models', 'views', 'collections', 'utils'],
-        //exclude: ['order', 'jquery', 'underscore', 'backbone', 'handlebars', 'text', 'tabby', 'tabs']
     }],
     inlineText: true,
     wrap: {
         start: "(function() {",
         end: "}());"
     }
-
-    //, optimizeCss: "standard.keepLines"
-    //, cssIn: "public/css/main.css"
-    //, cssOut: "public/css/build-main.css"
-})
+});
 

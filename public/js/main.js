@@ -23,8 +23,8 @@ require.config({
         collections: 'collections',
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
-        dropdown: 'libs/bootstrap/bootstrap-dropdown',
-        prettify: 'libs/prettify/prettify'
+        dropdown: 'libs/bootstrap/bootstrap-dropdown'
+        //prettify: 'libs/prettify/prettify'
     }
 });
 
@@ -39,9 +39,10 @@ define(function(require) {
     var App = require('order!app');
     var modal = require('order!modal');
     var dropdown = require('order!dropdown');
-    var prettify = require('order!prettify');
-    $(document).ready(function() {
-        prettyPrint();
-    });
+
+    //var prettify = require('order!prettify');
+    //$(document).ready(function() {
+        //prettyPrint();
+    //});
     App.initialize();
 });
