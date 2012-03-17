@@ -5,19 +5,33 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var ComponentModel = Backbone.Model.extend({
+        constructor: function(options) {
+            //: _allowedProperties are the list of properties from options that we want to 
+            //: directly attach to this Model object
+            var _allowedProperties = ['componentCollection', 'schema'];
+            //: _ignoreAttribures are the list of properties from options that we dont want
+            //: to turn into Backbone.Model `attributes` 
+            var _ignoredAttributes = ['componentCollection', 'schema'];
+            var args = [].slice.call(arguments, 0)[0];
+            _.each(options, function(value, key) {
+                if (!this.hasOwnProperty(key) || _.include(_allowedProperties, key)) {
+                    this[key] = value;
+                }
+            }, this);
+            _.each(args, function(value, key) {
+                if (_.include(_ignoredAttributes, key)) {
+                    delete args[key];
+                }
+            }, this);
+            return Backbone.Model.call(this, args);
+        },
+
         initialize: function(attr) {
             _.bindAll(this, 'destroy');
-            //: i want componentCollection to be a direct property
-            //: of the javascript object instead of being an attribute of
-            //: Backbone.Model
-            if (attr && (attr.componentCollection || attr.componentCollection === null)) {
-                this.componentCollection = attr.componentCollection;
-                this.unset('componentCollection', { silent: true });
-            }
         },
 
         destroy: function(options) {
-            var that = this, i, l;
+            var i, l;
             if (this.componentCollection && (options && options.cascade)) {
                 for (i = 0, l = this.componentCollection.length; i < l; i++) {
                     this.componentCollection.models[0].destroy();

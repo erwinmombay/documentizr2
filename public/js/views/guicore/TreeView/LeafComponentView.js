@@ -14,19 +14,17 @@ define(function(require) {
             //: rebind all the inherited methods from AbstractComponentView to
             //: `this` LeafComponentView instance.
             //: this is like calling super() in javascript
-            AbstractComponentView.prototype.initialize.call(this);
+            AbstractComponentView.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'render');
             this._type = 'leaf';
-            this.observers = options.observers;
+            this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
             this.model.on('change', this.render);
-            this.contextMenu = options.contextMenu || null;
         },
 
         render: function() {
             this.$el.empty();
-            var template = Handlebars.compile(this.template); 
-            this.$el.append(template({ label: this.model.get('name') }));
+            this.$el.append(this.template({ label: this.model.get('name') }));
             return this;
         }
     });

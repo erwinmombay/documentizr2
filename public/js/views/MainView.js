@@ -5,7 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var mediator = require('mediator');
-    var modules = require('modules');
+    var eventModulesHub = require('eventModulesHub');
     var contextMenuView = require('views/guicore/contextMenuView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
@@ -20,7 +20,6 @@ define(function(require) {
                 tagName: 'div',
                 id: 'doctree',
                 className: 'tree-panel',
-                observers: mediator,
                 contextMenu: contextMenuView,
                 rootFullName: 'TS_810',
                 rootName: '810'
@@ -32,28 +31,32 @@ define(function(require) {
                     this.walkTreeView(this.doctree.componentCollection.at(0));
                 }, this)
             });
+            mediator.proxyAllEvents(this.doctree);
         },
 
         render: function() {
             $('.sidebar-nav').append(this.doctree.el);
-            //$.ajax({
-                //context: this,
-                //url: '/document',
-                //success: function(data) {
-                    //var $pre = $('<pre/>', { 'class': 'prettyprint' });
-                    //var $code = $('<code/>', { 'class': 'language-js' });
-                    //$code.append(JSON.stringify(data, null, 4));
-                    //$('#content').append($pre.append($code));
-                //}
-            //});
             return this;
         },
 
+        debugJSON: function() {
+            $.ajax({
+                context: this,
+                url: '/document',
+                success: function(data) {
+                    var $pre = $('<pre/>', { 'class': 'prettyprint' });
+                    var $code = $('<code/>', { 'class': 'language-js' });
+                    $code.append(JSON.stringify(data, null, 4));
+                    $('#content').append($pre.append($code));
+                }
+            });
+        },
+
         walkTreeView: function(model) {
-            if (model && model.componentCollection && model.has('schema')) {
-                _.each(model.get('schema').collection, function(value) {
+            if (model && model.componentCollection && model.schema) {
+                _.each(model.schema.collection, function(value) {
                     if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || _.include(['M', 'M/Z'], value.req)) {
-                        var schema = model.get('schema').collection[value.fullName];
+                        var schema = model.schema.collection[value.fullName];
                         var newModel = new ComponentModel({
                             name: schema.name,
                             fullName: schema.fullName,

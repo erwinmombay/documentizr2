@@ -14,24 +14,25 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
+    mediator.proxyAllEvents(modalEditorView);
+
     var checkComponentReq = function(view) {
-        if (_.include(['M', 'M/Z'], view.model.get('schema').req) ||
-            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
+        if (_.include(['M', 'M/Z'], view.model.schema.req) ||
+            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.schema.name)) {
             view.$el.find('.tvc-label').css({ 'color': 'red' });
             return true;
         }
         return false;
     };
-
+    
     var createViewFromSpec = function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
             view = new DocCompositeComponentView({
                 model: spec.model,
-                observers: spec.viewContext.observers,
                 contextMenu: spec.viewContext.contextMenu
             });
-            view.render().sortable();
+            view.render().sortable({ handle: '' });
             view.menu = {
                 'add new node': function(e) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
@@ -43,7 +44,6 @@ define(function(require) {
         } else {
             view = new DocLeafComponentView({
                 model: spec.model,
-                observers: spec.viewContext.observers,
                 contextMenu: spec.viewContext.contextMenu
             }).render();
             //: we could treat the Segment as a Composite as well, but since
@@ -58,10 +58,8 @@ define(function(require) {
         }
         checkComponentReq(view);
         spec.viewContext.$componentCollection.append(view.el);
+        mediator.proxyAllEvents(view);
     };
-
-    mediator.on('drop:composite', 'compositeDropHandler', function(spec) {
-    });
 
     var _prevClickedView = null;
     var highlighter = function(spec) {
@@ -74,15 +72,15 @@ define(function(require) {
         _prevClickedView = spec.viewContext;
     };
 
-    mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
-        componentEditorView.clear();
-        componentDetailView.render(spec);
-        highlighter(spec);
-    });
-
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
         componentDetailView.render(spec);
         componentEditorView.render(spec);
+        highlighter(spec);
+    });
+
+    mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
+        componentEditorView.clear();
+        componentDetailView.render(spec);
         highlighter(spec);
     });
 
@@ -95,29 +93,31 @@ define(function(require) {
         spec.viewContext.foldToggle();
     });
 
-    mediator.on('hoverEnter:composite', 'compositeHoverEnterHandler', function(spec) {
-    });
-
-    mediator.on('hoverExit:composite', 'compositeHoverExitHandler', function(spec) {
-    });
-
     mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
         createViewFromSpec(spec);
     });
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
-        createViewFromSpec({ viewContext: spec.viewContext, model: spec.model });
+        createViewFromSpec(spec);
     });
-
-    modalEditorView.on('optionClick:modalEditor', function(spec) {
+    
+    mediator.on('optionClick:modalEditor', 'modalEditorOptionClickHandler', function(spec) {
         var targetId = $(spec.event.target).attr('id');
-        var schema = spec.viewContext.model.get('schema').collection[targetId];
+        var schema = spec.viewContext.model.schema.collection[targetId];
         var model = new ComponentModel({
             name: schema.name,
             fullName: schema.fullName,
             schema: schema || null,
-            componentCollection: schema && schema.collection && new ComponentCollection() || null
+            componentCollection: schema && schema.collection && new ComponentCollection()
         });
         spec.viewContext.model.componentCollection.add(model);
     });
+
+    //: unused events, document this later on
+    mediator.on('drop:leaf', 'leafDropHandler', function(spec) {});
+    mediator.on('drop:composite', 'compositeDropHandler', function(spec) {});
+    mediator.on('hoverEnter:leaf', 'leafHoverEnterHandler', function(spec) {});
+    mediator.on('hoverExit:leaf', 'leafHoverExitHandler', function(spec) {});
+    mediator.on('hoverEnter:composite', 'compositeHoverEnterHandler', function(spec) {});
+    mediator.on('hoverExit:composite', 'compositeHoverExitHandler', function(spec) {});
 });

@@ -16,7 +16,6 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.componentCollection = options.componentCollection || new TreeViewCollection();
             this.componentCollection.on('add', this.addOne);
-            this.observers = options.observers || { trigger: function() { /** no op **/ } };
             this.contextMenu = options.contextMenu || null;
             this.template = Handlebars.compile(this.template);
             this.$componentCollection = null;
@@ -31,7 +30,7 @@ define(function(require) {
         },
 
         addOne: function(model) {
-            this.observers.trigger('addOne:tree', { viewContext: this, model: model });
+            this.trigger('addOne:tree', { viewContext: this, model: model });
         },
 
         addAll: function () {

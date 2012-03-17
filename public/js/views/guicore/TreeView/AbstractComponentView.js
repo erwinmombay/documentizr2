@@ -36,24 +36,26 @@ define(function(require) {
         },
 
         constructor: function(options) {
+            //: apply _properties as identifiers/obj properties
+            var _allowedProperties = ['contextMenu'];
             //: we make our own constructor so that we can assign
             //: the object specifier before `initialize` is called. sometimes
             //: we create conditions inside the initialize that relies on properties
             //: passed to the object specifier. (ex. contextMenu object)
             _.each(options, function(value, key) {
-                if (!this.hasOwnProperty(key)) {
+                if (!this.hasOwnProperty(key) && _.include(_allowedProperties, key)) {
                     this[key] = value;
                 }
             }, this);
             return Backbone.View.apply(this, arguments);
         },
 
-        initialize: function() {
-            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown',
-                '_onContextMenu', 'droppable', 'bindEventHandlers', 'unbindEventHandlers');
-            this.observers = { trigger: function() { /** no op **/ } };
-            //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
+        initialize: function(options) {
+            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit',
+                '_onMouseDown', '_onContextMenu', 'droppable', 'bindEventHandlers',
+                'unbindEventHandlers');
             this._type = 'component';
+            //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this.bindEventHandlers();
         },
 
@@ -64,6 +66,7 @@ define(function(require) {
         },
 
         bindEventHandlers: function() {
+            this.model.on('change', this.render, this);
             this.model.on('destroy', this.destroy, this);
             if (this.contextMenu) {
                 //: doing a return false on the on.contextmenu event
@@ -73,6 +76,8 @@ define(function(require) {
         },
 
         unbindEventHandlers: function() {
+            this.model.off('destroy', this.destroy, this);
+            this.model.off('destroy', this.destroy, this);
             this.$el.off('contextmenu', this._onContextMenu);
         },
 
@@ -82,19 +87,19 @@ define(function(require) {
         },
 
         _onDoubleClick: function(e) {
-            this.observers.trigger('doubleClick:' + this._type, { viewContext: this, event: e });
+            this.trigger('doubleClick:' + this._type, { viewContext: this, event: e });
         },
 
         _onDrop: function(e, ui) {
-            this.observers.trigger('drop:' + this._type, { viewContext: this, event: e, ui: ui });
+            this.trigger('drop:' + this._type, { viewContext: this, event: e, ui: ui });
         },
 
         _onHoverEnter: function(e, ui) {
-            this.observers.trigger('hoverEnter:' + this._type, { viewContext: this, event: e, ui: ui });
+            this.trigger('hoverEnter:' + this._type, { viewContext: this, event: e, ui: ui });
         },
 
         _onHoverExit: function(e, ui) {
-            this.observers.trigger('hoverExit:' + this._type, { viewContext: this, event: e, ui: ui });
+            this.trigger('hoverExit:' + this._type, { viewContext: this, event: e, ui: ui });
         },
 
         _onMouseDown: function(e) {
@@ -108,16 +113,16 @@ define(function(require) {
             //: 1 is a mouse left click event.
             var $target = $(e.target);
             if (e.which == 1 && $target.closest('li').is(this.$el)) {
-                this.observers.trigger('leftClick:' + this._type, { viewContext: this, event: e });
+                this.trigger('leftClick:' + this._type, { viewContext: this, event: e });
             //: 3 is a mouse right click event
             } else if (e.which == 3 && $target.closest('li').is(this.$el)) {
                 //: when rightClick viewContext menu is turned on, we stop propagation since
                 //: the singleton contextMenuView attaches a mousedown listener to the body
                 //: that makes the contextMenuView clear/hide itself when its current state `isVisible`
-                this.observers.trigger('rightClick:' + this._type, { viewContext: this, event: e });
+                this.trigger('rightClick:' + this._type, { viewContext: this, event: e });
             //: 2 is a middle click event
             } else if (e.which == 2 && $target.closest('li').is(this.$el)) {
-                this.observers.trigger('middleClick:' + this._type, { viewContext: this, event: e });
+                this.trigger('middleClick:' + this._type, { viewContext: this, event: e });
             }
         },
 

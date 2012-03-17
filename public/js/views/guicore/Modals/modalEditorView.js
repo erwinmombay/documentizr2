@@ -29,7 +29,7 @@ define(function(require) {
             template = template({ curNode: spec.viewContext.model.get('name') + '. Choose a child node below.' });
             this.$el.append(template);
             var $body = this.$el.find('div.modal-body');
-            _.each(spec.viewContext.model.get('schema').collection, function(value) {
+            _.each(spec.viewContext.model.schema.collection, function(value) {
                 var $link = $('<a/>', {
                     'href': '#',
                     'id': value.fullName || value.name,

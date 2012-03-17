@@ -35,7 +35,7 @@ define(function(require) {
                     }
                 }, this),
                 error: _.bind(function(xhr, status, errObj) {
-                    alert('an error has occured while requesting document.');
+                    alert('an error has occured on GET document.');
                 }, this)
             };
             $.ajax(newOptions);

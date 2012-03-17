@@ -6,20 +6,23 @@ define(function(require) {
         'addOne:composite': {
             'compositeAddOneSubViewHandler': true
         },
-        'doubleClick:composite': {
-            'compositeDoubleClickHandler': true
-        },
-        'doubleClick:leaf': {
-            'leafDoubleClickHandler': true
+        'leftClick:leaf': {
+            'leafLeftClickHandler': true
         },
         'leftClick:composite': {
             'compositeLeftClickHandler': true
         },
-        'leftClick:leaf': {
-            'leafLeftClickHandler': true
+        'doubleClick:leaf': {
+            'leafDoubleClickHandler': true
+        },
+        'doubleClick:composite': {
+            'compositeDoubleClickHandler': true
         },
         'drop:composite': {
             'compositeDropHandler': false
+        },
+        'optionClick:modalEditor': {
+            'modalEditorOptionClickHandler': true
         }
     };
 
