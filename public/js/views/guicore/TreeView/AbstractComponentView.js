@@ -36,24 +36,27 @@ define(function(require) {
         },
 
         constructor: function(options) {
+            //: apply _properties as identifiers/obj properties
+            var _properties = ['observers', 'contextMenu'];
             //: we make our own constructor so that we can assign
             //: the object specifier before `initialize` is called. sometimes
             //: we create conditions inside the initialize that relies on properties
             //: passed to the object specifier. (ex. contextMenu object)
             _.each(options, function(value, key) {
-                if (!this.hasOwnProperty(key)) {
+                if (!this.hasOwnProperty(key) && _.include(_properties, key)) {
                     this[key] = value;
                 }
             }, this);
             return Backbone.View.apply(this, arguments);
         },
 
-        initialize: function() {
-            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit', '_onMouseDown',
-                '_onContextMenu', 'droppable', 'bindEventHandlers', 'unbindEventHandlers');
-            this.observers = { trigger: function() { /** no op **/ } };
-            //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
+        initialize: function(options) {
+            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit',
+                '_onMouseDown', '_onContextMenu', 'droppable', 'bindEventHandlers',
+                'unbindEventHandlers');
             this._type = 'component';
+            this.observers = this.observers || { trigger: function() { /** no op **/ } };
+            //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this.bindEventHandlers();
         },
 
@@ -64,6 +67,7 @@ define(function(require) {
         },
 
         bindEventHandlers: function() {
+            this.model.on('change', this.render, this);
             this.model.on('destroy', this.destroy, this);
             if (this.contextMenu) {
                 //: doing a return false on the on.contextmenu event
@@ -73,6 +77,8 @@ define(function(require) {
         },
 
         unbindEventHandlers: function() {
+            this.model.off('destroy', this.destroy, this);
+            this.model.off('destroy', this.destroy, this);
             this.$el.off('contextmenu', this._onContextMenu);
         },
 

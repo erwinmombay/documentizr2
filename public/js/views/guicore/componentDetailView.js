@@ -13,7 +13,7 @@ define(function(require) {
             this.$el.empty();
             this._cachedSpec = spec;
             var $ul = $('<ul/>');
-            if (this._cachedSpec.viewContext.model.get('schema').nodeType === 'element') {
+            if (this._cachedSpec.viewContext.model.schema.nodeType === 'element') {
                 _.each(this._cachedSpec.viewContext.model.collection.models, function(model) {
                     var $li = $('<li/>').append(JSON.stringify(model.toJSON(), null , 4));
                     $ul.append($li);

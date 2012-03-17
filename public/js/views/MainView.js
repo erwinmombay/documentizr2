@@ -5,7 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var mediator = require('mediator');
-    var modules = require('modules');
+    var eventModules = require('eventModules');
     var contextMenuView = require('views/guicore/contextMenuView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
@@ -50,10 +50,10 @@ define(function(require) {
         },
 
         walkTreeView: function(model) {
-            if (model && model.componentCollection && model.has('schema')) {
-                _.each(model.get('schema').collection, function(value) {
+            if (model && model.componentCollection && model.schema) {
+                _.each(model.schema.collection, function(value) {
                     if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || _.include(['M', 'M/Z'], value.req)) {
-                        var schema = model.get('schema').collection[value.fullName];
+                        var schema = model.schema.collection[value.fullName];
                         var newModel = new ComponentModel({
                             name: schema.name,
                             fullName: schema.fullName,

@@ -15,8 +15,8 @@ define(function(require) {
     var ComponentCollection = require('collections/ComponentCollection');
 
     var checkComponentReq = function(view) {
-        if (_.include(['M', 'M/Z'], view.model.get('schema').req) ||
-            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.get('schema').name)) {
+        if (_.include(['M', 'M/Z'], view.model.schema.req) ||
+            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.schema.name)) {
             view.$el.find('.tvc-label').css({ 'color': 'red' });
             return true;
         }
@@ -57,7 +57,7 @@ define(function(require) {
             };
         }
         checkComponentReq(view);
-        spec.viewContext.$componentCollection.append(view.$el.fadeIn('fast'));
+        spec.viewContext.$componentCollection.append(view.el);
     };
 
     mediator.on('drop:composite', 'compositeDropHandler', function(spec) {
@@ -111,7 +111,7 @@ define(function(require) {
 
     modalEditorView.on('optionClick:modalEditor', function(spec) {
         var targetId = $(spec.event.target).attr('id');
-        var schema = spec.viewContext.model.get('schema').collection[targetId];
+        var schema = spec.viewContext.model.schema.collection[targetId];
         var model = new ComponentModel({
             name: schema.name,
             fullName: schema.fullName,
