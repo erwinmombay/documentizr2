@@ -113,6 +113,7 @@ define(function(require) {
         spec.viewContext.model.componentCollection.add(model);
     });
 
+    //: unused events, document this later on
     mediator.on('drop:leaf', 'leafDropHandler', function(spec) {});
     mediator.on('drop:composite', 'compositeDropHandler', function(spec) {});
     mediator.on('hoverEnter:leaf', 'leafHoverEnterHandler', function(spec) {});
