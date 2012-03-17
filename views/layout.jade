@@ -8,11 +8,12 @@ html(lang="eng")
     //HTML5 shim, for IE 6-8 support of HTML elements
     //if lt IE 9
     //script(src="http://html5shim.googlecode.com/svn/trunk/html5.js")
-    link(rel="stylesheet", type="text/css", href="/css/jquery-ui-1.8.17.custom.css")
-    link(rel="stylesheet", type="text/css", href="/css/prettify.css")
+    //link(rel="stylesheet", type="text/css", href="/css/jquery-ui-1.8.17.custom.css")
+    //link(rel="stylesheet", type="text/css", href="/css/prettify.css")
     //- link(rel="stylesheet/less", href="/css/bootstrap/bootstrap.less")
     //- link(rel="stylesheet/less", href="/css/custom.less")
     link(rel="stylesheet", type="text/css", href="/css/custom.css")
+    //link(rel="stylesheet", type="text/css", href="/css/build-main.css")
     block extra-css
     
     script(type="text/javascript")
@@ -22,13 +23,8 @@ html(lang="eng")
     //- var bootstrapData= '<script type="text/javascript">bootstrapData = ' + data + '</script>'
       //| !{bootstrapData}
     //- script(type="text/javascript", src="/js/libs/less/less.min.js")
-    script(data-main="js/main", src="js/libs/require/require.min.js")
+    script(data-main="js/main-build", src="js/libs/require/require.min.js")
 
-    style
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
-    
     body!= body
  
 

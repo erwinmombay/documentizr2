@@ -4131,6 +4131,11 @@ a.thumbnail:hover {
 .invisible {
   visibility: hidden;
 }
+body {
+  padding-top: 60px;
+  /* 60px to make the container go all the way to the bottom of the topbar */
+
+}
 .cmenu-options {
   margin: 0;
   padding: 4px 0;
