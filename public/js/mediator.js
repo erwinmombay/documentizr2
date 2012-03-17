@@ -4,11 +4,10 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var permissions = require('permissions');
+    var permissions = require('eventProxyPermissions');
 
     //: we mixin Backbone.Events to turn the mediator object
-    //: into a message dispatcher while it also publishes/subscribes to the
-    //: components of the treeview we pass it into.
+    //: into a Events Proxy Hub for our application
     var mediator = _.extend({}, Backbone.Events);
 
     mediator.on = function(channel, subscriber, callback, context) {
@@ -16,6 +15,14 @@ define(function(require) {
             return Backbone.Events.on.call(mediator, channel, callback, context);
         }
         return mediator;
+    };
+
+    mediator.proxyAllEvents = function(obj) {
+        if (obj && obj.on) {
+            obj.on('all', function() {
+                mediator.trigger.apply(mediator, arguments);
+            });
+        }
     };
 
     return mediator;

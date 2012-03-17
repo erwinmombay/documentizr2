@@ -20,6 +20,9 @@ define(function(require) {
         },
         'drop:composite': {
             'compositeDropHandler': false
+        },
+        'optionClick:modalEditor': {
+            'modalEditorOptionClickHandler': true
         }
     };
 

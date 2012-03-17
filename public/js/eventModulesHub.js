@@ -14,6 +14,8 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
+    mediator.proxyAllEvents(modalEditorView);
+
     var checkComponentReq = function(view) {
         if (_.include(['M', 'M/Z'], view.model.schema.req) ||
             _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.schema.name)) {
@@ -22,13 +24,12 @@ define(function(require) {
         }
         return false;
     };
-
+    
     var createViewFromSpec = function(spec) {
         var view = null;
         if (spec.model && spec.model.componentCollection) {
             view = new DocCompositeComponentView({
                 model: spec.model,
-                observers: spec.viewContext.observers,
                 contextMenu: spec.viewContext.contextMenu
             });
             view.render().sortable();
@@ -43,7 +44,6 @@ define(function(require) {
         } else {
             view = new DocLeafComponentView({
                 model: spec.model,
-                observers: spec.viewContext.observers,
                 contextMenu: spec.viewContext.contextMenu
             }).render();
             //: we could treat the Segment as a Composite as well, but since
@@ -58,6 +58,7 @@ define(function(require) {
         }
         checkComponentReq(view);
         spec.viewContext.$componentCollection.append(view.el);
+        mediator.proxyAllEvents(view);
     };
 
     mediator.on('drop:composite', 'compositeDropHandler', function(spec) {
@@ -108,15 +109,15 @@ define(function(require) {
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
         createViewFromSpec({ viewContext: spec.viewContext, model: spec.model });
     });
-
-    modalEditorView.on('optionClick:modalEditor', function(spec) {
+    
+    mediator.on('optionClick:modalEditor', 'modalEditorOptionClickHandler', function(spec) {
         var targetId = $(spec.event.target).attr('id');
         var schema = spec.viewContext.model.schema.collection[targetId];
         var model = new ComponentModel({
             name: schema.name,
             fullName: schema.fullName,
             schema: schema || null,
-            componentCollection: schema && schema.collection && new ComponentCollection() || null
+            componentCollection: schema && schema.collection && new ComponentCollection()
         });
         spec.viewContext.model.componentCollection.add(model);
     });

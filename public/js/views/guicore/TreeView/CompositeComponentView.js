@@ -57,16 +57,16 @@ define(function(require) {
                 this.$tvcToggle.addClass('icon-minus');
             }
             this.$componentCollection.slideToggle('fast');
-            this.observers.trigger('foldToggle:composite', this);
+            this.trigger('foldToggle:composite', this);
         },
 
         addOne: function(model) {
-            this.observers.trigger('addOne:composite', { viewContext: this, model: model });
+            this.trigger('addOne:composite', { viewContext: this, model: model });
         },
 
         addAll: function() {
             this.model.componentCollection.each(this.addOne);
-            this.observers.trigger('addAll:composite', this);
+            this.trigger('addAll:composite', this);
             return this;
         },
 

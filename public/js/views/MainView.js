@@ -5,7 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var mediator = require('mediator');
-    var eventModules = require('eventModules');
+    var eventModulesHub = require('eventModulesHub');
     var contextMenuView = require('views/guicore/contextMenuView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
@@ -20,7 +20,6 @@ define(function(require) {
                 tagName: 'div',
                 id: 'doctree',
                 className: 'tree-panel',
-                observers: mediator,
                 contextMenu: contextMenuView,
                 rootFullName: 'TS_810',
                 rootName: '810'
@@ -32,6 +31,7 @@ define(function(require) {
                     this.walkTreeView(this.doctree.componentCollection.at(0));
                 }, this)
             });
+            mediator.proxyAllEvents(this.doctree);
         },
 
         render: function() {
