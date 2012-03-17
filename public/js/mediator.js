@@ -10,11 +10,13 @@ define(function(require) {
     //: into a message dispatcher while it also publishes/subscribes to the
     //: components of the treeview we pass it into.
     var mediator = _.extend({}, Backbone.Events);
+
     mediator.on = function(channel, subscriber, callback, context) {
         if (permissions.validate(subscriber, channel)) {
             return Backbone.Events.on.call(mediator, channel, callback, context);
         }
         return mediator;
     };
+
     return mediator;
 });

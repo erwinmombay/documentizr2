@@ -13,13 +13,17 @@ define(function() {
         },
 
         removeObserver: function(obj) {
-        },
-
-        addObservers: function(obsArr) {
 
         },
 
-        triggerObserver: function(channel) {
+        addObservers: function(arr) {
+            _.each(arr, this.addObserver);
+        },
+        
+        publish: function() {
+            _.each(this._observers, function(obs) {
+
+            }, this);
         }
     };
 
