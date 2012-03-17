@@ -6,7 +6,6 @@ define(function(require) {
 
     var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
-    var contextMenuView = require('views/guicore/contextMenuView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
 
     var DocTreeView = require('views/guicore/DocTreeView/DocTreeView');
@@ -20,7 +19,7 @@ define(function(require) {
                 tagName: 'div',
                 id: 'doctree',
                 className: 'tree-panel',
-                contextMenu: contextMenuView,
+                //contextMenu: contextMenuView,
                 rootFullName: 'TS_810',
                 rootName: '810'
             });

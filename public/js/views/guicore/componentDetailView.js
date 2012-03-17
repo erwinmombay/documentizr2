@@ -5,7 +5,7 @@ define(function(require) {
 
     var componentDetailView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this, 'render');
+            _.bindAll(this, 'render', 'clear');
         },
 
         render: function(spec) {
@@ -23,6 +23,11 @@ define(function(require) {
                 }, this);
             }
             this.$el.append($ul);
+            return this;
+        },
+
+        clear: function() {
+            this.$el.empty();
             return this;
         }
     });

@@ -19,7 +19,6 @@ define(function(require) {
             this._type = 'leaf';
             this.template = Handlebars.compile(this.template);
             this.$el.attr('id', this.model.cid);
-            this.model.on('change', this.render);
         },
 
         render: function() {

@@ -10,7 +10,6 @@ define(function(require) {
         initialize: function(options) {
             CompositeComponentView.prototype.initialize.call(this, options);
             this.schema = options.schema || {};
-            this.editor = options.editor;
         }
     });
 

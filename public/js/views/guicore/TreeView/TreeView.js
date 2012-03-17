@@ -16,7 +16,6 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll');
             this.componentCollection = options.componentCollection || new TreeViewCollection();
             this.componentCollection.on('add', this.addOne);
-            this.contextMenu = options.contextMenu || null;
             this.template = Handlebars.compile(this.template);
             this.$componentCollection = null;
         },
