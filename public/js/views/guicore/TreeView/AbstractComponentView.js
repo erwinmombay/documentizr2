@@ -37,13 +37,13 @@ define(function(require) {
 
         constructor: function(options) {
             //: apply _properties as identifiers/obj properties
-            var _properties = ['contextMenu'];
+            var _allowedProperties = ['contextMenu'];
             //: we make our own constructor so that we can assign
             //: the object specifier before `initialize` is called. sometimes
             //: we create conditions inside the initialize that relies on properties
             //: passed to the object specifier. (ex. contextMenu object)
             _.each(options, function(value, key) {
-                if (!this.hasOwnProperty(key) && _.include(_properties, key)) {
+                if (!this.hasOwnProperty(key) && _.include(_allowedProperties, key)) {
                     this[key] = value;
                 }
             }, this);

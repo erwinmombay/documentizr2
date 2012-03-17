@@ -32,7 +32,7 @@ define(function(require) {
                 model: spec.model,
                 contextMenu: spec.viewContext.contextMenu
             });
-            view.render().sortable();
+            view.render().sortable({ handle: '' });
             view.menu = {
                 'add new node': function(e) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
@@ -61,9 +61,6 @@ define(function(require) {
         mediator.proxyAllEvents(view);
     };
 
-    mediator.on('drop:composite', 'compositeDropHandler', function(spec) {
-    });
-
     var _prevClickedView = null;
     var highlighter = function(spec) {
         if (_prevClickedView) {
@@ -75,15 +72,15 @@ define(function(require) {
         _prevClickedView = spec.viewContext;
     };
 
-    mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
-        componentEditorView.clear();
-        componentDetailView.render(spec);
-        highlighter(spec);
-    });
-
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
         componentDetailView.render(spec);
         componentEditorView.render(spec);
+        highlighter(spec);
+    });
+
+    mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
+        componentEditorView.clear();
+        componentDetailView.render(spec);
         highlighter(spec);
     });
 
@@ -96,18 +93,12 @@ define(function(require) {
         spec.viewContext.foldToggle();
     });
 
-    mediator.on('hoverEnter:composite', 'compositeHoverEnterHandler', function(spec) {
-    });
-
-    mediator.on('hoverExit:composite', 'compositeHoverExitHandler', function(spec) {
-    });
-
     mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
         createViewFromSpec(spec);
     });
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
-        createViewFromSpec({ viewContext: spec.viewContext, model: spec.model });
+        createViewFromSpec(spec);
     });
     
     mediator.on('optionClick:modalEditor', 'modalEditorOptionClickHandler', function(spec) {
@@ -121,4 +112,11 @@ define(function(require) {
         });
         spec.viewContext.model.componentCollection.add(model);
     });
+
+    mediator.on('drop:leaf', 'leafDropHandler', function(spec) {});
+    mediator.on('drop:composite', 'compositeDropHandler', function(spec) {});
+    mediator.on('hoverEnter:leaf', 'leafHoverEnterHandler', function(spec) {});
+    mediator.on('hoverExit:leaf', 'leafHoverExitHandler', function(spec) {});
+    mediator.on('hoverEnter:composite', 'compositeHoverEnterHandler', function(spec) {});
+    mediator.on('hoverExit:composite', 'compositeHoverExitHandler', function(spec) {});
 });

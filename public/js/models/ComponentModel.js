@@ -11,7 +11,7 @@ define(function(require) {
             var _allowedProperties = ['componentCollection', 'schema'];
             //: _ignoreAttribures are the list of properties from options that we dont want
             //: to turn into Backbone.Model `attributes` 
-            var _ignoreAttributes = ['componentCollection', 'schema'];
+            var _ignoredAttributes = ['componentCollection', 'schema'];
             var args = [].slice.call(arguments, 0)[0];
             _.each(options, function(value, key) {
                 if (!this.hasOwnProperty(key) || _.include(_allowedProperties, key)) {
@@ -19,7 +19,7 @@ define(function(require) {
                 }
             }, this);
             _.each(args, function(value, key) {
-                if (_.include(_ignoreAttributes, key)) {
+                if (_.include(_ignoredAttributes, key)) {
                     delete args[key];
                 }
             }, this);
