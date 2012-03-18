@@ -11,6 +11,7 @@
 //: we set up aliases for our most frequently used imported files/modules/dir
 require.config({
     paths: {
+        //prettyprint: 'libs/prettify/prettify',
         order: 'libs/require/order.min',
         jquery: 'libs/jquery/jquery-1.7.1.min',
         jqueryui: 'libs/jquery/jquery-ui-1.8.17.custom.min',
@@ -29,7 +30,6 @@ require.config({
 
 //: we use the order plugin the load the library's synchronously
 define(function(require) {
-    'use strict';
     var $ = require('order!jquery');
     var _ = require('order!underscore');
     var Backbone = require('order!backbone');
@@ -38,6 +38,10 @@ define(function(require) {
     var App = require('order!app');
     var modal = require('order!modal');
     var dropdown = require('order!dropdown');
+    //var prettify = require('order!prettify');
+    //$(document).ready(function() {
+        //prettyPrint();
+    //});
 
     App.initialize();
 });
