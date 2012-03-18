@@ -21,11 +21,9 @@ define(function(require) {
         return mediator;
     };
 
-    mediator.proxyAllEvents = function(obj) {
+    mediator.proxyAllEvents = function(obj, specificEvent) {
         if (obj && obj.on) {
-            obj.on('all', function() {
-                mediator.trigger.apply(mediator, arguments);
-            });
+            obj.on('all', function() { mediator.trigger.apply(mediator, arguments); });
         }
     };
 

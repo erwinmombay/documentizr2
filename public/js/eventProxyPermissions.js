@@ -1,6 +1,9 @@
 define(function(require) {
     'use strict';
     var permissions = {
+        'keydown:body': {
+            'bodyKeyDownTraverser': true
+        },
         'addOne:tree': {
             'treeAddOneSubViewHandler': true    
         },
