@@ -3,6 +3,7 @@
     baseUrl: 'public/js/',
     name: 'main',
     //dir: 'public-build',
+    preserveLicenseComments: true,
     out: 'public/js/main-build.js',
         paths: {
         order: 'libs/require/order.min',
@@ -10,23 +11,21 @@
         jqueryui: 'libs/jquery/jquery-ui-1.8.17.custom.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
-        handlebars: 'libs/handlebars/handlebars-1.0.0.beta.4',
+        handlebars: 'libs/handlebars/handlebars',
         text: 'libs/require/text.min',
         templates: '../templates',
         models: 'models',
         collections: 'collections',
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
-        dropdown: 'libs/bootstrap/bootstrap-dropdown',
-        prettify: 'libs/prettify/prettify'
+        dropdown: 'libs/bootstrap/bootstrap-dropdown'
     },
     modules: [{
         name: 'main'
-    }],
-    inlineText: true,
-    wrap: {
-        start: "(function() {",
-        end: "}());"
-    }
-});
+    }]
+    //wrap: {
+        //start: "(function() {",
+        //end: "}());"
+    //}
+})
 

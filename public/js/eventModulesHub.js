@@ -15,8 +15,53 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
+    var _prevClickedView = null;
     //: proxy/handle all events that modalEditorView to mediator
     mediator.proxyAllEvents(modalEditorView);
+
+    $(document.documentElement).keydown(function(e) {
+        var $next, $children, $prev;
+        //: 40 is down arrow
+        if (e.which === 40) {
+            e.preventDefault();
+            //: if _prevClickedView is a composite then it will have children
+            //: we should select its children on arrow down
+            $children = _prevClickedView.$el.children('ul:first').children('li:first'); 
+            //: if _prevClickedView doesnt have any children then it is a leaf
+            //: so we should only select its next sibling
+            $next = $children.length ? $children : _prevClickedView.$el.next();
+            //: if there is a next sibling then select it
+            if ($next.length) {
+                $next.trigger({ type: 'mousedown', which: 1 });
+            //: else there is no next sibling
+            } else {
+                //: since there is no next sibling, go to the parent which is `ul` then select
+                //: the parent of `ul` which should be the previous `li` (the previous composite node)
+                $next = _prevClickedView.$el.parent().parent();
+                //: if the _prevClickedView's parent has any sibling then select it, else
+                //: go to the parent's parent and select it.
+                //: when we hit the bottom of the tree this should turn into a no op since there is no more `next()`
+                $next = $next.next().length ? $next.next() : $next.parent().parent().next();
+                $next.trigger({ type: 'mousedown', which: 1 });
+            }
+        //: 38 is up arrow
+        } else if (e.which === 38) {
+            e.preventDefault();
+            //: select the _prevClickedView's previous sibling
+            $prev = _prevClickedView.$el.prev();
+            //: if previous sibling doesnt exist select the parent's parent(the previous `li`
+            if (!$prev.length) {
+                $prev = _prevClickedView.$el.parent().parent(); 
+            //TODO optimize this.. seems to cause some lag
+            //: else if check if the previous sibling has any descendant `li` and if it does
+            //: select the very last one
+            } else {
+                $children = $prev.find('li.tvc:last');
+                if ($children.length) $prev = $children;
+            }
+            $prev.trigger({ type: 'mousedown', which: 1 });
+        }
+    });
     
     var createViewFromSpec = function(spec) {
         var view = null;
@@ -27,18 +72,22 @@ define(function(require) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
                 },
                 'delete node': function(e) {
-                    view.model.destroy({ cascade: true });
-                    componentEditorView.clear();
-                    componentDetailView.clear();
+                    view.$el.fadeOut('fast', function() {
+                        view.model.destroy({ cascade: true });
+                        componentEditorView.clear();
+                        componentDetailView.clear();
+                    });
                 }
             };
         } else {
             view = new DocLeafComponentView({ model: spec.model });
             view.render().menu = {
                 'delete node': function(e) {
-                    view.model.destroy();
-                    componentEditorView.clear();
-                    componentDetailView.clear();
+                    view.$el.fadeOut('fast', function() {
+                        view.model.destroy();
+                        componentEditorView.clear();
+                        componentDetailView.clear();
+                    });
                 }
             };
         }
@@ -50,6 +99,7 @@ define(function(require) {
         mediator.proxyAllEvents(view);
         //: append this new view to the previous viewContext
         spec.viewContext.$componentCollection.append(view.el);
+        view.$el.trigger({ type: 'mousedown', which: 1 });
     };
 
     var checkComponentReq = function(view) {
@@ -64,18 +114,15 @@ define(function(require) {
     var bindCustomContextMenu = function(view) {
         view.$el.on('contextmenu', function(e) {
             contextMenuView.render({ viewContext: view, event: e });
-            return false;
+            e.preventDefault();
         });
     };
 
-    var _prevClickedView = null;
     var highlighter = function(spec) {
         if (_prevClickedView) {
-            _prevClickedView.$el
-                .children('div:first').css({ 'background-color': '#F5F5F5' });
+            _prevClickedView.$el.children('div:first').css({ 'background-color': '#F5F5F5' });
         }
-        spec.viewContext.$el
-            .children('div:first').css({ 'background-color': '#D9EDF7' });
+        spec.viewContext.$el.children('div:first').css({ 'background-color': '#D9EDF7' });
         _prevClickedView = spec.viewContext;
     };
 
@@ -133,10 +180,10 @@ define(function(require) {
     });
 
     //: unused events, document this later on
-    mediator.on('drop:leaf', 'leafDropHandler', function(spec) {});
-    mediator.on('drop:composite', 'compositeDropHandler', function(spec) {});
-    mediator.on('hoverEnter:leaf', 'leafHoverEnterHandler', function(spec) {});
-    mediator.on('hoverExit:leaf', 'leafHoverExitHandler', function(spec) {});
-    mediator.on('hoverEnter:composite', 'compositeHoverEnterHandler', function(spec) {});
-    mediator.on('hoverExit:composite', 'compositeHoverExitHandler', function(spec) {});
+    //mediator.on('drop:leaf', 'leafDropHandler', function(spec) {});
+    //mediator.on('drop:composite', 'compositeDropHandler', function(spec) {});
+    //mediator.on('hoverEnter:leaf', 'leafHoverEnterHandler', function(spec) {});
+    //mediator.on('hoverExit:leaf', 'leafHoverExitHandler', function(spec) {});
+    //mediator.on('hoverEnter:composite', 'compositeHoverEnterHandler', function(spec) {});
+    //mediator.on('hoverExit:composite', 'compositeHoverExitHandler', function(spec) {});
 });

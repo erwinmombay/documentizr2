@@ -19,10 +19,10 @@ exports.getdocument = function(req, res) {
         results.push(row);
     });
     query.on('end', function() {
-            res.contentType('json');
-            //setTimeout(function() {
-            res.send(JSON.stringify(utils.buildDocLevelSchema(results)));
-            //}, 15000);
+        res.contentType('json');
+        //setTimeout(function() {
+        res.send(JSON.stringify(utils.buildDocLevelSchema(results)));
+        //}, 15000);
     });
 };
 

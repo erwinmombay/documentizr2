@@ -16,7 +16,7 @@ require.config({
         jqueryui: 'libs/jquery/jquery-ui-1.8.17.custom.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
-        handlebars: 'libs/handlebars/handlebars-1.0.0.beta.4',
+        handlebars: 'libs/handlebars/handlebars',
         text: 'libs/require/text.min',
         templates: '../templates',
         models: 'models',
@@ -24,7 +24,6 @@ require.config({
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
         dropdown: 'libs/bootstrap/bootstrap-dropdown'
-        //prettify: 'libs/prettify/prettify'
     }
 });
 
@@ -40,9 +39,5 @@ define(function(require) {
     var modal = require('order!modal');
     var dropdown = require('order!dropdown');
 
-    //var prettify = require('order!prettify');
-    //$(document).ready(function() {
-        //prettyPrint();
-    //});
     App.initialize();
 });

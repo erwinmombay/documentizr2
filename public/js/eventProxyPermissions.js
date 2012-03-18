@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     var permissions = {
         'addOne:tree': {
             'treeAddOneSubViewHandler': true    
@@ -18,17 +19,38 @@ define(function(require) {
         'rightClick:composite': {
             'compositeRightClickHandler': true
         },
+        'middleClick:leaf': {
+        },
+        'middleClick:composite': {
+        },
         'doubleClick:leaf': {
             'leafDoubleClickHandler': true
         },
         'doubleClick:composite': {
             'compositeDoubleClickHandler': true
         },
+        'drop:leaf': {
+            'leafDropHandler': false
+        },
         'drop:composite': {
             'compositeDropHandler': false
         },
+        'render:leaf': {
+        },
+        'render:composite': {
+        },
+        'clear:leaf': {
+        },
+        'clear:composite': {
+        },
         'optionClick:modalEditor': {
             'modalEditorOptionClickHandler': true
+        },
+        'show:modalEditor': {
+        },
+        'hide:modalEditor': {
+        },
+        'render:modalEditor': {
         }
     };
 
