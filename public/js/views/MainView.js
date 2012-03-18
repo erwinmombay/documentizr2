@@ -54,13 +54,15 @@ define(function(require) {
         walkTreeView: function(model) {
             if (model && model.componentCollection && model.schema) {
                 _.each(model.schema.collection, function(value) {
-                    if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) || _.include(['M', 'M/Z'], value.req)) {
+                    if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) ||
+                        _.include(['M', 'M/Z'], value.req)) {
                         var schema = model.schema.collection[value.fullName];
                         var newModel = new ComponentModel({
                             name: schema.name,
                             fullName: schema.fullName,
                             schema: schema || null,
-                            componentCollection: schema && schema.collection && new ComponentCollection() || null
+                            componentCollection: schema && schema.collection &&
+                                                 new ComponentCollection() || null
                         });
                         model.componentCollection.add(newModel);
                         this.walkTreeView(newModel);

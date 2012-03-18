@@ -20,7 +20,8 @@ define(function(require) {
 
     //: we proxy jquery events a little differently than Backbone events.
     //: we proxy the body jquery object's keydown event to the anonymous function
-    //: but only trigger on mousedown up/down arrow key events
+    //: but only trigger on mousedown up/down arrow key events.
+    //: we do this proxy so we can control the event through our eventProxyPermissions.
     var $body = $('body').on('keydown', $.proxy(function(e) {
         if (e.which === 40 || e.which === 38) mediator.trigger('keydown:body', e);
     }, mediator));
@@ -70,7 +71,6 @@ define(function(require) {
     };
 
     mediator.on('keydown:body', 'bodyKeyDownTraverser', function(e) {
-        console.log('in keydown');
         var $next, $children, $prev;
         //: 40 is down arrow
         if (e.which === 40) {
