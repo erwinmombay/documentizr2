@@ -18,7 +18,7 @@
         collections: 'collections',
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
-        dropdown: 'libs/bootstrap/bootstrap-dropdown',
+        dropdown: 'libs/bootstrap/bootstrap-dropdown'
     },
     modules: [{
         name: 'main'

@@ -4233,3 +4233,8 @@ li.tvc > div.tvc-container > span.handle {
   vertical-align: center;
   width: 5px;
 }
+div.outer-spinner-holder img.spinner {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -17,6 +17,15 @@ define(function(require) {
 
     //: proxy/handle all events that modalEditorView to mediator
     mediator.proxyAllEvents(modalEditorView);
+    $(document.documentElement).keydown(function(e) {
+        if (e.which === 40) {
+            e.preventDefault();
+            console.log('down');
+        } else if (e.which === 38) {
+            e.preventDefault();
+            console.log('down');
+        }
+    });
     
     var createViewFromSpec = function(spec) {
         var view = null;
@@ -64,7 +73,7 @@ define(function(require) {
     var bindCustomContextMenu = function(view) {
         view.$el.on('contextmenu', function(e) {
             contextMenuView.render({ viewContext: view, event: e });
-            return false;
+            e.preventDefault();
         });
     };
 
