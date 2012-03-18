@@ -18,7 +18,7 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'show', 'hide', '_onOptionClick', 'clear');
+            _.bindAll(this, 'render', 'show', 'hide', '_onOptionClick');
             this._cachedTargetView = null;
         },
 
@@ -26,8 +26,7 @@ define(function(require) {
             this.$el.empty();
             this._cachedTargetView = spec.viewContext;
             var template = Handlebars.compile(this.template);
-            template = template({ curNode: spec.viewContext.model.get('name') +
-                '. Choose a child node below.' });
+            template = template({ curNode: spec.viewContext.model.get('name') + '. Choose a child node below.' });
             this.$el.append(template);
             var $body = this.$el.find('div.modal-body');
             _.each(spec.viewContext.model.schema.collection, function(value) {
@@ -55,13 +54,8 @@ define(function(require) {
 
         hide: function() {
             this.$el.modal('hide');
-            this.trigger('show:modalEditor');
             this._cachedTargetView = null;
-            return this;
-        },
-
-        clear: function() {
-            this.$el.empty();
+            this.trigger('hide:modalEditor');
             return this;
         },
 

@@ -24,6 +24,7 @@ define(function(require) {
         render: function() {
             this.$el.empty();
             this.$el.append(this.template({ label: this.model.get('name') }));
+            this.trigger('render:' + this._type, this);
             return this;
         }
     });

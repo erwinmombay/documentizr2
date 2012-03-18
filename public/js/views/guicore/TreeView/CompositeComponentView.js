@@ -48,6 +48,7 @@ define(function(require) {
             if (this.model.componentCollection) {
                 this.addAll();
             }
+            this.trigger('render:' + this._type, this);
             return this;
         },
 
