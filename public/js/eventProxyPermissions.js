@@ -1,6 +1,6 @@
 define(function(require) {
     'use strict';
-    var permissions = {
+    var eventProxyPermissions = {
         'keydown:body': {
             'bodyKeyDownHandler': true
         },
@@ -57,14 +57,14 @@ define(function(require) {
         }
     };
 
-    permissions.validate = function(subscriber, channel) {
-        if (!permissions[channel]) {
+    eventProxyPermissions.validateSubscription = function(subscriber, channel) {
+        if (!eventProxyPermissions[channel]) {
             return false;
         }
-        var test = permissions[channel][subscriber];
+        var test = eventProxyPermissions[channel][subscriber];
         return test === undefined ? false : test;
     };
 
-    return permissions;
+    return eventProxyPermissions;
 });
 

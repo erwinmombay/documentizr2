@@ -39,6 +39,49 @@ define(function(require) {
         }
     };
 
+    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
+        var view = null;
+        if (spec.model.componentCollection) {
+            view = new DocCompositeComponentView({ model: spec.model });
+            view.render().sortable({ handle: '' }).menu = {
+                'add new node': function(e) {
+                    modalEditorView.render({ viewContext: view, event: e }).show();
+                },
+                'delete node': function(e) {
+                    view.$el.fadeOut('fast', function() {
+                        view.model.destroy({ cascade: true });
+                        componentEditorView.clear();
+                        componentDetailView.clear();
+                    });
+                }
+            };
+        } else {
+            view = new DocLeafComponentView({ model: spec.model });
+            view.render().menu = {
+                'delete node': function(e) {
+                    view.$el.fadeOut('fast', function() {
+                        view.model.destroy();
+                        componentEditorView.clear();
+                        componentDetailView.clear();
+                    });
+                }
+            };
+        }
+        //: change the label color based on requirement
+        treeViewUtils.checkComponentReq(view);
+        //: we override the normal contextmenu on right click and display our own
+        treeViewUtils.bindCustomContextMenu(view);
+        //: we proxy/handle all the events `view` triggers to mediator
+        mediator.proxyAllEvents(view);
+        //: append this new view to the previous viewContext
+        spec.viewContext.$componentCollection.append(view.el);
+        //: only trigger the leftClick event when it isnt the initial set up
+        //: to build the tree. the boolean flag isInitialTreeRender is reset to false
+        //: when the modalEditor is used. (means the user created this node)
+        if (!isInitialTreeRender) view.$el.trigger({ type: 'mousedown', which: 1 });
+        return view;
+    };
+
     /**************************************************************
      *                   TreeView DOM utilities
      **************************************************************/
@@ -108,49 +151,6 @@ define(function(require) {
             }
             $prev.trigger({ type: 'mousedown', which: 1 });
         }
-    };
-
-    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeBuild) {
-        var view = null;
-        if (spec.model.componentCollection) {
-            view = new DocCompositeComponentView({ model: spec.model });
-            view.render().sortable({ handle: '' }).menu = {
-                'add new node': function(e) {
-                    modalEditorView.render({ viewContext: view, event: e }).show();
-                },
-                'delete node': function(e) {
-                    view.$el.fadeOut('fast', function() {
-                        view.model.destroy({ cascade: true });
-                        componentEditorView.clear();
-                        componentDetailView.clear();
-                    });
-                }
-            };
-        } else {
-            view = new DocLeafComponentView({ model: spec.model });
-            view.render().menu = {
-                'delete node': function(e) {
-                    view.$el.fadeOut('fast', function() {
-                        view.model.destroy();
-                        componentEditorView.clear();
-                        componentDetailView.clear();
-                    });
-                }
-            };
-        }
-        //: change the label color based on requirement
-        treeViewUtils.checkComponentReq(view);
-        //: we override the normal contextmenu on right click and display our own
-        treeViewUtils.bindCustomContextMenu(view);
-        //: we proxy/handle all the events `view` triggers to mediator
-        mediator.proxyAllEvents(view);
-        //: append this new view to the previous viewContext
-        spec.viewContext.$componentCollection.append(view.el);
-        //: only trigger the leftClick event when it isnt the initial set up
-        //: to build the tree. the boolean flag isInitialTreeBuild is reset to false
-        //: when the modalEditor is used. (means the user created this node)
-        if (!isInitialTreeBuild) view.$el.trigger({ type: 'mousedown', which: 1 });
-        return view;
     };
 
     return treeViewUtils;

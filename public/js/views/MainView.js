@@ -5,15 +5,16 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var mediator = require('mediator');
+    var controlsView = require('views/controlsView');
     var eventModulesHub = require('eventModulesHub');
-    var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var treeViewUtils = require('utils/treeViewUtils');
 
     var DocTreeView = require('views/guicore/DocTreeView/DocTreeView');
 
-    var MainView = Backbone.View.extend({
+    var mainView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
+            this.controlsView = controlsView;
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',
@@ -32,6 +33,7 @@ define(function(require) {
         },
 
         render: function() {
+            this.controlsView.render();
             $('.sidebar-nav').append(this.doctree.el);
             return this;
         },
@@ -50,5 +52,5 @@ define(function(require) {
         }
     });
 
-    return MainView;
+    return new mainView({ el: 'div#app-panel' });
 });

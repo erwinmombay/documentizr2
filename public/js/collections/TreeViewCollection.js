@@ -5,6 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var ComponentModel = require('models/ComponentModel');
+
     var ComponentCollection = require('collections/ComponentCollection');
 
     var TreeViewCollection = Backbone.Collection.extend({
@@ -35,7 +36,7 @@ define(function(require) {
                     }
                 }, this),
                 error: _.bind(function(xhr, status, errObj) {
-                    alert('an error has occured on GET document.');
+                    alert('An error has occured fetching the document. Please refresh this page or check your internet connection.');
                 }, this)
             };
             $.ajax(newOptions);

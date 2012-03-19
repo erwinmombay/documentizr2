@@ -8,14 +8,14 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var permissions = require('eventProxyPermissions');
+    var eventProxyPermissions = require('eventProxyPermissions');
 
     //: we mixin Backbone.Events to turn the mediator object
     //: into a Events Proxy Hub for our application
     var mediator = _.extend({}, Backbone.Events);
 
     mediator.on = function(channel, subscriber, callback, context) {
-        if (permissions.validate(subscriber, channel)) {
+        if (eventProxyPermissions.validateSubscription(subscriber, channel)) {
             return Backbone.Events.on.call(mediator, channel, callback, context);
         }
         return mediator;
