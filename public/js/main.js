@@ -22,14 +22,13 @@ require.config({
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal',
-        dropdown: 'libs/bootstrap/bootstrap-dropdown'
+        modal: 'libs/bootstrap/bootstrap-modal'
+        //prettyprint: 'libs/prettify/prettify',
     }
 });
 
 //: we use the order plugin the load the library's synchronously
 define(function(require) {
-    'use strict';
     var $ = require('order!jquery');
     var _ = require('order!underscore');
     var Backbone = require('order!backbone');
@@ -37,7 +36,10 @@ define(function(require) {
     var jqui = require('order!jqueryui');
     var App = require('order!app');
     var modal = require('order!modal');
-    var dropdown = require('order!dropdown');
+    //var prettify = require('order!prettify');
+    //$(document).ready(function() {
+        //prettyPrint();
+    //});
 
     App.initialize();
 });

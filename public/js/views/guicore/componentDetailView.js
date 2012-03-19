@@ -32,5 +32,5 @@ define(function(require) {
         }
     });
 
-    return new componentDetailView({ el: $('#detail-view') });
+    return new componentDetailView({ el: $('#detail-panel') });
 });

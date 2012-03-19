@@ -1,0 +1,16 @@
+<table>
+  <tr>
+    <td>{{description}}</td>
+    <td>
+      <div id="{{id}}" class="btn-group" data-toggle="buttons-radio">
+      {{#each buttons}}
+        {{#if isDefault}}
+          <button class="btn btn-primary active">{{button}}</button>
+        {{else}}
+          <button class="btn btn-primary">{{button}}</button>
+        {{/if}}
+      {{/each}}
+      </div>
+    </td>
+  </tr>
+</table>

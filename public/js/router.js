@@ -12,7 +12,7 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var MainView = require('views/MainView');
+    var mainView = require('views/mainView');
 
     var Router = Backbone.Router.extend({
         routes: {
@@ -20,8 +20,7 @@ define(function(require) {
         },
 
         initialize: function() {
-            this.app = new MainView({ el: 'div#app-panel' });
-            this.app.render();
+            mainView.render();
         }
     });
     return Router;
