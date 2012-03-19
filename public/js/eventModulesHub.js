@@ -38,6 +38,8 @@ define(function(require) {
         }
     }, mediator));
 
+    mediator.on('all', 'test', function() { console.log('allz'); });
+
     //: proxy/handle all events that modalEditorView triggers to mediator
     mediator.proxyAllEvents(modalEditorView);
     //: we leave the `selectComponent` function in eventModulesHub since

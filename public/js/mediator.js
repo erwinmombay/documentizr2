@@ -43,11 +43,8 @@ define(function(require) {
         (events = events.split(/\s+/)).push(null);
 
         while (event = events.shift()) {
-            if (all) {
-                console.log('push');
-                if (!eventProxyPermissions[event][all.next.name]) {
-                    events.push({next: all.next, tail: all.tail, event: event});
-                }
+            if (all && eventProxyPermissions['all'][all.next.name]) {
+                events.push({next: all.next, tail: all.tail, event: event});
             }
             if (!(node = calls[event])) continue;
             if(!eventProxyPermissions[event][node.next.name]) continue;
@@ -71,6 +68,5 @@ define(function(require) {
         }
     };
 
-    console.log(mediator);
     return mediator;
 });
