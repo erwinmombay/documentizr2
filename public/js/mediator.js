@@ -15,8 +15,8 @@ define(function(require) {
     var mediator = _.extend({}, Backbone.Events);
 
     mediator.on = function(events, subscriber, callback, context) {
-        //: code copied from Backbonejs source.
-        //: need to modify to check for permissions on run time
+        //: code copied from Backbonejs source code and modified
+        //: to store subscriber name
         if (eventProxyPermissions.validateSubscription(subscriber, events)) {
             var ev;
             events = events.split(/\s+/);
@@ -35,8 +35,8 @@ define(function(require) {
     };
 
     mediator.trigger = function(events) {
-        //: code copied from Backbonejs source.
-        //: need to modify to check for permissions on run time
+        //: code copied from Backbonejs source code and modified
+        //: to check for permissions on run time
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks)) return this;
         all = calls['all'];
