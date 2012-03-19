@@ -1,6 +1,10 @@
 define(function(require) {
     'use strict';
     var eventProxyPermissions = {
+        //: careful when adding handlers to `all` since this gets
+        //: triggered for all the valid events handled by mediator
+        'all': {
+        },
         'keydown:body': {
             'bodyKeyDownHandler': true
         },
@@ -8,7 +12,9 @@ define(function(require) {
             'treeAddOneSubViewHandler': true    
         },
         'addOne:composite': {
-            'compositeAddOneSubViewHandler': true
+            'compositeAddOneSubViewHandler': true,
+            'test1': true,
+            'test2': true
         },
         'leftClick:leaf': {
             'leafLeftClickHandler': true

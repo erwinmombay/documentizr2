@@ -13,7 +13,6 @@ define(function(require) {
     var ComponentCollection = require('collections/ComponentCollection');
 
     var mediator = require('mediator');
-    var eventsProxyPermissions = require('eventProxyPermissions');
     var treeViewUtils = require('utils/treeViewUtils');
 
     //: _isInitialTreeRender is a flag used to identify if there are no changes
@@ -35,15 +34,12 @@ define(function(require) {
         //: their own individual functions (since we again do an if/else statement 
         //: on the event handler
         if (e.which === 40 || e.which === 38) {
-            if (eventsProxyPermissions['keydown:body'].bodyKeyDownHandler) {
-                mediator.trigger('keydown:body', e);
-            }
+            mediator.trigger('keydown:body', e);
         }
     }, mediator));
 
     //: proxy/handle all events that modalEditorView triggers to mediator
     mediator.proxyAllEvents(modalEditorView);
-
     //: we leave the `selectComponent` function in eventModulesHub since
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
@@ -90,6 +86,12 @@ define(function(require) {
 
     mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
         treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+    });
+
+    mediator.on('addOne:composite', 'test2', function(spec) {
+    });
+
+    mediator.on('addOne:composite', 'test1', function(spec) {
     });
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
