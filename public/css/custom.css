@@ -4208,12 +4208,12 @@ body {
 .tree-panel:after {
   clear: both;
 }
-#detail-view {
+#detail-panel {
   min-height: 340px;
   overflow-y: scroll;
   overflow-x: scroll;
 }
-#editor-view {
+#editor-panel {
   height: 150px;
 }
 /* Tree View Components */

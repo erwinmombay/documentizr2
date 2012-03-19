@@ -43,5 +43,5 @@ define(function(require) {
         }
     });
 
-    return new componentEditorView({ el: $('#editor-view') });
+    return new componentEditorView({ el: $('#editor-panel') });
 });

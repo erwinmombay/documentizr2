@@ -77,10 +77,10 @@ define(function(require) {
             e.preventDefault();
             //: if _prevClickedView is a composite then it will have children
             //: we should select its children on arrow down
-            $children = _prevClickedView.$el.children('ul:first').children('li:first'); 
+            $children = _prevClickedView.$el.children('ul:visible:first').children('li:first'); 
             //: if _prevClickedView doesnt have any children then it is a leaf
             //: so we should only select its next sibling
-            $next = $children.length ? $children : _prevClickedView.$el.next();
+            $next = $children.length ? $children : _prevClickedView.$el.next('');
             //: if there is a next sibling then select it
             if ($next.length) {
                 $next.trigger({ type: 'mousedown', which: 1 });
@@ -92,7 +92,8 @@ define(function(require) {
                 //: if the _prevClickedView's parent has any sibling then select it, else
                 //: go to the parent's parent and select it.
                 //: when we hit the bottom of the tree this should turn into a no op since there is no more `next()`
-                $next = $next.next().length ? $next.next() : $next.parent().parent().next();
+                $next = $next.next().length ?
+                    $next.next() : $next.parent().parent().next(':visible');
                 $next.trigger({ type: 'mousedown', which: 1 });
             }
         //: 38 is up arrow
@@ -107,7 +108,7 @@ define(function(require) {
             //: else if check if the previous sibling has any descendant `li` and if it does
             //: select the very last one
             } else {
-                $children = $prev.find('li.tvc:last');
+                $children = $prev.find('li.tvc:visible:last');
                 if ($children.length) $prev = $children;
             }
             $prev.trigger({ type: 'mousedown', which: 1 });
