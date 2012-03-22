@@ -40,7 +40,7 @@ define(function(require) {
 
         saveInput: function() {
             if (this._cachedModel) {
-                this._cachedModel.set('name', this.$el.find('#element').val());
+                this._cachedModel.set('name', this.$el.find('input#element').val());
                 componentDetailView.render(this._cachedSpec);
             }
         }

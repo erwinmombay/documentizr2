@@ -8,6 +8,8 @@ define(function(require) {
             _.bindAll(this, 'render', 'clear');
         },
 
+        //: TODO this should be redone an re optimized for finer grained updates
+        //: rerending the whole ul and li's is very expensive on auto update
         render: function(spec) {
             this.$el.empty();
             var $ul = $('<ul/>');
