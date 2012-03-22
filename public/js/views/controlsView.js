@@ -67,7 +67,7 @@ define(function(require) {
             if (!$(e.target).is('.active')) {
                 var $active = this.$eagerSaveControl.find('button.active');
                 var $inactive = this.$eagerSaveControl.find('button').not('.active');
-                if ($active.text() === 'auto') {
+                if ($active.text() === 'on') {
                     eventsProxyPermissions['inputChange:componentEditor'] = true;
                 } else {
                     eventsProxyPermissions['inputChange:componentEditor'] = false;
