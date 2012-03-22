@@ -6,7 +6,9 @@ define(function(require) {
 
     var eventsProxyPermissions = require('eventProxyPermissions');
     var buttonGroupTemplate = require('text!templates/Controls/ButtonGroup.html');
-
+    
+    //: TODO fix this. the way e currently create the buttons and listen to changes
+    //: is incredibly ugly and clunky and not very extendible.
     var controlsView = Backbone.View.extend({
         events: {
             'click #arrow-key-control': 'arrowKeyControl',
@@ -26,10 +28,10 @@ define(function(require) {
         buildEagerSaveTable: function() {
             return this.buttonGroupTemplate({ 
                 id: 'eager-save-control',
-                description: 'manually save changes or update automatically?',
+                description: 'auto update on edit',
                 buttons: [
-                    { button: 'manual', isDefault: true },
-                    { button: 'automatic' }
+                    { button: 'on', isDefault: true },
+                    { button: 'off' }
                 ]
             });
         },
@@ -37,7 +39,7 @@ define(function(require) {
         buildArrowKeyTable: function() {
             return this.buttonGroupTemplate({ 
                 id: 'arrow-key-control',
-                description: 'use up/down arrow keys to navigate tree view?',
+                description: 'use up/down arrow keys to navigate tree view',
                 buttons: [
                     { button: 'on', isDefault: true },
                     { button: 'off' }
@@ -65,8 +67,10 @@ define(function(require) {
             if (!$(e.target).is('.active')) {
                 var $active = this.$eagerSaveControl.find('button.active');
                 var $inactive = this.$eagerSaveControl.find('button').not('.active');
-                if ($active.text() === 'manual') {
+                if ($active.text() === 'auto') {
+                    eventsProxyPermissions['inputChange:componentEditor'] = true;
                 } else {
+                    eventsProxyPermissions['inputChange:componentEditor'] = false;
                 }
                 $active.removeClass('active');
                 $inactive.addClass('active');

@@ -35,6 +35,8 @@ define(function(require) {
         } else if (e.which === 38) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
+        } else if ($(e.target).closest(componentEditorView.$el)) {
+            mediator.trigger('inputChange:componentEditor');
         }
     }, mediator));
 
@@ -58,6 +60,10 @@ define(function(require) {
 
     mediator.on('upArrow:keyboard', 'keyboardUpArrowHandler', function(e) {
         treeViewUtils.traverseTreeUp(e, _prevClickedView);
+    });
+
+    mediator.on('inputChange:componentEditor', 'componentEditorHandler', function() {
+        componentEditorView.saveInput();
     });
 
     mediator.on('scroll', 'docTreeScrollHandler', function(spec) {

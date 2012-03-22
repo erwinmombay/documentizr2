@@ -64,6 +64,9 @@ define(function(require) {
         'hide:modalEditor': {
         },
         'render:modalEditor': {
+        },
+        'inputChange:componentEditor': {
+            'componentEditorHandler': true
         }
     };
 

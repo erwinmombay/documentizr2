@@ -1,3 +1,10 @@
+/**
+ * mainView.js
+ * ~~~~~~~~~~~~~~
+ *
+ * @author erwin.mombay
+ */
+
 define(function(require) {
     'use strict';
     var $ = require('jquery');
