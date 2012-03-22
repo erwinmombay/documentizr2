@@ -36,10 +36,6 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
         curItem = queue.pop();
         lookahead = queue[queue.length - 1];
 
-        //console.log('===========');
-        //console.log(curItem);
-        //console.log(curSegment);
-        //console.log(lookahead);
         if (curSegment && curItem.segment === curSegment.name) {
             curSegment.collection[curItem.segment +
                                   (String(curItem.ref).length < 2 ? '0' + curItem.ref : curItem.ref)
@@ -50,26 +46,21 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
             this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
         } else {
             curSegment = null;
-            //console.log('BBBBB');
             //: is under table and not part of any loop
             if (curItem.loop === 'None' && curItem.parent_loop_pos === 'n/a') {
-                //console.log('a');
                 segment = this.buildSegment(curItem);
                 curSegment = segment;
                 curTable.collection[segment.fullName] = segment;
             //: under table but part of a loop
             } else if (curItem.loop !== 'None'  && curItem.parent_loop_pos === 'n/a') {
-                //console.log('b');
                 //: current queuedLoops initiator matches the current rows loop(loop parent)
                 if (queuedLoop && queuedLoop.initiator === curItem.loop) {
-                //console.log('b-a');
                     segment = this.buildSegment(curItem);
                     curSegment = segment;
                     queuedLoop.collection[segment.fullName] = segment;
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                 //: loop does not exist create a loop and attach this segment
                 } else {
-                //console.log('b-b');
                     loop = this.buildLoop(curItem);
                     segment = this.buildSegment(curItem);
                     curSegment = segment;
@@ -80,14 +71,14 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
                 }
             //: not under table and is part of a loop (nested loops)
             } else {
-                //console.log('c');
                 //: item belongs to the current queuedLoop 
                 if (queuedLoop.initiator === curItem.loop) {
-                //console.log('c-a');
                     segment = this.buildSegment(curItem);
                     curSegment = segment;
                     queuedLoop.collection[segment.fullName] = segment;
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
+                //: create a new loop, this is a nested loop since its parent loop pos
+                //: is the posNo of the queuedLoop
                 } else if (queuedLoop.posNo === curItem.parent_loop_pos) {
                     loop = this.buildLoop(curItem);
                     segment = this.buildSegment(curItem);
@@ -96,15 +87,15 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
                     queuedLoop.collection[loop.fullName] = loop;
                     loops.push(loop);
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
+                //: else it is a nested loop but the current queuedLoop is not its parent.
+                //: pop the loops queue repeatedly until we find its parent.
                 } else {
-                //console.log('e');
                     loops.pop();
                     loop = this.buildLoop(curItem);
                     segment = this.buildSegment(curItem);
                     curSegment = segment;
                     loop.collection[segment.fullName] = segment;
                     //: keep on popping the loops array until we find the parent.
-                    //: we usually need to do this if we just exited deeply nested loops.
                     while (loops.length) {
                         queuedLoop = getQueuedLoop();
                         if (queuedLoop.posNo === loop.parentPosNo) {
@@ -134,7 +125,8 @@ exports.checkIfLoopsArrayShouldPop = function(lookahead, loopsArray, queue) {
  * wether it be a part of the same loop or actually a child/nested loop
  */
 exports.isNextItemInScope = function(lookahead, loopsArray) {
-    //TODO fix logic here
+    //: TODO fix logic here. reexamine this section. seems to work but we can probably
+    //: make it cleaner
     var queuedLoop = loopsArray.length && loopsArray[loopsArray.length - 1];
     if (lookahead && queuedLoop && lookahead.loop !== queuedLoop.initiator) {
         //: if it actually is a child scope then return true
@@ -146,13 +138,6 @@ exports.isNextItemInScope = function(lookahead, loopsArray) {
     return true;
 };
 
-exports.popAppend = function(popTarget, appendTarget) {
-    var dequeuedItem = popTarget.pop();
-    if (dequeuedItem) {
-        appendTarget.collection[dequeuedItem.fullName] = dequeuedItem;
-    }
-};
-
 exports.buildSegment = function(curItem) {
     var segment = {
         name: curItem.segment,
@@ -161,8 +146,7 @@ exports.buildSegment = function(curItem) {
         maxOccurs: curItem.max_count,
         req: curItem.req_des,
         nodeType: 'segment',
-        collection: {
-        }
+        collection: {}
     };
     segment.collection[curItem.segment + '0' + curItem.ref] = this.buildElement(curItem);
     return segment;
