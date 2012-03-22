@@ -89,26 +89,13 @@ exports.buildTableLevelSchema = function(curTable, curTableSegments) {
                     queuedLoop.collection[segment.fullName] = segment;
                     this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                 } else if (queuedLoop.posNo === curItem.parent_loop_pos) {
-                //console.log('c-b');
-                    //TODO re evaluate this block, might not be needed
-                    if (queuedLoop.initiator === curItem.loop) {
-                //console.log('d-a');
-                        segment = this.buildSegment(curItem);
-                        curSegment = segment;
-                        queuedLoop.collection[segment.fullName] = segment;
-                        this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
-                    //: current item is a loop initiator
-                    //: build loop, then build segment then attach segment to loop
-                    } else {
-                //console.log('d-b');
-                        loop = this.buildLoop(curItem);
-                        segment = this.buildSegment(curItem);
-                        curSegment = segment;
-                        loop.collection[segment.fullName] = segment;
-                        queuedLoop.collection[loop.fullName] = loop;
-                        loops.push(loop);
-                        this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
-                    }
+                    loop = this.buildLoop(curItem);
+                    segment = this.buildSegment(curItem);
+                    curSegment = segment;
+                    loop.collection[segment.fullName] = segment;
+                    queuedLoop.collection[loop.fullName] = loop;
+                    loops.push(loop);
+                    this.checkIfLoopsArrayShouldPop(lookahead, loops, queue);
                 } else {
                 //console.log('e');
                     loops.pop();
