@@ -36,6 +36,7 @@ define(function(require) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
         }
+        console.log($(e.target));
     }, mediator));
 
     //: proxy/handle all events that modalEditorView triggers to mediator
