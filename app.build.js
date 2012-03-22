@@ -5,6 +5,7 @@
     //dir: 'public-build',
     preserveLicenseComments: true,
     out: 'public/js/main-build.js',
+    optimize: 'uglify',
         paths: {
         order: 'libs/require/order.min',
         jquery: 'libs/jquery/jquery-1.7.1.min',

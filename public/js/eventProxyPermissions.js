@@ -1,11 +1,21 @@
 define(function(require) {
     'use strict';
     var eventProxyPermissions = {
-        'keydown:body': {
-            'bodyKeyDownHandler': true
+        //: careful when adding handlers to `all` since this gets
+        //: triggered for all the valid events handled by mediator
+        'all': {
+        },
+        'scroll': {
+            'docTreeScrollHandler': true
         },
         'addOne:tree': {
             'treeAddOneSubViewHandler': true    
+        },
+        'downArrow:keyboard': {
+            'keyboardDownArrowHandler': true
+        },
+        'upArrow:keyboard': {
+            'keyboardUpArrowHandler': true
         },
         'addOne:composite': {
             'compositeAddOneSubViewHandler': true

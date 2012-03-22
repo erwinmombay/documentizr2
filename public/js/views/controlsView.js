@@ -9,14 +9,29 @@ define(function(require) {
 
     var controlsView = Backbone.View.extend({
         events: {
-            'click #arrow-key-control': 'arrowKeyControl'
+            'click #arrow-key-control': 'arrowKeyControl',
+            'click #eager-save-control': 'eagerSaveControl'
         },
 
         initialize: function() {
-            _.bindAll(this, 'render', 'buildArrowKeyTable', 'arrowKeyControl');
+            _.bindAll(this, 'render', 'buildArrowKeyTable', 'arrowKeyControl',
+                'buildEagerSaveTable', 'eagerSaveControl');
             this.buttonGroupTemplate = Handlebars.compile(buttonGroupTemplate);
             this.$arrowKeyTable = $(this.buildArrowKeyTable());
+            this.$eagerSaveTable = $(this.buildEagerSaveTable());
             this.$arrowKeyControl = this.$arrowKeyTable.find('#arrow-key-control');
+            this.$eagerSaveControl = this.$eagerSaveTable.find('#eager-save-control');
+        },
+
+        buildEagerSaveTable: function() {
+            return this.buttonGroupTemplate({ 
+                id: 'eager-save-control',
+                description: 'manually save changes or update automatically?',
+                buttons: [
+                    { button: 'manual', isDefault: true },
+                    { button: 'automatic' }
+                ]
+            });
         },
 
         buildArrowKeyTable: function() {
@@ -35,9 +50,23 @@ define(function(require) {
                 var $active = this.$arrowKeyControl.find('button.active');
                 var $inactive = this.$arrowKeyControl.find('button').not('.active');
                 if ($active.text() === 'on') {
-                    eventsProxyPermissions['keydown:body'].bodyKeyDownHandler = false;
+                    eventsProxyPermissions['downArrow:keyboard'].keyboardDownArrowHandler = false;
+                    eventsProxyPermissions['upArrow:keyboard'].keyboardUpArrowHandler = false;
                 } else {
-                    eventsProxyPermissions['keydown:body'].bodyKeyDownHandler = true;
+                    eventsProxyPermissions['downArrow:keyboard'].keyboardDownArrowHandler = true;
+                    eventsProxyPermissions['upArrow:keyboard'].keyboardUpArrowHandler = true;
+                }
+                $active.removeClass('active');
+                $inactive.addClass('active');
+            }
+        },
+
+        eagerSaveControl: function(e) {
+            if (!$(e.target).is('.active')) {
+                var $active = this.$eagerSaveControl.find('button.active');
+                var $inactive = this.$eagerSaveControl.find('button').not('.active');
+                if ($active.text() === 'manual') {
+                } else {
                 }
                 $active.removeClass('active');
                 $inactive.addClass('active');
@@ -46,6 +75,7 @@ define(function(require) {
 
         render: function() {
             this.$el.append(this.$arrowKeyTable);
+            this.$el.append(this.$eagerSaveTable);
         }
     });
 

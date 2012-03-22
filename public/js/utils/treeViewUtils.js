@@ -22,8 +22,8 @@ define(function(require) {
     treeViewUtils.walkTreeViewModels = function(model) {
         if (model && model.componentCollection && model.schema) {
             _.each(model.schema.collection, function(value) {
-                if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) ||
-                    _.include(['M', 'M/Z'], value.req)) {
+                //if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) ||
+                    //_.include(['M', 'M/Z'], value.req)) {
                     var schema = model.schema.collection[value.fullName];
                     var newModel = new ComponentModel({
                         name: schema.name,
@@ -34,7 +34,7 @@ define(function(require) {
                     });
                     model.componentCollection.add(newModel);
                     treeViewUtils.walkTreeViewModels(newModel);
-                }
+                //}
             }, this);
         }
     };
@@ -83,7 +83,7 @@ define(function(require) {
     };
 
     /**************************************************************
-     *                   TreeView DOM utilities
+     *                   TreeView DOM utilities                   *
      **************************************************************/
 
     treeViewUtils.checkComponentReq = function(view) {
@@ -109,48 +109,48 @@ define(function(require) {
         spec.viewContext.$el.children('div:first').css({ 'background-color': '#D9EDF7' });
     };
 
-    treeViewUtils.treeClickSelector = function(e, prevClickedView) {
-        var $next, $prev, $children;
-        //: 40 is down arrow
-        if (e.which === 40) {
-            e.preventDefault();
-            //: if prevClickedView is a composite then it will have children
-            //: we should select its children on arrow down
-            $children = prevClickedView.$el.children('ul:visible:first').children('li:first');
-            //: if prevClickedView doesnt have any children then it is a leaf,
-            //: so we should only select its next sibling
-            $next = $children.length ? $children : prevClickedView.$el.next('');
-            //: if there is a next sibling then select it
-            if ($next.length) {
-                $next.trigger({ type: 'mousedown', which: 1 });
-            //: else there is no next sibling and try to traverse parent instead
-            } else {
-                //: since there is no next sibling, go to the parent which is `ul`, then select
-                //: the parent of `ul` which should be the previous `li` (the previous composite node)
-                $next = prevClickedView.$el.parent().parent();
-                //: if the prevClickedView's parent has any sibling then select it, else
-                //: go to the parent's parent and select it.
-                //: when we hit the bottom of the tree this should turn into a no op since there is no more `next()`
-                $next = $next.next().length ? $next.next() : $next.parent().parent().next(':visible');
-                $next.trigger({ type: 'mousedown', which: 1 });
+    treeViewUtils.traverseTreeDown = function(e, prevView) {
+        var $next, $children;
+        e.preventDefault();
+        //: if prevView is a composite then it will have children
+        //: we should select its children on arrow down
+        $children = prevView.$el.children('ul.tvc-ul:visible:first').children('li:first');
+        //: if prevView doesnt have any children then it is a leaf,
+        //: so we should only select its next sibling
+        $next = $children.length ? $children : prevView.$el.next();
+        //: if there is a next sibling then select it
+        if ($next.length) {
+            $next.trigger({ type: 'mousedown', which: 1 });
+        //: else there is no next sibling and try to traverse parent instead
+        } else {
+            $next = prevView.$el.parent().parent('li.tvc');
+            while ($next.length) {
+                if ($next.next().length) {
+                    $next = $next.next();
+                    break;
+                }
+                $next = $next.parent().parent('li.tvc');
             }
-        //: 38 is up arrow
-        } else if (e.which === 38) {
-            e.preventDefault();
-            //: select the prevClickedView's previous sibling
-            $prev = prevClickedView.$el.prev();
-            //: if previous sibling doesnt exist select the parent's parent(the previous `li`
-            if (!$prev.length) {
-                $prev = prevClickedView.$el.parent().parent();
-            //TODO optimize this.. seems to cause some lag(expected because of heavy dom traversal)
-            //: else if check if the previous sibling has any descendant `li` and if it does
-            //: select the very last one
-            } else {
-                $children = $prev.find('li.tvc:visible:last');
-                if ($children.length) $prev = $children;
-            }
-            $prev.trigger({ type: 'mousedown', which: 1 });
         }
+        if ($next.length) $next.trigger({ type: 'mousedown', which: 1 });
+    };
+
+    treeViewUtils.traverseTreeUp = function(e, prevView) {
+        var $prev, $children;
+        e.preventDefault();
+        //: select the prevView's previous sibling
+        $prev = prevView.$el.prev();
+        //: if previous sibling doesnt exist select the parent's parent(the previous `li`
+        if (!$prev.length) {
+            $prev = prevView.$el.parent('ul.tvc-ul').parent('li.tvc');
+        //TODO optimize this.. seems to cause some lag(expected because of heavy dom traversal)
+        //: else if check if the previous sibling has any descendant `li` and if it does
+        //: select the very last one
+        } else {
+            $children = $prev.find('li.tvc:visible:last');
+            if ($children.length) $prev = $children;
+        }
+        $prev.trigger({ type: 'mousedown', which: 1 });
     };
 
     return treeViewUtils;
