@@ -39,8 +39,10 @@ define(function(require) {
         },
 
         saveInput: function() {
-            this._cachedModel.set('name', this.$el.find('#element').val());
-            componentDetailView.render(this._cachedSpec);
+            if (this._cachedModel) {
+                this._cachedModel.set('name', this.$el.find('#element').val());
+                componentDetailView.render(this._cachedSpec);
+            }
         }
     });
 

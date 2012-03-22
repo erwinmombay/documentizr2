@@ -28,17 +28,15 @@ define(function(require) {
     //: we proxy jquery events a little differently than Backbone events.
     //: we proxy the $body jquery object's keydown event to the anonymous function
     //: but only trigger on mousedown down/up(40/38 respectively) arrow key events.
-    //: we do this proxy so we can toggle permissions through eventProxyPermissions.
-    var $body = $('body').on('keydown', $.proxy(function(e) {
-        //: TODO this can be optimized by seperating out the up and down events to
-        //: their own individual functions (since we again do an if/else statement 
-        //: on the event handler
-        if (e.which === 40 || e.which === 38) {
-            mediator.trigger('keydown:body', e);
+    var $body = $('body').on('keydown', _.bind(function(e) {
+        if (e.which === 40) {
+            e.preventDefault();
+            mediator.trigger('downArrow:keyboard', e);
+        } else if (e.which === 38) {
+            e.preventDefault();
+            mediator.trigger('upArrow:keyboard', e);
         }
     }, mediator));
-
-    mediator.on('all', 'test', function() { console.log('allz'); });
 
     //: proxy/handle all events that modalEditorView triggers to mediator
     mediator.proxyAllEvents(modalEditorView);
@@ -48,21 +46,32 @@ define(function(require) {
     var selectComponent = function(spec) {
         componentDetailView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
+        //console.log('pos: ' + spec.viewContext.$el.position().top);
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)
         _prevClickedView = spec.viewContext;
     };
 
-    mediator.on('keydown:body', 'bodyKeyDownHandler', function(e) {
-        treeViewUtils.treeClickSelector(e, _prevClickedView);
+    mediator.on('downArrow:keyboard', 'keyboardDownArrowHandler', function(e) {
+        treeViewUtils.traverseTreeDown(e, _prevClickedView);
+    });
+
+    mediator.on('upArrow:keyboard', 'keyboardUpArrowHandler', function(e) {
+        treeViewUtils.traverseTreeUp(e, _prevClickedView);
+    });
+
+    mediator.on('scroll', 'docTreeScrollHandler', function(spec) {
+        //console.log(spec.viewContext.$el.scrollTop());
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
+        componentEditorView.saveInput();
         componentEditorView.render(spec);
         selectComponent(spec);
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
+        componentEditorView.saveInput();
         componentEditorView.clear();
         selectComponent(spec);
     });

@@ -5,16 +5,20 @@ define(function(require) {
         //: triggered for all the valid events handled by mediator
         'all': {
         },
-        'keydown:body': {
-            'bodyKeyDownHandler': true
+        'scroll': {
+            'docTreeScrollHandler': true
         },
         'addOne:tree': {
             'treeAddOneSubViewHandler': true    
         },
+        'downArrow:keyboard': {
+            'keyboardDownArrowHandler': true
+        },
+        'upArrow:keyboard': {
+            'keyboardUpArrowHandler': true
+        },
         'addOne:composite': {
-            'compositeAddOneSubViewHandler': true,
-            'test1': true,
-            'test2': true
+            'compositeAddOneSubViewHandler': true
         },
         'leftClick:leaf': {
             'leafLeftClickHandler': true

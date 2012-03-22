@@ -60,10 +60,11 @@ define(function(require) {
         },
 
         destroy: function() {
-            this.off();
-            this.unbindEventHandlers();
             this.remove();
+            //: need to call trigger destroy ahead before call to `this.off()`
             this.trigger('destroy' + this._type);
+            this.unbindEventHandlers();
+            this.off();
         },
 
         clear: function() {
