@@ -35,8 +35,10 @@ define(function(require) {
         } else if (e.which === 38) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
-        } else if ($(e.target).closest(componentEditorView.$el)) {
-            mediator.trigger('inputChange:componentEditor');
+        }
+    }, mediator)).on('keyup', _.bind(function(e) {
+        if ($(e.target).closest(componentEditorView.$el)) {
+            mediator.trigger('inputChange:componentEditor', e);
         }
     }, mediator));
 
@@ -62,7 +64,8 @@ define(function(require) {
         treeViewUtils.traverseTreeUp(e, _prevClickedView);
     });
 
-    mediator.on('inputChange:componentEditor', 'componentEditorHandler', function() {
+    mediator.on('inputChange:componentEditor', 'componentEditorHandler', function(e) {
+            console.log('kaka');
         componentEditorView.saveInput();
     });
 

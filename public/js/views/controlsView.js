@@ -68,9 +68,10 @@ define(function(require) {
                 var $active = this.$eagerSaveControl.find('button.active');
                 var $inactive = this.$eagerSaveControl.find('button').not('.active');
                 if ($active.text() === 'on') {
-                    eventsProxyPermissions['inputChange:componentEditor'] = true;
+                    eventsProxyPermissions['inputChange:componentEditor'].componentEditorHandler = false;
                 } else {
-                    eventsProxyPermissions['inputChange:componentEditor'] = false;
+                    console.log('reset');
+                    eventsProxyPermissions['inputChange:componentEditor'].componentEditorHandler = true;
                 }
                 $active.removeClass('active');
                 $inactive.addClass('active');
