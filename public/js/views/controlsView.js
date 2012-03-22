@@ -50,9 +50,11 @@ define(function(require) {
                 var $active = this.$arrowKeyControl.find('button.active');
                 var $inactive = this.$arrowKeyControl.find('button').not('.active');
                 if ($active.text() === 'on') {
-                    eventsProxyPermissions['keydown:body'].bodyKeyDownHandler = false;
+                    eventsProxyPermissions['downArrow:keyboard'].keyboardDownArrowHandler = false;
+                    eventsProxyPermissions['upArrow:keyboard'].keyboardUpArrowHandler = false;
                 } else {
-                    eventsProxyPermissions['keydown:body'].bodyKeyDownHandler = true;
+                    eventsProxyPermissions['downArrow:keyboard'].keyboardDownArrowHandler = true;
+                    eventsProxyPermissions['upArrow:keyboard'].keyboardUpArrowHandler = true;
                 }
                 $active.removeClass('active');
                 $inactive.addClass('active');
@@ -64,9 +66,7 @@ define(function(require) {
                 var $active = this.$eagerSaveControl.find('button.active');
                 var $inactive = this.$eagerSaveControl.find('button').not('.active');
                 if ($active.text() === 'manual') {
-                    //eventsProxyPermissions['keydown:body'].bodyKeyDownHandler = false;
                 } else {
-                    //eventsProxyPermissions['keydown:body'].bodyKeyDownHandler = true;
                 }
                 $active.removeClass('active');
                 $inactive.addClass('active');

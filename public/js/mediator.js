@@ -36,7 +36,8 @@ define(function(require) {
 
     mediator.trigger = function(events) {
         //: code copied from Backbonejs source code and modified
-        //: to check for permissions on run time
+        //: to check for permissions during run time(so permissions can be toggled
+        //: on and off even after the original subscription permissions setting)
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks)) return this;
         all = calls['all'];
