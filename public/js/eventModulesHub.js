@@ -74,13 +74,11 @@ define(function(require) {
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
-        componentEditorView.saveInput();
         componentEditorView.render(spec);
         selectComponent(spec);
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
-        componentEditorView.saveInput();
         componentEditorView.clear();
         selectComponent(spec);
     });
