@@ -37,10 +37,9 @@ define(function(require) {
                 }, this)
             });
             mediator.proxyAllEvents(this.doctree);
-            //: proxy the jquery scroll event it triggers as well
-            this.doctree.$el.on('scroll', _.bind(function(e) {
-                this.doctree.trigger('scroll', { viewContext: this.doctree, event: e });
-            }, this));
+            //: give mediator direct access to doctree(to trigger scroll when traversing 
+            //: tree through arrowkeys)
+            mediator.doctree = this.doctree;
         },
 
         render: function() {
