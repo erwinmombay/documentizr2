@@ -89,8 +89,8 @@ define(function(require) {
     treeViewUtils.checkComponentReq = function(view) {
         if (_.include(['M', 'M/Z'], view.model.schema.req) ||
             _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.schema.name)) {
-            view.$el.find('.tvc-label').css({ 'color': 'red' });
-            return true;
+                view.$el.find('.tvc-label').css({ 'color': 'red' });
+                return true;
         }
         return false;
     };
