@@ -16,35 +16,23 @@ define(function(require) {
         },
 
         initialize: function() {
-            _.bindAll(this, 'render', 'buildArrowKeyTable', 'arrowKeyControl',
-                'buildEagerSaveTable', 'eagerSaveControl');
+            _.bindAll(this, 'render', 'arrowKeyControl', 'eagerSaveControl',
+                'buildOnOffButtonGroup');
             this.buttonGroupTemplate = Handlebars.compile(buttonGroupTemplate);
-            this.$arrowKeyTable = $(this.buildArrowKeyTable());
-            this.$eagerSaveTable = $(this.buildEagerSaveTable());
-            this.$arrowKeyControl = this.$arrowKeyTable.find('#arrow-key-control');
-            this.$eagerSaveControl = this.$eagerSaveTable.find('#eager-save-control');
+            this.$arrowKeyControls = this.buildOnOffButtonGroup({ 
+                id: 'arrow-key-control', description: 'use up/down arrow keys to navigate tree view',
+                buttons: [{ button: 'on', isDefault: true }, { button: 'off' }]
+            });
+            this.$eagerSaveControls = this.buildOnOffButtonGroup({ 
+                id: 'eager-save-control', description: 'auto update on edit',
+                buttons: [{ button: 'on', isDefault: true }, { button: 'off' }]
+            });
+            this.$arrowKeyControl = this.$arrowKeyControls.find('#arrow-key-control');
+            this.$eagerSaveControl = this.$eagerSaveControls.find('#eager-save-control');
         },
 
-        buildEagerSaveTable: function() {
-            return this.buttonGroupTemplate({ 
-                id: 'eager-save-control',
-                description: 'auto update on edit',
-                buttons: [
-                    { button: 'on', isDefault: true },
-                    { button: 'off' }
-                ]
-            });
-        },
-
-        buildArrowKeyTable: function() {
-            return this.buttonGroupTemplate({ 
-                id: 'arrow-key-control',
-                description: 'use up/down arrow keys to navigate tree view',
-                buttons: [
-                    { button: 'on', isDefault: true },
-                    { button: 'off' }
-                ]
-            });
+        buildOnOffButtonGroup: function(spec) {
+            return $(this.buttonGroupTemplate(spec));
         },
 
         arrowKeyControl: function(e) {
@@ -70,7 +58,6 @@ define(function(require) {
                 if ($active.text() === 'on') {
                     eventsProxyPermissions['inputChange:componentEditor'].componentEditorHandler = false;
                 } else {
-                    console.log('reset');
                     eventsProxyPermissions['inputChange:componentEditor'].componentEditorHandler = true;
                 }
                 $active.removeClass('active');
@@ -79,8 +66,8 @@ define(function(require) {
         },
 
         render: function() {
-            this.$el.append(this.$arrowKeyTable);
-            this.$el.append(this.$eagerSaveTable);
+            this.$el.append(this.$arrowKeyControls);
+            this.$el.append(this.$eagerSaveControls);
         }
     });
 

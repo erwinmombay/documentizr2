@@ -65,7 +65,6 @@ define(function(require) {
     });
 
     mediator.on('inputChange:componentEditor', 'componentEditorHandler', function(e) {
-            console.log('kaka');
         componentEditorView.saveInput();
     });
 
