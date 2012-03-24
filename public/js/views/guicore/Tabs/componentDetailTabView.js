@@ -1,9 +1,14 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
+    
+    var componentDetailTabView = Backbone.View.extend({
+        id: 'detail-pane',
+        className: 'tab-pane',
+        name: 'detail',
 
-    var componentDetailView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render', 'clear');
         },
@@ -34,5 +39,5 @@ define(function(require) {
         }
     });
 
-    return new componentDetailView({ el: $('#detail-panel') });
+    return new componentDetailTabView(); 
 });

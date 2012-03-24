@@ -22,7 +22,8 @@ require.config({
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal'
+        modal: 'libs/bootstrap/bootstrap-modal',
+        tab: 'libs/bootstrap/bootstrap-tab'
         //prettyprint: 'libs/prettify/prettify',
     }
 });
@@ -36,6 +37,7 @@ define(function(require) {
     var jqui = require('order!jqueryui');
     var App = require('order!app');
     var modal = require('order!modal');
+    var tab = require('order!tab');
     //var prettify = require('order!prettify');
     //$(document).ready(function() {
         //prettyPrint();

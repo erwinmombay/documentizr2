@@ -5,8 +5,8 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
-    var componentDetailView = require('views/guicore/componentDetailView');
-    var componentEditorView = require('views/guicore/componentEditorView');
+    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
+    var componentEditorView = require('views/guicore/Panels/componentEditorView');
     var eventProxyPermissions = require('eventProxyPermissions');
 
     var ComponentModel = require('models/ComponentModel');
@@ -51,7 +51,7 @@ define(function(require) {
     var selectComponent = function(spec) {
         var curSelectPos = spec.viewContext.$el.position().top;
         var curScrollPos = mediator.doctree.$el.scrollTop();
-        componentDetailView.render(spec);
+        componentDetailTabView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
         //: if else statement that readjusts the doctree's scroll position
         if  (curSelectPos > 640) {
@@ -134,7 +134,7 @@ define(function(require) {
         var model = new ComponentModel({
             name: schema.name, fullName: schema.fullName, schema: schema || null,
             componentCollection: schema && schema.collection && new ComponentCollection(),
-            data: ''
+            data: 'default'
         });
         spec.viewContext.model.componentCollection.add(model);
     });

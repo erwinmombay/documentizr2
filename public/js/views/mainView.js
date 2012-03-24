@@ -11,8 +11,10 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var mediator = require('mediator');
     var controlsView = require('views/controlsView');
+    var componentTabsView = require('views/guicore/Panels/componentTabsView');
+
+    var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
     var treeViewUtils = require('utils/treeViewUtils');
 
@@ -21,7 +23,6 @@ define(function(require) {
     var mainView = Backbone.View.extend({
         initialize: function() {
             _.bindAll(this, 'render');
-            this.controlsView = controlsView;
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',
@@ -43,7 +44,8 @@ define(function(require) {
         },
 
         render: function() {
-            this.controlsView.render();
+            controlsView.render();
+            componentTabsView.render();
             $('.sidebar-nav').append(this.doctree.el);
             return this;
         },

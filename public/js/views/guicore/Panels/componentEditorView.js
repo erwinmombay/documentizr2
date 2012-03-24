@@ -1,9 +1,10 @@
 define(function(require) {
+    'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var componentDetailView = require('views/guicore/componentDetailView');
+    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
 
     var elementTemplate = require('text!templates/Element.html');
 
@@ -24,9 +25,9 @@ define(function(require) {
             this._cachedModel = spec.viewContext.model;
             var template = Handlebars.compile(elementTemplate);
             this.$el.append(template({
-                label: 'name',
-                name: this._cachedModel.get('name') ,
-                value: this._cachedModel.get('name')
+                label: this._cachedModel.get('name'),
+                name: this._cachedModel.get('name'),
+                value: this._cachedModel.get('data')
             }));
             return this;
         },
@@ -40,8 +41,8 @@ define(function(require) {
 
         saveInput: function() {
             if (this._cachedModel) {
-                this._cachedModel.set('name', this.$el.find('input#element').val());
-                componentDetailView.render(this._cachedSpec);
+                this._cachedModel.set('data', this.$el.find('input#element').val());
+                componentDetailTabView.render(this._cachedSpec);
             }
         }
     });

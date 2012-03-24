@@ -5,8 +5,8 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var contextMenuView = require('views/guicore/contextMenuView');
-    var componentEditorView = require('views/guicore/componentEditorView');
-    var componentDetailView = require('views/guicore/componentDetailView');
+    var componentEditorView = require('views/guicore/Panels/componentEditorView');
+    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
@@ -26,11 +26,9 @@ define(function(require) {
                     //_.include(['M', 'M/Z'], value.req)) {
                     var schema = model.schema.collection[value.fullName];
                     var newModel = new ComponentModel({
-                        name: schema.name,
-                        fullName: schema.fullName,
-                        schema: schema || null,
-                        componentCollection: schema && schema.collection &&
-                                             new ComponentCollection() || null
+                        name: schema.name, fullName: schema.fullName, schema: schema || null,
+                        componentCollection: schema && schema.collection && new ComponentCollection() || null,
+                        data: 'default'
                     });
                     model.componentCollection.add(newModel);
                     treeViewUtils.walkTreeViewModels(newModel);
@@ -51,7 +49,7 @@ define(function(require) {
                     view.$el.fadeOut('fast', function() {
                         view.model.destroy({ cascade: true });
                         componentEditorView.clear();
-                        componentDetailView.clear();
+                        componentDetailTabView.clear();
                     });
                 }
             };
@@ -62,13 +60,11 @@ define(function(require) {
                     view.$el.fadeOut('fast', function() {
                         view.model.destroy();
                         componentEditorView.clear();
-                        componentDetailView.clear();
+                        componentDetailTabView.clear();
                     });
                 }
             };
         }
-        //: change the label color based on requirement
-        treeViewUtils.checkComponentReq(view);
         //: we override the normal contextmenu on right click and display our own
         treeViewUtils.bindCustomContextMenu(view);
         //: we proxy/handle all the events `view` triggers to mediator
