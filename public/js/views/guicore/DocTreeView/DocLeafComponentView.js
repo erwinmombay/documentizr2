@@ -15,7 +15,6 @@ define(function(require) {
 
         render: function() {
             LeafComponentView.prototype.render.call(this);
-            console.log(this.model);
             if (_.include(['M', 'M/Z'], this.model.schema.req)) {
                 this.$el.find('.tvc-label').css({ 'color': 'red' });
             }

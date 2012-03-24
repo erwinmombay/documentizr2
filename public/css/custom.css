@@ -6014,7 +6014,7 @@ body {
 #tabs-panel {
   height: 440px;
 }
-#tabs-panel #tabs-content div {
+#tabs-panel #tabs-content > div {
   height: 380px;
   overflow-y: scroll;
   overflow-x: scroll;
