@@ -9,13 +9,15 @@ define(function(require) {
      
     var componentDetailTabView = Backbone.View.extend({
         name: 'detail',
+        id: 'detail-pane',
 
         el: componentDetailTabViewTemplate,
 
         initialize: function() {
             _.bindAll(this, 'render', 'clear');
             this.template = Handlebars.compile(detailFieldTemplate);
-            this.$fields = this.$el.find('fieldset');
+            this.$el.attr('id', this.id);
+            this.$fields = this.$el.find('.span8');
         },
 
         //: TODO this should be redone and re optimized for finer grained updates

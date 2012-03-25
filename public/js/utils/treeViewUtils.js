@@ -82,14 +82,16 @@ define(function(require) {
      *                   TreeView DOM utilities                   *
      **************************************************************/
 
-    treeViewUtils.checkComponentReq = function(view) {
-        if (_.include(['M', 'M/Z'], view.model.schema.req) ||
-            _.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.schema.name)) {
-                view.$el.find('.tvc-label').css({ 'color': 'red' });
-                return true;
-        }
-        return false;
-    };
+    //: TODO evaluate if this is still needed or if we can extract it out to another
+    //: utility location
+    //treeViewUtils.checkComponentReq = function(view) {
+        //if (_.include(['M', 'M/Z'], view.model.schema.req) ||
+            //_.include(['810', 'Table_1', 'Table_2', 'Table_3'], view.model.schema.name)) {
+                //view.$el.find('.tvc-label').css({ 'color': 'red' });
+                //return true;
+        //}
+        //return false;
+    //};
 
     treeViewUtils.bindCustomContextMenu = function(view) {
         view.$el.on('contextmenu', function(e) {
