@@ -43,6 +43,7 @@ define(function(require) {
 
         groupClicked: function(e) {
             var targetId, $target, $el;
+            e.preventDefault();
             $target = $(e.target);
             if ($target.attr('data-parent') === ('#' + this.$el.attr('id'))) {
                 targetId = $target.attr('href');
