@@ -17,7 +17,7 @@ define(function(require) {
             AbstractComponentView.prototype.initialize.apply(this, arguments);
             _.bindAll(this, 'render');
             this._type = 'leaf';
-            this.template = Handlebars.compile(this.template);
+            this.template = Handlebars.compile(options.template || this.template);
             this.$el.attr('id', this.model.cid);
         },
 

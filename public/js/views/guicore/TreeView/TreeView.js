@@ -10,22 +10,25 @@ define(function(require) {
     var TreeViewTemplate = require('text!templates/TreeView/TreeView.html');
 
     var TreeView = Backbone.View.extend({
-        template: TreeViewTemplate,
+        el: TreeViewTemplate,
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOne', 'addAll');
+            _.bindAll(this, 'render', 'addOne', 'addAll', 'reRender');
             this.componentCollection = options.componentCollection || new TreeViewCollection();
             this.componentCollection.on('add', this.addOne);
-            this.template = Handlebars.compile(this.template);
+            //this.template = Handlebars.compile(this.template);
             this.$componentCollection = null;
         },
 
         render: function() {
-            this.$el.empty();
-            this.$el.append(this.template);
-            this.$componentCollection = this.$el.children('.tvc-ul');
+            this.$componentCollection = this.$el;
             this.addAll();
             return this;
+        },
+
+        reRender: function() {
+            this.$el.empty();
+            this.render();
         },
 
         addOne: function(model) {

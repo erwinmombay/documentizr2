@@ -18,7 +18,8 @@
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal'
+        modal: 'libs/bootstrap/bootstrap-modal',
+        tab: 'libs/bootstrap/bootstrap-tab'
     },
     modules: [{
         name: 'main'

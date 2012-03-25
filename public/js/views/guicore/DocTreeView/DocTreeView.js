@@ -17,11 +17,13 @@ define(function(require) {
             this.schema = options.schema || null;
             this.rootName = options.rootName;
             this.rootFullName = options.rootFullName;
-            this.$el.append(spinner);
+            this.$spinner = $(spinner);
+            this.$el.append(this.$spinner);
         },
 
         render: function() {
             TreeView.prototype.render.call(this);
+            this.$spinner.remove();
             return this;
         }
     });

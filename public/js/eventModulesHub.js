@@ -117,16 +117,10 @@ define(function(require) {
         treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
     });
 
-    mediator.on('addOne:composite', 'test2', function(spec) {
-    });
-
-    mediator.on('addOne:composite', 'test1', function(spec) {
-    });
-
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
         treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
         //: we select the root node after creation
-        spec.viewContext.$el.children('ul').children('li').trigger({ type: 'mousedown', which: 1 });
+        //spec.viewContext.$el.children('ul').children('li').trigger({ type: 'mousedown', which: 1 });
     });
 
     mediator.on('optionClick:modalEditor', 'modalEditorOptionClickHandler', function(spec) {
