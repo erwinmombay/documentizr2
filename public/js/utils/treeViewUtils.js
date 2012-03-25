@@ -11,6 +11,7 @@ define(function(require) {
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
     var AccordionView = require('views/guicore/Accordions/AccordionView');
+    var AccordionGroupView = require('views/guicore/Accordions/AccordionGroupView');
 
     var ComponentModel = require('models/ComponentModel');
 
@@ -45,10 +46,21 @@ define(function(require) {
     };
 
     treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
-        var view;
+        var view, labels;
         if (spec.model.componentCollection) {
             if (spec.model.schema.name == '810') {
-                view = new AccordionView({ model: spec.model, id: spec.model.cid, className: 'accordion' });
+                view = new AccordionView({ model: spec.model, id: spec.model.cid, className: 'accordion' }).render();
+            } else if (_.include(['Table_1', 'Table_2', 'Table_3'], spec.model.schema.name)) {
+                labels = { 'Table_1': 'Header', 'Table_2': 'Detail', 'Table_3': 'Summary' };
+                view = new AccordionGroupView({
+                    parentId: spec.viewContext.model.cid,
+                    model: spec.model,
+                    id: spec.model.cid,
+                    className: 'accordion-group',
+                    label: labels[spec.model.schema.name]
+                }).render();
+                view.$componentCollection = $('<ul/>', {'class': 'tvc-ul' });
+                view.$el.find('.accordion-inner').append(view.$componentCollection);
             } else {
                 view = new DocCompositeComponentView({ model: spec.model, id: spec.model.cid });
                 view.render().sortable().menu = {
@@ -76,8 +88,8 @@ define(function(require) {
                 }
             };
         }
-        //: we override the normal contextmenu on right click and display our own
-        if (!(_.include(['810'], spec.model.schema.name))) {
+        if (!(_.include(['810', 'Table_1', 'Table_2', 'Table_3'], spec.model.schema.name))) {
+            //: we override the normal contextmenu on right click and display our own
             treeViewUtils.bindCustomContextMenu(view);
         }
         //: we proxy/handle all the events `view` triggers to mediator

@@ -13,10 +13,9 @@ define(function(require) {
         el: TreeViewTemplate,
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOne', 'addAll', 'reRender');
+            _.bindAll(this, 'render', 'addOne', 'addAll');
             this.componentCollection = options.componentCollection || new TreeViewCollection();
             this.componentCollection.on('add', this.addOne);
-            //this.template = Handlebars.compile(this.template);
             this.$componentCollection = null;
         },
 
@@ -24,11 +23,6 @@ define(function(require) {
             this.$componentCollection = this.$el;
             this.addAll();
             return this;
-        },
-
-        reRender: function() {
-            this.$el.empty();
-            this.render();
         },
 
         addOne: function(model) {
