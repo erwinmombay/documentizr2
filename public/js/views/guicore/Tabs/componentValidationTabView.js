@@ -5,7 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var validationTabTemplate = require('text!templates/Tabs/ValidationTab.html');
-    
+
     var componentValidationTabView = Backbone.View.extend({
         el: validationTabTemplate,
         id: 'validation-pane',
@@ -22,8 +22,8 @@ define(function(require) {
             this.$code = this.$el.find('#validate-code');
             this.defLeafCode = 'if (this.get("name").length >= 10) {\n  alert(JSON.stringify(this.toJSON())' +
                 ');\n} else {\n  alert(this.get("name") + " is less than 10 chars long.")\n}';
-            this.defCompCode = 'if (this.componentCollection.length >= 10)' +
-                '{\n  alert(this.get("name") + " has more than or equal to 10 children nodes. ");\n} else ' +
+            this.defCompCode = 'if (this.componentCollection.length >= 10) {' +
+                '\n  alert(this.get("name") + " has more than or equal to 10 children nodes. ");\n} else ' +
                 '{\n  alert(this.get("name") + " only has " + this.componentCollection.length\n + " children nodes.")\n}';
             this._cachedSpec = null;
             this._cachedModel = null;
@@ -55,5 +55,5 @@ define(function(require) {
         }
     });
 
-    return new componentValidationTabView(); 
+    return new componentValidationTabView();
 });

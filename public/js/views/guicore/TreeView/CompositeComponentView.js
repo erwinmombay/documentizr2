@@ -19,7 +19,7 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle', 'selectable',
                 'sortable', 'bindEventHandlers', 'unbindEventHandlers');
             this._type = 'composite';
-            this.template = Handlebars.compile(this.template);
+            this.template = Handlebars.compile(options.template || this.template);
             //: models have componentCollection while views have
             //: $componentCollection which are the dom elements we dynamically attach
             this.$componentCollection = null;

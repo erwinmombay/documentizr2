@@ -38,9 +38,16 @@ define(function(require) {
     };
 
     treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
-        var view = null;
+        var view, template;
+        console.log(spec);
         if (spec.model.componentCollection) {
-            view = new DocCompositeComponentView({ model: spec.model });
+            if (_.include(['810'], spec.model.schema.name)) {
+            }
+            if (template) {
+                view = new DocCompositeComponentView({ model: spec.model, template: template });
+            } else {
+                view = new DocCompositeComponentView({ model: spec.model });
+            }
             view.render().sortable({ handle: '' }).menu = {
                 'add new node': function(e) {
                     modalEditorView.render({ viewContext: view, event: e }).show();
