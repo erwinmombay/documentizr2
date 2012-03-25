@@ -5,6 +5,8 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var ComponentModel = Backbone.Model.extend({
+        customValidationList: [],
+
         constructor: function(options) {
             //: _allowedProperties are the list of properties from options that we want to 
             //: directly attach to this Model object
@@ -38,6 +40,13 @@ define(function(require) {
                 }
             }
             Backbone.Model.prototype.destroy.call(this, options);
+        },
+
+        validation: function() {
+            var i, l;
+            for (i = 0, l = this.customValidationList.length; i < l; i++) {
+
+            }
         }
     });
     return ComponentModel;

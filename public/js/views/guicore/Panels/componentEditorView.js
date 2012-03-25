@@ -17,14 +17,14 @@ define(function(require) {
             _.bindAll(this, 'render', 'clear', 'saveInput');
             this._cachedModel = null;
             this._cachedSpec = null;
+            this.template = Handlebars.compile(elementTemplate); 
         },
 
         render: function(spec) {
             this.$el.empty();
             this._cachedSpec = spec;
             this._cachedModel = spec.viewContext.model;
-            var template = Handlebars.compile(elementTemplate);
-            this.$el.append(template({
+            this.$el.append(this.template({
                 label: this._cachedModel.get('name'),
                 name: this._cachedModel.get('name'),
                 value: this._cachedModel.get('data')
