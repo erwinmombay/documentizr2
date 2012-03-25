@@ -10,6 +10,8 @@ define(function(require) {
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
+    var AccordionView = require('views/guicore/Accordions/AccordionView');
+    var AccordionGroupView = require('views/guicore/Accordions/AccordionGroupView');
 
     var ComponentModel = require('models/ComponentModel');
 
@@ -20,16 +22,22 @@ define(function(require) {
     var treeViewUtils = {};
 
     treeViewUtils.walkTreeViewModels = function(model) {
+        var schema, newModel;
         if (model && model.componentCollection && model.schema) {
             _.each(model.schema.collection, function(value) {
                 //if (_.include(['Table_1', 'Table_2', 'Table_3'], value.name) ||
                     //_.include(['M', 'M/Z'], value.req)) {
-                    var schema = model.schema.collection[value.fullName];
-                    var newModel = new ComponentModel({
-                        name: schema.name, fullName: schema.fullName, schema: schema || null,
-                        componentCollection: schema && schema.collection && new ComponentCollection() || null,
-                        data: 'default'
-                    });
+                    schema = model.schema.collection[value.fullName];
+                    if (schema && schema.collection) {
+                        newModel = new ComponentModel({
+                            name: schema.name, fullName: schema.fullName, schema: schema,
+                            componentCollection: new ComponentCollection()
+                        });
+                    } else {
+                        newModel = new ComponentModel({
+                            name: schema.name, fullName: schema.fullName, schema: schema, data: 'default'
+                        });
+                    }
                     model.componentCollection.add(newModel);
                     treeViewUtils.walkTreeViewModels(newModel);
                 //}
@@ -38,30 +46,38 @@ define(function(require) {
     };
 
     treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
-        var view, template;
-        console.log(spec);
+        var view, labels;
         if (spec.model.componentCollection) {
-            if (_.include(['810'], spec.model.schema.name)) {
-            }
-            if (template) {
-                view = new DocCompositeComponentView({ model: spec.model, template: template });
+            if (spec.model.schema.name == '810') {
+                view = new AccordionView({ model: spec.model, id: spec.model.cid, className: 'accordion' }).render();
+            } else if (_.include(['Table_1', 'Table_2', 'Table_3'], spec.model.schema.name)) {
+                labels = { 'Table_1': 'Header', 'Table_2': 'Detail', 'Table_3': 'Summary' };
+                view = new AccordionGroupView({
+                    parentId: spec.viewContext.model.cid,
+                    model: spec.model,
+                    id: spec.model.cid,
+                    className: 'accordion-group',
+                    label: labels[spec.model.schema.name]
+                }).render();
+                view.$componentCollection = $('<ul/>', {'class': 'tvc-ul' });
+                view.$el.find('.accordion-inner').append(view.$componentCollection);
             } else {
-                view = new DocCompositeComponentView({ model: spec.model });
+                view = new DocCompositeComponentView({ model: spec.model, id: spec.model.cid });
+                view.render().sortable().menu = {
+                    'add new node': function(e) {
+                        modalEditorView.render({ viewContext: view, event: e }).show();
+                    },
+                    'delete node': function(e) {
+                        view.$el.fadeOut('fast', function() {
+                            view.model.destroy({ cascade: true });
+                            componentEditorView.clear();
+                            componentDetailTabView.clear();
+                        });
+                    }
+                };
             }
-            view.render().sortable({ handle: '' }).menu = {
-                'add new node': function(e) {
-                    modalEditorView.render({ viewContext: view, event: e }).show();
-                },
-                'delete node': function(e) {
-                    view.$el.fadeOut('fast', function() {
-                        view.model.destroy({ cascade: true });
-                        componentEditorView.clear();
-                        componentDetailTabView.clear();
-                    });
-                }
-            };
         } else {
-            view = new DocLeafComponentView({ model: spec.model });
+            view = new DocLeafComponentView({ model: spec.model, id: spec.model.cid });
             view.render().menu = {
                 'delete node': function(e) {
                     view.$el.fadeOut('fast', function() {
@@ -72,8 +88,10 @@ define(function(require) {
                 }
             };
         }
-        //: we override the normal contextmenu on right click and display our own
-        treeViewUtils.bindCustomContextMenu(view);
+        if (!(_.include(['810', 'Table_1', 'Table_2', 'Table_3'], spec.model.schema.name))) {
+            //: we override the normal contextmenu on right click and display our own
+            treeViewUtils.bindCustomContextMenu(view);
+        }
         //: we proxy/handle all the events `view` triggers to mediator
         mediator.proxyAllEvents(view);
         //: append this new view to the previous viewContext

@@ -68,13 +68,35 @@ body {
   padding-top: 0.3em;
 }
 
+/*.accordion {*/
+  /*height: auto;*/
+  /*margin-bottom: @baseLineHeight;*/
+/*}*/
+
+/*.accordion-body {*/
+  /*.clearfix();*/
+/*}*/
+
+/*.accordion-group {*/
+  /*height: auto;*/
+  /*margin-bottom: 2px;*/
+  /*border: 1px solid #e5e5e5;*/
+  /*.border-radius(4px);*/
+/*}*/
+.accordion-inner {
+  padding: 9px 15px;
+  border-top: 1px solid #e5e5e5;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  max-height: 450px;
+}
+
 .tree-panel {
-  .clearfix();
   border-radius: 3px 3px 3px 3px;
   display: block;
   height: 550px;
   /*overflow-y: scroll;*/
-  overflow-x: scroll;
+  /*overflow-x: scroll;*/
   padding-right: 24px;
 }
 
@@ -91,11 +113,15 @@ body {
 
 
 #editor-panel {
-  height: 150px;
+  height: 162px;
 }
 
+
+ul.tvc-ul {
+}
 /* Tree View Components */
 li.tvc {
+  cursor: pointer;
   list-style-type: none;
   span {
     min-height: 5px;
@@ -105,7 +131,6 @@ li.tvc {
   }
   > div.tvc-container > span.handle {
     background-repeat: no-repeat;
-    cursor: pointer;
     display: inline-block;
     vertical-align: center;
     width: 5px;

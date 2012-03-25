@@ -123,6 +123,14 @@ define(function(require) {
         //spec.viewContext.$el.children('ul').children('li').trigger({ type: 'mousedown', which: 1 });
     });
 
+    mediator.on('addOne:accordion', 'accordionAddOneSubViewHandler', function(spec) {
+        treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+    });
+
+    mediator.on('addOne:accordionGroup', 'accordionGroupAddOneSubViewHandler', function(spec) {
+        treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+    });
+
     mediator.on('optionClick:modalEditor', 'modalEditorOptionClickHandler', function(spec) {
         _isInitialTreeRender = false;
         var targetId = $(spec.event.target).attr('id');

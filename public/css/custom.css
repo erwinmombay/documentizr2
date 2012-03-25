@@ -5984,32 +5984,35 @@ body {
   margin-top: 0.3em;
   padding-top: 0.3em;
 }
+/*.accordion {*/
+/*height: auto;*/
+/*margin-bottom: @baseLineHeight;*/
+/*}*/
+/*.accordion-body {*/
+/*.clearfix();*/
+/*}*/
+/*.accordion-group {*/
+/*height: auto;*/
+/*margin-bottom: 2px;*/
+/*border: 1px solid #e5e5e5;*/
+/*.border-radius(4px);*/
+/*}*/
+.accordion-inner {
+  padding: 9px 15px;
+  border-top: 1px solid #e5e5e5;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  max-height: 450px;
+}
 .tree-panel {
-  *zoom: 1;
-  *zoom: 1;
   border-radius: 3px 3px 3px 3px;
   display: block;
   height: 550px;
   /*overflow-y: scroll;*/
 
-  overflow-x: scroll;
+  /*overflow-x: scroll;*/
+
   padding-right: 24px;
-}
-.tree-panel:before,
-.tree-panel:after {
-  display: table;
-  content: "";
-}
-.tree-panel:after {
-  clear: both;
-}
-.tree-panel:before,
-.tree-panel:after {
-  display: table;
-  content: "";
-}
-.tree-panel:after {
-  clear: both;
 }
 #tabs-panel {
   height: 440px;
@@ -6020,10 +6023,11 @@ body {
   overflow-x: scroll;
 }
 #editor-panel {
-  height: 150px;
+  height: 162px;
 }
 /* Tree View Components */
 li.tvc {
+  cursor: pointer;
   list-style-type: none;
 }
 li.tvc span {
@@ -6034,7 +6038,6 @@ li.tvc span.tvc-label {
 }
 li.tvc > div.tvc-container > span.handle {
   background-repeat: no-repeat;
-  cursor: pointer;
   display: inline-block;
   vertical-align: center;
   width: 5px;

@@ -5,11 +5,14 @@ define(function(require) {
         //: triggered for all the valid events handled by mediator
         'all': {
         },
-        'scroll': {
-            'docTreeScrollHandler': true
-        },
         'addOne:tree': {
-            'treeAddOneSubViewHandler': true    
+            'treeAddOneSubViewHandler': true
+        },
+        'addOne:accordion': {
+            'accordionAddOneSubViewHandler': true
+        },
+        'addOne:accordionGroup': {
+            'accordionGroupAddOneSubViewHandler': true
         },
         'downArrow:keyboard': {
             'keyboardDownArrowHandler': true
