@@ -42,11 +42,11 @@ define(function(require) {
         },
 
         groupClicked: function(e) {
-            var targetId, $target, $elem;
+            var targetId, $target, $elem, href;
             e.preventDefault();
             $target = $(e.target);
             if ($target.attr('data-parent') === ('#' + this.$el.attr('id'))) {
-                targetId = $this.attr('href') && href.replace(/.*(?=#[^\s]+$)/, ''); //: strip ie full url
+                targetId = (href = $target.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') ;
                 alert(targetId);
                 $target = this.$el.find(targetId);
                 _.each(this.$componentCollection.find('.accordion-body'), function(elem) {
