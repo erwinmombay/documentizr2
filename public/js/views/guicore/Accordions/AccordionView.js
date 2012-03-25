@@ -45,7 +45,7 @@ define(function(require) {
             var targetId, $target, $el;
             $target = $(e.target);
             if ($target.attr('data-parent') === ('#' + this.$el.attr('id'))) {
-                targetId = $(e.target).attr('href');
+                targetId = $target.attr('href');
                 $target = this.$el.find('#' + targetId);
                 _.each(this.$componentCollection.find('.accordion-body'), function(el) {
                     $el = $(el);
