@@ -148,7 +148,7 @@ exports.buildSegment = function(curItem) {
         nodeType: 'segment',
         collection: {}
     };
-    segment.collection[curItem.segment + '0' + curItem.ref] = this.buildElement(curItem);
+    segment.collection[curItem.segment + '01']  = this.buildElement(curItem);
     return segment;
 };
 

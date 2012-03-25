@@ -1,4 +1,5 @@
 @import "bootstrap/bootstrap.less";
+@import "bootstrap/mixins.less";
 body {
   padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
 }
@@ -77,11 +78,17 @@ body {
   padding-right: 24px;
 }
 
-#detail-panel {
-  height: 340px;
-  overflow-y: scroll;
-  overflow-x: scroll;
+#tabs-panel {
+  height: 440px;
+  #tabs-content {
+    > div {
+      height: 380px;
+      overflow-y: scroll;
+      overflow-x: scroll;
+    }
+  }
 }
+
 
 #editor-panel {
   height: 150px;
@@ -114,4 +121,9 @@ div.outer-spinner-holder img.spinner {
 display: block;
     margin-left: auto;
     margin-right: auto 
+}
+
+.dropbox {
+  max-height: 30px;
+  max-width: 30px;
 }

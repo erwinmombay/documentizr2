@@ -98,6 +98,9 @@ define(function(require) {
             this.trigger('drop:' + this._type, { viewContext: this, event: e, ui: ui });
         },
 
+        //: TODO optimize this class in the future by having a settings has to turn these events
+        //: on and off. onhover events are a good example why we would want this as it is slightly expensive
+        //: on every hover triggering an event.
         _onHoverEnter: function(e, ui) {
             this.trigger('hoverEnter:' + this._type, { viewContext: this, event: e, ui: ui });
         },

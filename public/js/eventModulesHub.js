@@ -5,8 +5,10 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
-    var componentDetailView = require('views/guicore/componentDetailView');
-    var componentEditorView = require('views/guicore/componentEditorView');
+    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
+    var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
+    var componentEditorView = require('views/guicore/Panels/componentEditorView');
+    var eventProxyPermissions = require('eventProxyPermissions');
 
     var ComponentModel = require('models/ComponentModel');
 
@@ -48,9 +50,17 @@ define(function(require) {
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
-        componentDetailView.render(spec);
+        var curSelectPos = spec.viewContext.$el.position().top;
+        var curScrollPos = mediator.doctree.$el.scrollTop();
+        componentDetailTabView.render(spec);
+        componentValidationTabView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
-        //console.log('pos: ' + spec.viewContext.$el.position().top);
+        //: if else statement that readjusts the doctree's scroll position
+        if  (curSelectPos > 640) {
+            mediator.doctree.$el.scrollTop(curScrollPos + 30);
+        } else if (curSelectPos < 120) {
+            mediator.doctree.$el.scrollTop(curScrollPos - 30);
+        }
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)
         _prevClickedView = spec.viewContext;
@@ -68,11 +78,13 @@ define(function(require) {
         componentEditorView.saveInput();
     });
 
-    mediator.on('scroll', 'docTreeScrollHandler', function(spec) {
-        //console.log(spec.viewContext.$el.scrollTop());
-    });
-
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
+        //: if permissions has been reset to true for auto update 
+        //: do a saveInput on the previous data. this makes sure that we save the users input data
+        //: when the the toggle is currently off while they type and turn it on prior to changing nodes
+        if (eventProxyPermissions['inputChange:componentEditor'].componentEditorHandler) {
+            componentEditorView.saveInput();
+        }
         componentEditorView.render(spec);
         selectComponent(spec);
     });
@@ -124,7 +136,7 @@ define(function(require) {
         var model = new ComponentModel({
             name: schema.name, fullName: schema.fullName, schema: schema || null,
             componentCollection: schema && schema.collection && new ComponentCollection(),
-            data: ''
+            data: 'default'
         });
         spec.viewContext.model.componentCollection.add(model);
     });
