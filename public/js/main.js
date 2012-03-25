@@ -24,7 +24,6 @@ require.config({
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
         tab: 'libs/bootstrap/bootstrap-tab'
-        //collapse: 'libs/bootstrap/bootstrap-collapse'
         //prettyprint: 'libs/prettify/prettify',
     }
 });
@@ -39,7 +38,6 @@ define(function(require) {
     var App = require('order!app');
     var modal = require('order!modal');
     var tab = require('order!tab');
-    //var collapse = require('order!collapse');
     //var prettify = require('order!prettify');
     //$(document).ready(function() {
         //prettyPrint();
