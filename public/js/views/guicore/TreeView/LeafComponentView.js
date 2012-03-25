@@ -18,7 +18,6 @@ define(function(require) {
             _.bindAll(this, 'render');
             this._type = 'leaf';
             this.template = Handlebars.compile(options.template || this.template);
-            this.$el.attr('id', this.model.cid);
         },
 
         render: function() {

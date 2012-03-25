@@ -10,7 +10,6 @@ define(function(require) {
     var componentDetailTabView = Backbone.View.extend({
         name: 'detail',
         id: 'detail-pane',
-
         el: componentDetailTabViewTemplate,
 
         initialize: function() {
@@ -32,9 +31,15 @@ define(function(require) {
                 }, this);
             } else {
                 _.each(spec.viewContext.model.componentCollection.models, function(model) {
-                    this.$fields.append(
-                        this.template({ id: 'd' + model.cid, name: model.get('name'), data: model.get('data') })
-                    );
+                    if (model.componentCollection) {
+                        this.$fields.append(
+                            this.template({ id: 'd' + model.cid, name: model.get('name') })
+                        );
+                    } else {
+                        this.$fields.append(
+                            this.template({ id: 'd' + model.cid, name: model.get('name'), data: model.get('data') })
+                        );
+                    }
                 }, this);
             }
             return this;

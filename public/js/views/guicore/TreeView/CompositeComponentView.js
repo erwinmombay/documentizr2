@@ -23,7 +23,6 @@ define(function(require) {
             //: models have componentCollection while views have
             //: $componentCollection which are the dom elements we dynamically attach
             this.$componentCollection = null;
-            this.$el.attr('id', this.model.cid);
         },
 
         bindEventHandlers: function() {
@@ -87,7 +86,7 @@ define(function(require) {
 
         sortable: function(spec) {
             var options = _.defaults(spec || {}, { 
-                helper: 'clone', handle: '.handle', placeholder: 'ui-state-highlight', delay: 100
+                helper: 'clone', placeholder: 'ui-state-highlight', delay: 100
             });
             if (this.$componentCollection) {
                 this.$componentCollection.sortable(options);

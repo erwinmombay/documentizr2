@@ -62,14 +62,14 @@ define(function(require) {
         destroy: function() {
             this.remove();
             //: need to call trigger destroy ahead before call to `this.off()`
-            this.trigger('destroy' + this._type);
+            this.trigger('destroy:' + this._type);
             this.unbindEventHandlers();
             this.off();
         },
 
         clear: function() {
             this.$el.empty();
-            this.trigger('clear' + this._type);
+            this.trigger('clear:' + this._type);
             return this;
         },
 
@@ -84,8 +84,10 @@ define(function(require) {
         },
 
         droppable: function(spec) {
-            var options = _.defaults(spec || {}, { greedy: true, accept: '.tvc', tolerance: 'pointer' });
-            _.extend(options, { drop: this._onDrop, over: this._onHoverEnter, out: this._onHoverExit });
+            var options = _.defaults(spec || {}, { drop: this._onDrop, greedy: true, accept: '.tvc', tolerance: 'pointer' });
+            if (spec.hover) {
+                _.defaults(options, { over: this._onHoverEnter, out: this._onHoverExit });
+            }
             this.$el.droppable(options);
             return this;
         },
