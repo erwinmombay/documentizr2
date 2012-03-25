@@ -42,18 +42,19 @@ define(function(require) {
         },
 
         groupClicked: function(e) {
-            var targetId, $target, $el;
+            var targetId, $target, $elem;
             e.preventDefault();
             $target = $(e.target);
             if ($target.attr('data-parent') === ('#' + this.$el.attr('id'))) {
                 targetId = $target.attr('href');
-                $target = this.$el.find('#' + targetId);
-                _.each(this.$componentCollection.find('.accordion-body'), function(el) {
-                    $el = $(el);
-                    if ($target.is($el) && $target.is('.collapse')) {
-                        $el.removeClass('collapse').addClass('in');
+                alert(targetId);
+                $target = this.$el.find(targetId);
+                _.each(this.$componentCollection.find('.accordion-body'), function(elem) {
+                    $elem = $(elem);
+                    if ($target.is($elem) && $target.is('.collapse')) {
+                        $elem.removeClass('collapse').addClass('in');
                     } else {
-                        $el.removeClass('in').addClass('collapse');
+                        $elem.removeClass('in').addClass('collapse');
                     }
                 }, this);
             }
