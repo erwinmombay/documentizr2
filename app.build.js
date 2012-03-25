@@ -6,7 +6,7 @@
     preserveLicenseComments: true,
     out: 'public/js/main-build.js',
     optimize: 'uglify',
-        paths: {
+    paths: {
         order: 'libs/require/order.min',
         jquery: 'libs/jquery/jquery-1.7.1.min',
         jqueryui: 'libs/jquery/jquery-ui-1.8.17.custom.min',
