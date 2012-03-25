@@ -20,7 +20,7 @@ define(function(require) {
             _.bindAll(this, 'render', 'saveCode', 'runCode');
             this.$el.attr('id', this.id);
             this.$code = this.$el.find('#validate-code');
-            this.defLeafCode = 'if (this.get("name").length >= 10) {\n  alert(JSON.stringify(this.toJSON())' +
+            this.defLeafCode = 'if (this.get("name").length >= 10) {\n  alert(this.get("name") + " is a long name."' +
                 ');\n} else {\n  alert(this.get("name") + " is less than 10 chars long.")\n}';
             this.defCompCode = 'if (this.componentCollection.length >= 10) {' +
                 '\n  alert(this.get("name") + " has more than or equal to 10 children nodes. ");\n} else ' +
