@@ -46,7 +46,7 @@ define(function(require) {
             e.preventDefault();
             $target = $(e.target);
             if ($target.attr('data-parent') === ('#' + this.$el.attr('id'))) {
-                targetId = $target.attr('href');
+                targetId = $this.attr('href') && href.replace(/.*(?=#[^\s]+$)/, ''); //: strip ie full url
                 alert(targetId);
                 $target = this.$el.find(targetId);
                 _.each(this.$componentCollection.find('.accordion-body'), function(elem) {
