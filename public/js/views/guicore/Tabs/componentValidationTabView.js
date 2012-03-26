@@ -20,8 +20,8 @@ define(function(require) {
             _.bindAll(this, 'render', 'saveCode', 'runCode');
             this.$el.attr('id', this.id);
             this.$code = this.$el.find('#validate-code');
-            this.defLeafCode = 'if (this.get("name").length >= 10) {\n  alert(JSON.stringify(this.toJSON())' +
-                ');\n} else {\n  alert(this.get("name") + " is less than 10 chars long.")\n}';
+            this.defLeafCode = 'if (this.get("data") !== "default") {\n  alert(this.get("data") + " is not default!"' +
+                ');\n} else {\n  alert(this.get("name") + " is still default data.")\n}';
             this.defCompCode = 'if (this.componentCollection.length >= 10) {' +
                 '\n  alert(this.get("name") + " has more than or equal to 10 children nodes. ");\n} else ' +
                 '{\n  alert(this.get("name") + " only has " + this.componentCollection.length\n + " children nodes.")\n}';
@@ -50,7 +50,6 @@ define(function(require) {
         runCode: function() {
             var code = this.$code.val();
             var fn = _.bind(new Function(code), this._cachedModel);
-            console.log(this._cachedModel);
             fn();
         }
     });
