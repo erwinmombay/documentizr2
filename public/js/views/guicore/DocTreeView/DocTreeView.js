@@ -22,8 +22,8 @@ define(function(require) {
         },
 
         render: function() {
-            TreeView.prototype.render.call(this);
             this.$spinner.remove();
+            TreeView.prototype.render.call(this);
             return this;
         }
     });
