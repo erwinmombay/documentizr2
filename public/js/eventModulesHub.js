@@ -119,8 +119,7 @@ define(function(require) {
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
         treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
-        //: we select the root node after creation
-        //spec.viewContext.$el.children('ul').children('li').trigger({ type: 'mousedown', which: 1 });
+        //spec.viewContext.$el.find('li:first').trigger({ type: 'mousedown', which: 1 });
     });
 
     mediator.on('addOne:accordion', 'accordionAddOneSubViewHandler', function(spec) {
