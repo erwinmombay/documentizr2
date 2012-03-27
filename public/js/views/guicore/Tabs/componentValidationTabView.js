@@ -48,9 +48,13 @@ define(function(require) {
         },
 
         runCode: function() {
-            var code = this.$code.val();
-            var fn = _.bind(new Function(code), this._cachedModel);
-            fn();
+            try {
+                var code = this.$code.val();
+                var fn = _.bind(new Function(code), this._cachedModel);
+                fn();
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
         }
     });
 
