@@ -24,9 +24,5 @@
     modules: [{
         name: 'main'
     }]
-    //wrap: {
-        //start: "(function() {",
-        //end: "}());"
-    //}
 })
 
