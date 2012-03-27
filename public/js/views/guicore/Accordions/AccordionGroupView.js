@@ -11,9 +11,8 @@ define(function(require) {
             _.bindAll(this, 'render', 'addOne', 'addAll', 'bindEventHandlers', 'unbindEventHandlers');
             this.template = options && options.template || accordionGroupTemplate;
             this.template = Handlebars.compile(this.template);
-            this.parentId = options && options.parentId || null;
+            this.parentId = options && options.parentId;
             this.label = options && options.label || this.model.get('name');
-            this.$componentCollection = null;
             this.bindEventHandlers();
         },
 
@@ -33,6 +32,7 @@ define(function(require) {
 
         render: function() {
             this.$el.append(this.template({ parentId: this.parentId, id: this.label, label: this.label  }));
+            this.$componentCollection = this.$el.find('.tvc-ul');
             return this;
         },
 
@@ -43,24 +43,6 @@ define(function(require) {
         addAll: function() {
             this.model.componentCollection.each(this.addOne);
         }
-
-        //_onMouseDown: function(e) {
-            ////:~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            ////: Doing an event.stopPropagation() onmousedown causes $.selectable or other evenHandlers
-            ////: behavior to not trigger. We make sure that the current event.target dom `is` this view.$el
-            ////:~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            ////: 1 is a mouse left click event.
-            //var $target = $(e.target);
-            //if (e.which == 1 && $target.closest(this.tagName).is(this.$el)) {
-                //this.trigger('leftClick:' + this._type, { viewContext: this, event: e });
-            ////: 3 is a mouse right click event
-            //} else if (e.which == 3 && $target.closest(this.tagName).is(this.$el)) {
-                //this.trigger('rightClick:' + this._type, { viewContext: this, event: e });
-            ////: 2 is a middle click event
-            //} else if (e.which == 2 && $target.closest(this.tagName).is(this.$el)) {
-                //this.trigger('middleClick:' + this._type, { viewContext: this, event: e });
-            //}
-        //}
     });
 
     return AccordionGroupView;

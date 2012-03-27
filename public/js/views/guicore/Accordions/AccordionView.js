@@ -46,7 +46,7 @@ define(function(require) {
             e.preventDefault();
             $target = $(e.target);
             if ($target.attr('data-parent') === ('#' + this.$el.attr('id'))) {
-                targetId = (href = $target.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') ;
+                targetId = (href = $target.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '');
                 $target = this.$el.find(targetId);
                 _.each(this.$componentCollection.find('.accordion-body'), function(elem) {
                     $elem = $(elem);

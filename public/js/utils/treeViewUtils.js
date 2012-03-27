@@ -48,7 +48,7 @@ define(function(require) {
     treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
         var view, labels;
         if (spec.model.componentCollection) {
-            if (spec.model.schema.name == '810') {
+            if (spec.model.schema.name === '810') {
                 view = new AccordionView({ model: spec.model, id: spec.model.cid, className: 'accordion' }).render();
             } else if (_.include(['Table_1', 'Table_2', 'Table_3'], spec.model.schema.name)) {
                 labels = { 'Table_1': 'Header', 'Table_2': 'Detail', 'Table_3': 'Summary' };
@@ -59,8 +59,6 @@ define(function(require) {
                     className: 'accordion-group',
                     label: labels[spec.model.schema.name]
                 }).render();
-                view.$componentCollection = $('<ul/>', {'class': 'tvc-ul' });
-                view.$el.find('.accordion-inner').append(view.$componentCollection);
             } else {
                 view = new DocCompositeComponentView({ model: spec.model, id: spec.model.cid });
                 view.render().sortable().menu = {
@@ -95,6 +93,7 @@ define(function(require) {
         //: we proxy/handle all the events `view` triggers to mediator
         mediator.proxyAllEvents(view);
         //: append this new view to the previous viewContext
+        //console.log(spec.viewContext.$componentCollection);
         spec.viewContext.$componentCollection.append(view.el);
         //: only trigger the leftClick event when it isnt the initial set up
         //: to build the tree. the boolean flag isInitialTreeRender is reset to false
