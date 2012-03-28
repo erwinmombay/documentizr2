@@ -5,7 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
     
     var detailFieldTemplate = require('text!templates/DetailField.html');
-    var componentDetailTabViewTemplate = require('text!templates/DetailTab.html');
+    var componentDetailTabViewTemplate = require('text!templates/Tabs/DetailTab.html');
      
     var componentDetailTabView = Backbone.View.extend({
         name: 'detail',

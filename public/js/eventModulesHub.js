@@ -7,6 +7,7 @@ define(function(require) {
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
     var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
+    var componentCustomTabView = require('views/guicore/Tabs/componentCustomTabView');
     var componentEditorView = require('views/guicore/Panels/componentEditorView');
     var eventProxyPermissions = require('eventProxyPermissions');
 
@@ -54,6 +55,7 @@ define(function(require) {
         var curScrollPos = mediator.doctree.$el.scrollTop();
         componentDetailTabView.render(spec);
         componentValidationTabView.render(spec);
+        componentCustomTabView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
         //: if else statement that readjusts the doctree's scroll position
         if  (curSelectPos > 640) {

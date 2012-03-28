@@ -6,9 +6,10 @@ define(function(require) {
 
     var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
     var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
+    var componentCustomTabView = require('views/guicore/Tabs/componentCustomTabView');
 
     var componentTabsView = Backbone.View.extend({
-        tabs: [componentDetailTabView, componentValidationTabView],
+        tabs: [componentDetailTabView, componentValidationTabView, componentCustomTabView],
         initialize: function() {
             _.bindAll(this, 'render');
             this.$ul = this.$el.children('ul');

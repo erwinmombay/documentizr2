@@ -14,7 +14,15 @@ define(function(require) {
         },
 
         render: function() {
-            CompositeComponentView.prototype.render.call(this);
+            this.$el.empty();
+            this.$el.append(this.template({ label: this.model.get('name'), fullName: this.model.schema.fullName }));
+            this.$componentCollection = this.$el.children('.tvc-ul');
+            this.$tvcHandle = this.$('.handle');
+            this.$tvcToggle = this.$tvcHandle.children('i');
+            if (this.model.componentCollection) {
+                this.addAll();
+            }
+            this.trigger('render:' + this._type, this);
             if (_.include(['M', 'M/Z'], this.model.schema.req) ||
                 _.include(['810', 'Table_1', 'Table_2', 'Table_3'], this.model.schema.name)) {
                     this.$el.find('.tvc-label').css({ 'color': 'red' });

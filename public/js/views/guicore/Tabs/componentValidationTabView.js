@@ -12,11 +12,10 @@ define(function(require) {
         name: 'validation',
 
         events: {
-            'click #save-code': 'saveCode',
             'click #run-code': 'runCode'
         },
 
-        initialize: function() {
+        initialize: function(options) {
             _.bindAll(this, 'render', 'saveCode', 'runCode');
             this.$el.attr('id', this.id);
             this.$code = this.$el.find('#validate-code');
