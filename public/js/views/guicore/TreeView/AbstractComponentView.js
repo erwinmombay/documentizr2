@@ -79,8 +79,7 @@ define(function(require) {
         },
 
         unbindEventHandlers: function() {
-            this.model.off('change', this.render, this);
-            this.model.off('destroy', this.destroy, this);
+            this.model.off(null, null, this);
         },
 
         droppable: function(spec) {
@@ -132,5 +131,3 @@ define(function(require) {
 
     return AbstractComponentView;
 });
-
-

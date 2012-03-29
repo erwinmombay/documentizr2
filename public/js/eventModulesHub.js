@@ -52,16 +52,26 @@ define(function(require) {
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
         var curSelectPos = spec.viewContext.$el.position().top;
-        var curScrollPos = mediator.doctree.$el.scrollTop();
+        var $accordion = spec.viewContext.$el.closest('.accordion-inner');
+        var curScrollPos = $accordion.scrollTop();
+        //var curScrollPos = mediator.doctree.$el.scrollTop();
         componentDetailTabView.render(spec);
         componentValidationTabView.render(spec);
         componentCustomTabView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
+        //: TODO FIX THIS SCROLL
+        console.log('======');
+        console.log($accordion.height());
+        console.log(curSelectPos);
+        console.log(curScrollPos);
+        
         //: if else statement that readjusts the doctree's scroll position
         if  (curSelectPos > 640) {
-            mediator.doctree.$el.scrollTop(curScrollPos + 30);
+            $accordion.scrollTop(curScrollPos + 30);
+            //mediator.doctree.$el.scrollTop(curScrollPos + 30);
         } else if (curSelectPos < 120) {
-            mediator.doctree.$el.scrollTop(curScrollPos - 30);
+            $accordion.scrollTop(curScrollPos - 30);
+            //mediator.doctree.$el.scrollTop(curScrollPos - 30);
         }
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)

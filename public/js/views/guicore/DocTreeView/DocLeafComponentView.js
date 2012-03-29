@@ -18,7 +18,10 @@ define(function(require) {
 
         render: function() {
             this.$el.empty();
-            this.$el.append(this.template({ label: this.model.get('name'), fullName: this.model.schema.fullName }));
+            this.$el.append(this.template({
+                label: this.model.get('name'),
+                fullName: this.model.schema.fullName
+            }));
             if (_.include(['M', 'M/Z'], this.model.schema.req)) {
                 this.$el.find('.tvc-label').css({ 'color': 'red' });
             }
