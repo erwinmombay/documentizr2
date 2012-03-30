@@ -51,25 +51,22 @@ define(function(require) {
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
-        var curSelectPos = spec.viewContext.$el.position().top;
         var $accordion = spec.viewContext.$el.closest('.accordion-inner');
+        var accordionTopPos = $accordion.position().top;
+        var curSelectPos = spec.viewContext.$el.position().top;
         var curScrollPos = $accordion.scrollTop();
-        //var curScrollPos = mediator.doctree.$el.scrollTop();
+        var scrollRelativePos = curSelectPos - accordionTopPos;
+
         componentDetailTabView.render(spec);
         componentValidationTabView.render(spec);
         componentCustomTabView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
-        //: TODO FIX THIS SCROLL
-        console.log('======');
-        console.log($accordion.height());
-        console.log(curSelectPos);
-        console.log(curScrollPos);
-        
-        //: if else statement that readjusts the doctree's scroll position
-        if  (curSelectPos > 640) {
+
+        //: readjusts the doctree's scroll position
+         if (scrollRelativePos > 410) {
             $accordion.scrollTop(curScrollPos + 30);
             //mediator.doctree.$el.scrollTop(curScrollPos + 30);
-        } else if (curSelectPos < 120) {
+        } else if (scrollRelativePos < 20)  {
             $accordion.scrollTop(curScrollPos - 30);
             //mediator.doctree.$el.scrollTop(curScrollPos - 30);
         }

@@ -8,6 +8,7 @@ define(function(require) {
         customValidationList: [],
         _allowedProperties: ['componentCollection', 'schema'],
         _ignoredAttributes: ['componentCollection', 'schema'],
+
         constructor: function(options) {
             //: _allowedProperties are the list of properties from options that we want to 
             //: directly attach to this Model object
@@ -28,7 +29,7 @@ define(function(require) {
         },
 
         initialize: function(attr) {
-            _.bindAll(this, 'destroy');
+            _.bindAll(this, 'destroy', 'validation');
         },
 
         destroy: function(options) {
