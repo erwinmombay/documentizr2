@@ -6,26 +6,25 @@ define(function(require) {
 
     var ComponentModel = Backbone.Model.extend({
         customValidationList: [],
-
+        _allowedProperties: ['componentCollection', 'schema'],
+        _ignoredAttributes: ['componentCollection', 'schema'],
         constructor: function(options) {
             //: _allowedProperties are the list of properties from options that we want to 
             //: directly attach to this Model object
-            var _allowedProperties = ['componentCollection', 'schema'];
             //: _ignoreAttribures are the list of properties from options that we dont want
             //: to turn into Backbone.Model `attributes` 
-            var _ignoredAttributes = ['componentCollection', 'schema'];
             var args = [].slice.call(arguments, 0)[0];
-            _.each(options, function(value, key) {
-                if (!this.hasOwnProperty(key) || _.include(_allowedProperties, key)) {
-                    this[key] = value;
-                }
-            }, this);
+            _.each(options, this._allowProperties, this);
             _.each(args, function(value, key) {
-                if (_.include(_ignoredAttributes, key)) {
-                    delete args[key];
-                }
+                if (_.include(this._ignoredAttributes, key)) delete args[key];
             }, this);
             return Backbone.Model.call(this, args);
+        },
+
+        _allowProperties: function(value, key) {
+            if (!this.hasOwnProperty(key) || _.include(this._allowedProperties, key)) {
+                this[key] = value;
+            }
         },
 
         initialize: function(attr) {

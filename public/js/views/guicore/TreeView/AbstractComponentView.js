@@ -34,23 +34,28 @@ define(function(require) {
             'dblclick': '_onDoubleClick',
             'mousedown': '_onMouseDown'
         },
+        
+        _allowedProperties: [],
 
         constructor: function(options) {
             //: apply _properties as identifiers/obj properties
-            var _allowedProperties = [];
             //: we make our own constructor so that we can assign
             //: the object specifier before `initialize` is called. sometimes
             //: we create conditions inside the initialize that relies on properties
             //: passed to the object specifier. (ex. contextMenu object)
-            _.each(options, function(value, key) {
-                if (!this.hasOwnProperty(key) && _.include(_allowedProperties, key)) {
-                    this[key] = value;
-                }
-            }, this);
+            _.each(options, this._allowProperties, this);
             return Backbone.View.apply(this, arguments);
         },
 
+        _allowProperties: function(value, key) {
+            if (!this.hasOwnProperty(key) && _.include(this._allowedProperties, key)) {
+                this[key] = value;
+            }
+        },
+
         initialize: function(options) {
+            //: note that constructor and apply properties are not binded since they
+            //: are used before initialize is even called
             _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit',
                 '_onMouseDown', 'droppable', 'bindEventHandlers', 'unbindEventHandlers',
                 'destroy', 'clear');

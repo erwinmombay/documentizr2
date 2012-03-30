@@ -12,7 +12,8 @@ define(function(require) {
         _cachedTargetView: null,
 
         initialize: function(options) {
-            _.bindAll(this, 'render','_onMouseDown', 'hide', 'createMenuOptions');
+            _.bindAll(this, 'render','_onMouseDown', 'hide', 'createMenuOptions',
+                'createMenuListItems');
             this.$body = $('body').on('mousedown', this._onMouseDown);
             //: we append to the body so and not on the contextView
             //: so that we only need to append once
@@ -63,17 +64,19 @@ define(function(require) {
         },
 
         createMenuOptions: function(menuObj) {
-            _.each(menuObj, function(value, key) {
-                var $listItem = $('<li/>');
-                var $link = $('<a/>', { 'href': '#', 'text': key});
-                $link.on('mousedown', function(e) {
-                    if (e.which == 1) {
-                        //: value should be the callback
-                        value(e);
-                    }
-                });
-                this.$options.append($listItem.append($link));
-            }, this);
+            _.each(menuObj, this.createMenuListItems);
+        },
+
+        createMenuListItems: function(value, key) {
+            var $listItem = $('<li/>');
+            var $link = $('<a/>', { 'href': '#', 'text': key});
+            $link.on('mousedown', function(e) {
+                if (e.which == 1) {
+                    //: value should be the callback
+                    value(e);
+                }
+            });
+            this.$options.append($listItem.append($link));
         }
     });
     

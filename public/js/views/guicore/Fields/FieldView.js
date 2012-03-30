@@ -35,7 +35,6 @@ define(function(require) {
         },
 
         reRender: function() {
-            this.$data.empty();
             this.$data.text(this.model.get('data'));
             return this;
         },
