@@ -11,6 +11,20 @@ define(function(require) {
         id: 'custom-pane',
         name: 'custom',
 
+        defCompCode: [
+            'var st02 = this.model.componentCollection.where({ "fullName": "ST02" })[0];',
+            'var st03 = this.model.componentCollection.where({ "fullName": "ST03" })[0];',
+            'var $st03 = this.$el.find(".data-repr.ST03");',
+            '',
+            'st02.on("change:data", function() {',
+            '    if (st02.get("data") !== "default") {',
+            '        $st03.css({ "color": "orange" });',
+            '    } else {',
+            '        $st03.css({ "color": "black" });',
+            '    }',
+            '}, this);'
+        ].join('\n'),
+
         events: {
             'click #apply-code': 'applyCode'
         },
@@ -24,11 +38,11 @@ define(function(require) {
         render: function(spec) {
             this.$code.empty();
             this._cachedSpec = spec;
-            if (this._cachedSpec.viewContext.$componentCollection) {
+            //if (this._cachedSpec.viewContext.$componentCollection) {
+                //this.$code.val(this.defCompCode);
+            //} else {
                 this.$code.val(this.defCompCode);
-            } else {
-                this.$code.val(this.defLeafCode);
-            }
+            //}
             return this;
         },
 
