@@ -6,11 +6,12 @@ define(function(require) {
 
     var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
     var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
+    var componentCustomTabView = require('views/guicore/Tabs/componentCustomTabView');
 
     var componentTabsView = Backbone.View.extend({
-        tabs: [componentDetailTabView, componentValidationTabView],
+        tabs: [componentDetailTabView, componentValidationTabView, componentCustomTabView],
         initialize: function() {
-            _.bindAll(this, 'render');
+            _.bindAll(this, 'render', 'renderListItem');
             this.$ul = this.$el.children('ul');
             this.$div = this.$el.children('#tabs-content');
         },
@@ -18,12 +19,14 @@ define(function(require) {
         //: TODO this should be redone an re optimized for finer grained updates
         //: rerending the whole ul and li's is very expensive on auto update
         render: function() {
-            _.each(this.tabs, function(value) {
-                this.$ul.append('<li><a href="#' + value.id + '" data-toggle="tab">' + value.name + '</a></li>');
-                this.$div.append(value.$el);
-            }, this);
+            _.each(this.tabs, this.renderListItem);
             this.$ul.children('li:first').addClass('active');
             this.$div.children('div:first').addClass('active');
+        },
+
+        renderListItem: function(value) {
+            this.$ul.append('<li><a href="#' + value.id + '" data-toggle="tab">' + value.name + '</a></li>');
+            this.$div.append(value.$el);
         }
     });
 

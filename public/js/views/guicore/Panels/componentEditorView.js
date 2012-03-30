@@ -42,7 +42,6 @@ define(function(require) {
         saveInput: function() {
             if (this._cachedModel) {
                 this._cachedModel.set('data', this.$el.find('input#element').val());
-                componentDetailTabView.render(this._cachedSpec);
             }
         }
     });

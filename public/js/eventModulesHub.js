@@ -7,6 +7,7 @@ define(function(require) {
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
     var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
+    var componentCustomTabView = require('views/guicore/Tabs/componentCustomTabView');
     var componentEditorView = require('views/guicore/Panels/componentEditorView');
     var eventProxyPermissions = require('eventProxyPermissions');
 
@@ -50,16 +51,24 @@ define(function(require) {
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
+        var $accordion = spec.viewContext.$el.closest('.accordion-inner');
+        var accordionTopPos = $accordion.position().top;
         var curSelectPos = spec.viewContext.$el.position().top;
-        var curScrollPos = mediator.doctree.$el.scrollTop();
+        var curScrollPos = $accordion.scrollTop();
+        var scrollRelativePos = curSelectPos - accordionTopPos;
+
         componentDetailTabView.render(spec);
         componentValidationTabView.render(spec);
+        componentCustomTabView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
-        //: if else statement that readjusts the doctree's scroll position
-        if  (curSelectPos > 640) {
-            mediator.doctree.$el.scrollTop(curScrollPos + 30);
-        } else if (curSelectPos < 120) {
-            mediator.doctree.$el.scrollTop(curScrollPos - 30);
+
+        //: readjusts the doctree's scroll position
+         if (scrollRelativePos > 410) {
+            $accordion.scrollTop(curScrollPos + 30);
+            //mediator.doctree.$el.scrollTop(curScrollPos + 30);
+        } else if (scrollRelativePos < 20)  {
+            $accordion.scrollTop(curScrollPos - 30);
+            //mediator.doctree.$el.scrollTop(curScrollPos - 30);
         }
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)

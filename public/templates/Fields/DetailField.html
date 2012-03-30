@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="span4" style="text-align:right;">
+    {{#if data}}
+      <span class="label-name {{fullName}}">{{name}}:</span>
+    {{else}}
+      <span class="label-name {{fullName}}">{{name}}</span>
+    {{/if}}
+  </div>
+  <div class="span4">
+    <span class="data-repr {{fullName}}">{{data}}</span>
+  </div>
+</div>

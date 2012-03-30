@@ -94,7 +94,7 @@ define(function(require) {
         mediator.proxyAllEvents(view);
         //: append this new view to the previous viewContext
         //console.log(spec.viewContext.$componentCollection);
-        spec.viewContext.$componentCollection.append(view.el);
+        spec.viewContext.$componentCollection.append(view.$el);
         //: only trigger the leftClick event when it isnt the initial set up
         //: to build the tree. the boolean flag isInitialTreeRender is reset to false
         //: when the modalEditor is used. (means the user created this node)
@@ -141,10 +141,8 @@ define(function(require) {
         //: so we should only select its next sibling
         $next = $children.length ? $children : prevView.$el.next();
         //: if there is a next sibling then select it
-        if ($next.length) {
-            $next.trigger({ type: 'mousedown', which: 1 });
+        if (!$next.length) {
         //: else there is no next sibling and try to traverse parent instead
-        } else {
             $next = prevView.$el.parent().parent('li.tvc');
             while ($next.length) {
                 if ($next.next().length) {

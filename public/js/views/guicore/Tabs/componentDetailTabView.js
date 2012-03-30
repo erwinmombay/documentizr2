@@ -3,46 +3,47 @@ define(function(require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    
-    var detailFieldTemplate = require('text!templates/DetailField.html');
-    var componentDetailTabViewTemplate = require('text!templates/DetailTab.html');
-     
+
+    var FieldView = require('views/guicore/Fields/FieldView');
+
+    var detailFieldTemplate = require('text!templates/Fields/DetailField.html');
+    var componentDetailTabViewTemplate = require('text!templates/Tabs/DetailTab.html');
+
     var componentDetailTabView = Backbone.View.extend({
         name: 'detail',
         id: 'detail-pane',
         el: componentDetailTabViewTemplate,
+        _cachedViews: [],
+        _cachedCollection: null,
 
         initialize: function() {
-            _.bindAll(this, 'render', 'clear');
+            _.bindAll(this, 'render', 'clear', 'destroyOneFieldView', 'addOneFieldView');
             this.template = Handlebars.compile(detailFieldTemplate);
             this.$el.attr('id', this.id);
             this.$fields = this.$el.find('.span8');
         },
 
         //: TODO this should be redone and re optimized for finer grained updates
-        //: rerending the whole fieldset is very expensive on auto update
         render: function(spec) {
-            this.$fields.empty();
-            if (spec.viewContext.model.schema.nodeType === 'element') {
-                _.each(spec.viewContext.model.collection.models, function(model) {
-                    this.$fields.append(
-                        this.template({ id: 'd' + model.cid, name: model.get('name'), data: model.get('data') })
-                    );
-                }, this);
-            } else {
-                _.each(spec.viewContext.model.componentCollection.models, function(model) {
-                    if (model.componentCollection) {
-                        this.$fields.append(
-                            this.template({ id: 'd' + model.cid, name: model.get('name') })
-                        );
-                    } else {
-                        this.$fields.append(
-                            this.template({ id: 'd' + model.cid, name: model.get('name'), data: model.get('data') })
-                        );
-                    }
-                }, this);
+            if (this._cachedCollection !== spec.viewContext.model.collection) {
+                _.each(this._cachedViews, this.destroyOneFieldView);
+                //: empty the cached view array
+                this._cachedViews.length = 0;
+                this._cachedCollection = spec.viewContext.model.collection;
+                _.each(this._cachedCollection.models, this.addOneFieldView);
             }
             return this;
+        },
+
+        destroyOneFieldView: function(view) {
+            view.destroy();
+        },
+
+        addOneFieldView: function(model) {
+            var field;
+            field = new FieldView({ model: model });
+            this._cachedViews.push(field);
+            this.$fields.append(field.render().$el);
         },
 
         clear: function() {
@@ -51,5 +52,5 @@ define(function(require) {
         }
     });
 
-    return new componentDetailTabView(); 
+    return new componentDetailTabView();
 });
