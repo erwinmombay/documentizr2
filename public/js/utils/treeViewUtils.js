@@ -5,13 +5,9 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var contextMenuView = require('views/guicore/contextMenuView');
-    var componentEditorView = require('views/guicore/Panels/componentEditorView');
-    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
-    var AccordionView = require('views/guicore/Accordions/AccordionView');
-    var AccordionGroupView = require('views/guicore/Accordions/AccordionGroupView');
 
     var ComponentModel = require('models/ComponentModel');
 
@@ -46,20 +42,9 @@ define(function(require) {
     };
 
     treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
-        var view, labels;
-        if (spec.model.componentCollection) {
-            if (spec.model.schema.name === '810') {
-                view = new AccordionView({ model: spec.model, id: spec.model.cid, className: 'accordion' }).render();
-            } else if (_.include(['Table_1', 'Table_2', 'Table_3'], spec.model.schema.name)) {
-                labels = { 'Table_1': 'Header', 'Table_2': 'Detail', 'Table_3': 'Summary' };
-                view = new AccordionGroupView({
-                    parentId: spec.viewContext.model.cid,
-                    model: spec.model,
-                    id: spec.model.cid,
-                    className: 'accordion-group',
-                    label: labels[spec.model.schema.name]
-                }).render();
-            } else {
+        var view;
+        if ((spec.model.schema.nodeType !== 'e' && isInitialTreeRender) || !isInitialTreeRender) {
+            if (spec.model.componentCollection) {
                 view = new DocCompositeComponentView({ model: spec.model, id: spec.model.cid });
                 view.render().sortable().menu = {
                     'add new node': function(e) {
@@ -68,38 +53,35 @@ define(function(require) {
                     'delete node': function(e) {
                         view.$el.fadeOut('fast', function() {
                             view.model.destroy({ cascade: true });
-                            componentEditorView.clear();
-                            componentDetailTabView.clear();
+                            componentDetailView.clear();
+                        });
+                    }
+                };
+            } else {
+                view = new DocLeafComponentView({ model: spec.model, id: spec.model.cid });
+                view.render().menu = {
+                    'delete node': function(e) {
+                        view.$el.fadeOut('fast', function() {
+                            view.model.destroy();
+                            componentDetailView.clear();
                         });
                     }
                 };
             }
-        } else {
-            view = new DocLeafComponentView({ model: spec.model, id: spec.model.cid });
-            view.render().menu = {
-                'delete node': function(e) {
-                    view.$el.fadeOut('fast', function() {
-                        view.model.destroy();
-                        componentEditorView.clear();
-                        componentDetailTabView.clear();
-                    });
-                }
-            };
-        }
-        if (!(_.include(['810', 'Table_1', 'Table_2', 'Table_3'], spec.model.schema.name))) {
             //: we override the normal contextmenu on right click and display our own
             treeViewUtils.bindCustomContextMenu(view);
+            //: we proxy/handle all the events `view` triggers to mediator
+            mediator.proxyAllEvents(view);
+            //: append this new view to the previous viewContext
+            //console.log(spec.viewContext.$componentCollection);
+            spec.viewContext.$componentCollection.append(view.$el);
+            if (view.model.schema.nodeType === 's' && isInitialTreeRender) view.foldToggle();
+            //: only trigger the leftClick event when it isnt the initial set up
+            //: to build the tree. the boolean flag isInitialTreeRender is reset to false
+            //: when the modalEditor is used. (means the user created this node)
+            if (!isInitialTreeRender) view.$el.trigger({ type: 'mousedown', which: 1 });
+            return view;
         }
-        //: we proxy/handle all the events `view` triggers to mediator
-        mediator.proxyAllEvents(view);
-        //: append this new view to the previous viewContext
-        //console.log(spec.viewContext.$componentCollection);
-        spec.viewContext.$componentCollection.append(view.$el);
-        //: only trigger the leftClick event when it isnt the initial set up
-        //: to build the tree. the boolean flag isInitialTreeRender is reset to false
-        //: when the modalEditor is used. (means the user created this node)
-        if (!isInitialTreeRender) view.$el.trigger({ type: 'mousedown', which: 1 });
-        return view;
     };
 
     /**************************************************************
@@ -126,7 +108,7 @@ define(function(require) {
 
     treeViewUtils.hightlightComponent = function(spec, prevHighlightedView) {
         if (prevHighlightedView) {
-            prevHighlightedView.$el.children('div:first').css({ 'background-color': '#F5F5F5' });
+            prevHighlightedView.$el.children('div:first').css({ 'background-color': '#FFFFFF' });
         }
         spec.viewContext.$el.children('div:first').css({ 'background-color': '#D9EDF7' });
     };
