@@ -46,7 +46,6 @@ define(function(require) {
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
-        componentDetailView.render(spec);
         //: TODO readjust componentDetailView scrollpos when the selected element is out of view
         var $detailView = componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName);
         //: TODO fix bug where when we are traversing up the tree and are under a segment with a large
@@ -82,16 +81,20 @@ define(function(require) {
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
         selectComponent(spec);
+        componentDetailView.render({ collectionContext: spec.viewContext.model.collection });
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
         //: optimiziation by delaying the rendering of the elements/leaf nodes until first leftClick on the segment
         if (!spec.viewContext.$el.find('li').length) {
             spec.viewContext.model.componentCollection.each(function(model) {
-                treeViewUtils.createSubViewFromSpec({ model: model, viewContext: spec.viewContext }, false);
+                _isInitialTreeRender = false;
+                treeViewUtils.createSubViewFromSpec({ model: model, viewContext: spec.viewContext }, _isInitialTreeRender);
             });
         }
         selectComponent(spec);
+        componentDetailView.render({ collectionContext: spec.viewContext.model.componentCollection });
+        componentDetailView.$el.find('.data-repr:first').select();
     });
 
     mediator.on('rightClick:leaf', 'leafRightClickHandler', function(spec) {
@@ -112,7 +115,8 @@ define(function(require) {
     });
 
     mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
-        treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+        var view = treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+        if (!_isInitialTreeRender && view) view.$el.trigger({ type: 'mousedown', which: 1 });
     });
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
