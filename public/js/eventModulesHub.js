@@ -42,6 +42,7 @@ define(function(require) {
 
     //: proxy/handle all events that modalEditorView triggers to mediator
     mediator.proxyAllEvents(modalEditorView);
+    mediator.proxyAllEvents(componentDetailView);
     //: we leave the `selectComponent` function in eventModulesHub since
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
@@ -51,7 +52,6 @@ define(function(require) {
         //: TODO fix bug where when we are traversing up the tree and are under a segment with a large
         //: number of elements and the offset 100 is not enough to show the bottom field view on the detail screen
         if ($detailView.length) adjustScrollPos($detailView, componentDetailView.$el, 100);
-        $detailView.select();
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)
@@ -82,6 +82,7 @@ define(function(require) {
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
         selectComponent(spec);
         componentDetailView.render({ collectionContext: spec.viewContext.model.collection });
+        componentDetailView.$el.find('#field' + spec.viewContext.model.cid).select();
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
@@ -142,6 +143,10 @@ define(function(require) {
             data: 'default'
         });
         spec.viewContext.model.componentCollection.add(model);
+    });
+    
+    mediator.on('click:dataRepr', 'detailDataReprClickHandler', function(spec) {
+        mediator.doctree.$el.find('#' + spec.id).trigger({ type: 'mousedown', which: 1 });
     });
 
     //: unused events, document this later on

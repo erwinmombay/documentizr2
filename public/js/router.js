@@ -12,6 +12,7 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
+    var mediator = require('mediator');
     var mainView = require('views/mainView');
 
     var Router = Backbone.Router.extend({

@@ -14,8 +14,12 @@ define(function(require) {
         _cachedCollection: null,
         _cachedCollectionLength: null,
 
+        events: {
+            'click .data-repr': 'dataReprClicked'
+        },
+
         initialize: function() {
-            _.bindAll(this, 'render', 'destroyOne', 'destroyAll', 'addOne');
+            _.bindAll(this, 'render', 'destroyOne', 'destroyAll', 'addOne', 'dataReprClicked');
             this.template = Handlebars.compile(detailFieldTemplate);
             this.$el.append(Handlebars.compile(template));
             this.$fieldset = this.$el.find('fieldset');
@@ -24,7 +28,9 @@ define(function(require) {
         //: TODO this should be redone and re optimized for finer grained updates
         render: function(spec) {
             if (spec && spec.collectionContext) {
-                if ((this._cachedCollection !== spec.collectionContext) || 
+                //: if this collection is the cached collection or if it is the same collection object
+                //: but the length has changed then rerender
+                if (this._cachedCollection !== spec.collectionContext ||
                     (this._cachedCollection === spec.collectionContext &&
                      this._cachedCollectionLength !== spec.collectionContext.length)) {
                         this.destroyAll();
@@ -32,6 +38,8 @@ define(function(require) {
                         this._cachedCollectionLength = this._cachedCollection.length;
                         _.each(this._cachedCollection.models, this.addOne);
                 }
+            //: spec was not passed. just rerender the cached collection if it exists
+            //: this is usually called after a destroyOne was triggered
             } else if (this._cachedCollection) {
                 this.destroyAll();
                 this._cachedCollectionLength = this._cachedCollection.length;
@@ -59,6 +67,12 @@ define(function(require) {
             field = new FieldView({ model: model });
             this._cachedViews.push(field);
             this.$fieldset.append(field.render().$el);
+        },
+
+        dataReprClicked: function(e) {
+            this.trigger('click:dataRepr', {
+                viewContext: this, event: e, id: $(e.target).attr('id').substring(5)
+            });
         }
     });
 
