@@ -5,6 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var contextMenuView = require('views/guicore/contextMenuView');
+    var componentDetailView = require('views/guicore/componentDetailView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
@@ -53,7 +54,7 @@ define(function(require) {
                     'delete node': function(e) {
                         view.$el.fadeOut('fast', function() {
                             view.model.destroy({ cascade: true });
-                            componentDetailView.clear();
+                            componentDetailView.render();
                         });
                     }
                 };
@@ -63,7 +64,7 @@ define(function(require) {
                     'delete node': function(e) {
                         view.$el.fadeOut('fast', function() {
                             view.model.destroy();
-                            componentDetailView.clear();
+                            componentDetailView.render();
                         });
                     }
                 };
@@ -76,10 +77,6 @@ define(function(require) {
             //console.log(spec.viewContext.$componentCollection);
             spec.viewContext.$componentCollection.append(view.$el);
             if (view.model.schema.nodeType === 's' && isInitialTreeRender) view.foldToggle();
-            //: only trigger the leftClick event when it isnt the initial set up
-            //: to build the tree. the boolean flag isInitialTreeRender is reset to false
-            //: when the modalEditor is used. (means the user created this node)
-            if (!isInitialTreeRender) view.$el.trigger({ type: 'mousedown', which: 1 });
             return view;
         }
     };

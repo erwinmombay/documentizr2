@@ -67,6 +67,9 @@ define(function(require) {
         'hide:modalEditor': {
         },
         'render:modalEditor': {
+        },
+        'click:dataRepr': {
+            'detailDataReprClickHandler': true
         }
     };
 

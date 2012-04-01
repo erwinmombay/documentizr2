@@ -1,7 +1,7 @@
 /**
  * main.js
  * ~~~~~~~~~~~~~~~~~~~
- * used to bootstrap requirejs and is the first point of entry into application
+ * used to bootstrap requirejs and is the first point of entry into the application
  *
  * @author erwin.mombay
  */
@@ -24,7 +24,6 @@ require.config({
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
         tab: 'libs/bootstrap/bootstrap-tab'
-        //prettyprint: 'libs/prettify/prettify',
     }
 });
 
@@ -38,10 +37,6 @@ define(function(require) {
     var App = require('order!app');
     var modal = require('order!modal');
     var tab = require('order!tab');
-    //var prettify = require('order!prettify');
-    //$(document).ready(function() {
-        //prettyPrint();
-    //});
 
     App.initialize();
 });
