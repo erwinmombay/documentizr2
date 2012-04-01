@@ -6008,11 +6008,8 @@ body {
 .tree-panel {
   border-radius: 3px 3px 3px 3px;
   display: block;
-  height: 550px;
-  /*overflow-y: scroll;*/
-
-  /*overflow-x: scroll;*/
-
+  height: 650px;
+  overflow-y: scroll;
   padding-right: 24px;
 }
 #tabs-panel {

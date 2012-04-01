@@ -4,12 +4,11 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
     var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
     var componentCustomTabView = require('views/guicore/Tabs/componentCustomTabView');
 
     var componentTabsView = Backbone.View.extend({
-        tabs: [componentDetailTabView, componentValidationTabView, componentCustomTabView],
+        tabs: [componentValidationTabView, componentCustomTabView],
         initialize: function() {
             _.bindAll(this, 'render', 'renderListItem');
             this.$ul = this.$el.children('ul');

@@ -4,8 +4,6 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
-
     var elementTemplate = require('text!templates/Element.html');
 
     var componentEditorView = Backbone.View.extend({

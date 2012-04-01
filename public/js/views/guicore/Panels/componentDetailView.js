@@ -7,12 +7,12 @@ define(function(require) {
     var FieldView = require('views/guicore/Fields/FieldView');
 
     var detailFieldTemplate = require('text!templates/Fields/DetailField.html');
-    var componentDetailTabViewTemplate = require('text!templates/Tabs/DetailTab.html');
+    var componentDetailViewTemplate = require('text!templates/DetailView.html');
 
-    var componentDetailTabView = Backbone.View.extend({
+    var componentDetailView = Backbone.View.extend({
         name: 'detail',
         id: 'detail-pane',
-        el: componentDetailTabViewTemplate,
+        el: componentDetailViewTemplate,
         _cachedViews: [],
         _cachedCollection: null,
 
@@ -52,5 +52,5 @@ define(function(require) {
         }
     });
 
-    return new componentDetailTabView();
+    return new componentDetailView();
 });
