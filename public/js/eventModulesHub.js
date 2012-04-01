@@ -35,57 +35,67 @@ define(function(require) {
         } else if (e.which === 38) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
+        } else if (e.which === 37 || e.which === 39) {
+            if (_prevClickedView.foldToggle) _prevClickedView.foldToggle();
         }
     }, mediator));
 
     //: proxy/handle all events that modalEditorView triggers to mediator
     mediator.proxyAllEvents(modalEditorView);
+    mediator.proxyAllEvents(componentDetailView);
     //: we leave the `selectComponent` function in eventModulesHub since
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
-        componentDetailView.render(spec);
         //: TODO readjust componentDetailView scrollpos when the selected element is out of view
-        componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName).select();
+        var $detailView = componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName);
+        //: TODO fix bug where when we are traversing up the tree and are under a segment with a large
+        //: number of elements and the offset 100 is not enough to show the bottom field view on the detail screen
+        if ($detailView.length) adjustScrollPos($detailView, componentDetailView.$el, 100);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)
         _prevClickedView = spec.viewContext;
     };
 
-    var adjustScrollPos = function(view) {
-        var curSelectPos = view.$el.position().top;
-        var curScrollPos = mediator.doctree.$el.scrollTop();
+    var adjustScrollPos = function($selected, $container, yoffset) {
+        var curSelectPos = $selected.position().top;
+        var curScrollPos = $container.scrollTop();
         //: if else statement that readjusts the doctree's scroll position
         if  (curSelectPos > 640) {
-            mediator.doctree.$el.scrollTop(curScrollPos + 30);
+            $container.scrollTop(curScrollPos + yoffset);
         } else if (curSelectPos < 120) {
-            mediator.doctree.$el.scrollTop(curScrollPos - 30);
+            $container.scrollTop(curScrollPos - yoffset);
         }
     };
 
     mediator.on('downArrow:keyboard', 'keyboardDownArrowHandler', function(e) {
         treeViewUtils.traverseTreeDown(e, _prevClickedView);
-        adjustScrollPos(_prevClickedView);
+        adjustScrollPos(_prevClickedView.$el, mediator.doctree.$el, 30);
     });
 
     mediator.on('upArrow:keyboard', 'keyboardUpArrowHandler', function(e) {
         treeViewUtils.traverseTreeUp(e, _prevClickedView);
-        adjustScrollPos(_prevClickedView);
+        adjustScrollPos(_prevClickedView.$el, mediator.doctree.$el, 30);
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
         selectComponent(spec);
+        componentDetailView.render({ collectionContext: spec.viewContext.model.collection });
+        componentDetailView.$el.find('#field' + spec.viewContext.model.cid).select();
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
         //: optimiziation by delaying the rendering of the elements/leaf nodes until first leftClick on the segment
         if (!spec.viewContext.$el.find('li').length) {
             spec.viewContext.model.componentCollection.each(function(model) {
-                treeViewUtils.createSubViewFromSpec({ model: model, viewContext: spec.viewContext }, false);
+                _isInitialTreeRender = false;
+                treeViewUtils.createSubViewFromSpec({ model: model, viewContext: spec.viewContext }, _isInitialTreeRender);
             });
         }
         selectComponent(spec);
+        componentDetailView.render({ collectionContext: spec.viewContext.model.componentCollection });
+        componentDetailView.$el.find('.data-repr:first').select();
     });
 
     mediator.on('rightClick:leaf', 'leafRightClickHandler', function(spec) {
@@ -106,7 +116,8 @@ define(function(require) {
     });
 
     mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
-        treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+        var view = treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+        if (!_isInitialTreeRender && view) view.$el.trigger({ type: 'mousedown', which: 1 });
     });
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
@@ -132,6 +143,10 @@ define(function(require) {
             data: 'default'
         });
         spec.viewContext.model.componentCollection.add(model);
+    });
+    
+    mediator.on('click:dataRepr', 'detailDataReprClickHandler', function(spec) {
+        mediator.doctree.$el.find('#' + spec.id).trigger({ type: 'mousedown', which: 1 });
     });
 
     //: unused events, document this later on
