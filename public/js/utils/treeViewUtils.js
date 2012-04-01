@@ -5,7 +5,6 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var contextMenuView = require('views/guicore/contextMenuView');
-    var componentDetailView = require('views/guicore/Panels/componentDetailView');
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var DocCompositeComponentView = require('views/guicore/DocTreeView/DocCompositeComponentView');
     var DocLeafComponentView = require('views/guicore/DocTreeView/DocLeafComponentView');
@@ -54,7 +53,6 @@ define(function(require) {
                     'delete node': function(e) {
                         view.$el.fadeOut('fast', function() {
                             view.model.destroy({ cascade: true });
-                            componentEditorView.clear();
                             componentDetailView.clear();
                         });
                     }
@@ -65,7 +63,6 @@ define(function(require) {
                     'delete node': function(e) {
                         view.$el.fadeOut('fast', function() {
                             view.model.destroy();
-                            componentEditorView.clear();
                             componentDetailView.clear();
                         });
                     }

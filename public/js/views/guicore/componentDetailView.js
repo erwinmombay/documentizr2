@@ -52,5 +52,5 @@ define(function(require) {
         }
     });
 
-    return new componentDetailView();
+    return new componentDetailView({ el: $('#detail-panel') });
 });

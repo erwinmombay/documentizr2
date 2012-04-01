@@ -16,19 +16,13 @@ define(function(require) {
         },
 
         initialize: function() {
-            _.bindAll(this, 'render', 'arrowKeyControl', 'eagerSaveControl',
-                'buildOnOffButtonGroup');
+            _.bindAll(this, 'render', 'arrowKeyControl', 'buildOnOffButtonGroup');
             this.buttonGroupTemplate = Handlebars.compile(buttonGroupTemplate);
             this.$arrowKeyControls = this.buildOnOffButtonGroup({ 
                 id: 'arrow-key-control', description: 'use up/down arrow keys to navigate tree view',
                 buttons: [{ button: 'on', isDefault: true }, { button: 'off' }]
             });
-            this.$eagerSaveControls = this.buildOnOffButtonGroup({ 
-                id: 'eager-save-control', description: 'auto update on edit',
-                buttons: [{ button: 'on', isDefault: true }, { button: 'off' }]
-            });
             this.$arrowKeyControl = this.$arrowKeyControls.find('#arrow-key-control');
-            this.$eagerSaveControl = this.$eagerSaveControls.find('#eager-save-control');
         },
 
         buildOnOffButtonGroup: function(spec) {
@@ -51,23 +45,8 @@ define(function(require) {
             }
         },
 
-        eagerSaveControl: function(e) {
-            if (!$(e.target).is('.active')) {
-                var $active = this.$eagerSaveControl.find('button.active');
-                var $inactive = this.$eagerSaveControl.find('button').not('.active');
-                if ($active.text() === 'on') {
-                    eventsProxyPermissions['inputChange:componentEditor'].componentEditorHandler = false;
-                } else {
-                    eventsProxyPermissions['inputChange:componentEditor'].componentEditorHandler = true;
-                }
-                $active.removeClass('active');
-                $inactive.addClass('active');
-            }
-        },
-
         render: function() {
             this.$el.append(this.$arrowKeyControls);
-            this.$el.append(this.$eagerSaveControls);
         }
     });
 

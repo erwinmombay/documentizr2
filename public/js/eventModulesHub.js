@@ -5,10 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
-    var componentDetailView = require('views/guicore/Panels/componentDetailView');
-    var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
-    var componentCustomTabView = require('views/guicore/Tabs/componentCustomTabView');
-    var componentEditorView = require('views/guicore/Panels/componentEditorView');
+    var componentDetailView = require('views/guicore/componentDetailView');
     var eventProxyPermissions = require('eventProxyPermissions');
 
     var ComponentModel = require('models/ComponentModel');
@@ -40,9 +37,6 @@ define(function(require) {
             mediator.trigger('upArrow:keyboard', e);
         }
     }, mediator)).on('keyup', _.bind(function(e) {
-        if ($(e.target).closest(componentEditorView.$el)) {
-            mediator.trigger('inputChange:componentEditor', e);
-        }
     }, mediator));
 
     //: proxy/handle all events that modalEditorView triggers to mediator
@@ -75,18 +69,7 @@ define(function(require) {
         treeViewUtils.traverseTreeUp(e, _prevClickedView);
     });
 
-    mediator.on('inputChange:componentEditor', 'componentEditorHandler', function(e) {
-        componentEditorView.saveInput();
-    });
-
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
-        //: if permissions has been reset to true for auto update 
-        //: do a saveInput on the previous data. this makes sure that we save the users input data
-        //: when the the toggle is currently off while they type and turn it on prior to changing nodes
-        if (eventProxyPermissions['inputChange:componentEditor'].componentEditorHandler) {
-            componentEditorView.saveInput();
-        }
-        componentEditorView.render(spec);
         selectComponent(spec);
     });
 
@@ -97,17 +80,14 @@ define(function(require) {
                 treeViewUtils.createSubViewFromSpec({ model: model, viewContext: spec.viewContext }, false);
             });
         }
-        componentEditorView.clear();
         selectComponent(spec);
     });
 
     mediator.on('rightClick:leaf', 'leafRightClickHandler', function(spec) {
-        componentEditorView.render(spec);
         selectComponent(spec);
     });
 
     mediator.on('rightClick:composite', 'compositeRightClickHandler', function(spec) {
-        componentEditorView.clear();
         selectComponent(spec);
     });
 
