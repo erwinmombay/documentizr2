@@ -22,8 +22,7 @@ require.config({
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal',
-        tab: 'libs/bootstrap/bootstrap-tab'
+        modal: 'libs/bootstrap/bootstrap-modal'
     }
 });
 
@@ -36,7 +35,6 @@ define(function(require) {
     var jqui = require('order!jqueryui');
     var App = require('order!app');
     var modal = require('order!modal');
-    var tab = require('order!tab');
 
     App.initialize();
 });
