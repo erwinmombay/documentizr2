@@ -1,8 +1,6 @@
 ({
-    //appDir: 'public',
     baseUrl: 'public/js/',
     name: 'main',
-    //dir: 'public-build',
     preserveLicenseComments: true,
     out: 'public/js/main-build.js',
     optimize: 'uglify',
@@ -18,8 +16,7 @@
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal',
-        tab: 'libs/bootstrap/bootstrap-tab'
+        modal: 'libs/bootstrap/bootstrap-modal'
     },
     modules: [{
         name: 'main'
