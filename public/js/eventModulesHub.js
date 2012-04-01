@@ -5,10 +5,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
-    var componentDetailTabView = require('views/guicore/Tabs/componentDetailTabView');
-    var componentValidationTabView = require('views/guicore/Tabs/componentValidationTabView');
-    var componentCustomTabView = require('views/guicore/Tabs/componentCustomTabView');
-    var componentEditorView = require('views/guicore/Panels/componentEditorView');
+    var componentDetailView = require('views/guicore/componentDetailView');
     var eventProxyPermissions = require('eventProxyPermissions');
 
     var ComponentModel = require('models/ComponentModel');
@@ -39,10 +36,6 @@ define(function(require) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
         }
-    }, mediator)).on('keyup', _.bind(function(e) {
-        if ($(e.target).closest(componentEditorView.$el)) {
-            mediator.trigger('inputChange:componentEditor', e);
-        }
     }, mediator));
 
     //: proxy/handle all events that modalEditorView triggers to mediator
@@ -51,65 +44,55 @@ define(function(require) {
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
-        var $accordion = spec.viewContext.$el.closest('.accordion-inner');
-        var accordionTopPos = $accordion.position().top;
-        var curSelectPos = spec.viewContext.$el.position().top;
-        var curScrollPos = $accordion.scrollTop();
-        var scrollRelativePos = curSelectPos - accordionTopPos;
-
-        componentDetailTabView.render(spec);
-        componentValidationTabView.render(spec);
-        componentCustomTabView.render(spec);
+        componentDetailView.render(spec);
+        //: TODO readjust componentDetailView scrollpos when the selected element is out of view
+        componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName).select();
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
-
-        //: readjusts the doctree's scroll position
-         if (scrollRelativePos > 410) {
-            $accordion.scrollTop(curScrollPos + 30);
-            //mediator.doctree.$el.scrollTop(curScrollPos + 30);
-        } else if (scrollRelativePos < 20)  {
-            $accordion.scrollTop(curScrollPos - 30);
-            //mediator.doctree.$el.scrollTop(curScrollPos - 30);
-        }
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)
         _prevClickedView = spec.viewContext;
     };
 
+    var adjustScrollPos = function(view) {
+        var curSelectPos = view.$el.position().top;
+        var curScrollPos = mediator.doctree.$el.scrollTop();
+        //: if else statement that readjusts the doctree's scroll position
+        if  (curSelectPos > 640) {
+            mediator.doctree.$el.scrollTop(curScrollPos + 30);
+        } else if (curSelectPos < 120) {
+            mediator.doctree.$el.scrollTop(curScrollPos - 30);
+        }
+    };
+
     mediator.on('downArrow:keyboard', 'keyboardDownArrowHandler', function(e) {
         treeViewUtils.traverseTreeDown(e, _prevClickedView);
+        adjustScrollPos(_prevClickedView);
     });
 
     mediator.on('upArrow:keyboard', 'keyboardUpArrowHandler', function(e) {
         treeViewUtils.traverseTreeUp(e, _prevClickedView);
-    });
-
-    mediator.on('inputChange:componentEditor', 'componentEditorHandler', function(e) {
-        componentEditorView.saveInput();
+        adjustScrollPos(_prevClickedView);
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
-        //: if permissions has been reset to true for auto update 
-        //: do a saveInput on the previous data. this makes sure that we save the users input data
-        //: when the the toggle is currently off while they type and turn it on prior to changing nodes
-        if (eventProxyPermissions['inputChange:componentEditor'].componentEditorHandler) {
-            componentEditorView.saveInput();
-        }
-        componentEditorView.render(spec);
         selectComponent(spec);
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
-        componentEditorView.clear();
+        //: optimiziation by delaying the rendering of the elements/leaf nodes until first leftClick on the segment
+        if (!spec.viewContext.$el.find('li').length) {
+            spec.viewContext.model.componentCollection.each(function(model) {
+                treeViewUtils.createSubViewFromSpec({ model: model, viewContext: spec.viewContext }, false);
+            });
+        }
         selectComponent(spec);
     });
 
     mediator.on('rightClick:leaf', 'leafRightClickHandler', function(spec) {
-        componentEditorView.render(spec);
         selectComponent(spec);
     });
 
     mediator.on('rightClick:composite', 'compositeRightClickHandler', function(spec) {
-        componentEditorView.clear();
         selectComponent(spec);
     });
 
@@ -128,7 +111,7 @@ define(function(require) {
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
         treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
-        //spec.viewContext.$el.find('li:first').trigger({ type: 'mousedown', which: 1 });
+        spec.viewContext.$el.find('li:first').trigger({ type: 'mousedown', which: 1 });
     });
 
     mediator.on('addOne:accordion', 'accordionAddOneSubViewHandler', function(spec) {

@@ -11,9 +11,6 @@ define(function(require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
 
-    var controlsView = require('views/controlsView');
-    var componentTabsView = require('views/guicore/Panels/componentTabsView');
-
     var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
     var treeViewUtils = require('utils/treeViewUtils');
@@ -44,8 +41,6 @@ define(function(require) {
         },
 
         render: function() {
-            controlsView.render();
-            componentTabsView.render();
             $('.sidebar-nav').append(this.doctree.el);
             return this;
         },
