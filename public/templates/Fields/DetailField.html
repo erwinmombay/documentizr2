@@ -1,8 +1,8 @@
 <div class="control-group">
   {{#if data}}
-  <label class="control-label {{fullName}}" for="{{id}}">{{name}}</label>
+  <label class="control-label {{fullName}}" for="field{{id}}">{{name}}</label>
   <div class="controls">
-    <input type="text" class="data-repr {{fullName}}" id="{{id}}" value="{{data}}"></input>
+    <input type="text" class="data-repr {{fullName}}" id="field{{id}}" value="{{data}}"></input>
   </div>
   {{else}}
   <label class="control-label {{fullName}}" for="{{id}}">{{name}}</label>

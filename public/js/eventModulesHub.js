@@ -45,28 +45,32 @@ define(function(require) {
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
-        var curSelectPos = spec.viewContext.$el.position().top;
-        var curScrollPos = mediator.doctree.$el.scrollTop();
-
         componentDetailView.render(spec);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
+        //: we cache the current selected View Component to _prevClickedView so that
+        //: on the next selection we know which component we need to reset(highlighting etc..)
+        _prevClickedView = spec.viewContext;
+    };
+
+    var adjustScrollPos = function(view) {
+        var curSelectPos = view.$el.position().top;
+        var curScrollPos = mediator.doctree.$el.scrollTop();
         //: if else statement that readjusts the doctree's scroll position
         if  (curSelectPos > 640) {
             mediator.doctree.$el.scrollTop(curScrollPos + 30);
         } else if (curSelectPos < 120) {
             mediator.doctree.$el.scrollTop(curScrollPos - 30);
         }
-        //: we cache the current selected View Component to _prevClickedView so that
-        //: on the next selection we know which component we need to reset(highlighting etc..)
-        _prevClickedView = spec.viewContext;
     };
 
     mediator.on('downArrow:keyboard', 'keyboardDownArrowHandler', function(e) {
         treeViewUtils.traverseTreeDown(e, _prevClickedView);
+        adjustScrollPos(_prevClickedView);
     });
 
     mediator.on('upArrow:keyboard', 'keyboardUpArrowHandler', function(e) {
         treeViewUtils.traverseTreeUp(e, _prevClickedView);
+        adjustScrollPos(_prevClickedView);
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {

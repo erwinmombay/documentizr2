@@ -24,7 +24,7 @@ define(function(require) {
 
         render: function() {
             this.$el.append(this.template({
-                id: 'd' + this.model.cid,
+                id:  this.model.cid,
                 name: this.model.get('name'),
                 fullName: this.model.get('fullName'),
                 data: this.model.get('data') || null
