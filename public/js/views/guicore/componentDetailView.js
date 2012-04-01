@@ -7,24 +7,22 @@ define(function(require) {
     var FieldView = require('views/guicore/Fields/FieldView');
 
     var detailFieldTemplate = require('text!templates/Fields/DetailField.html');
-    var componentDetailViewTemplate = require('text!templates/DetailView.html');
+    var template = require('text!templates/DetailView.html');
 
     var componentDetailView = Backbone.View.extend({
-        name: 'detail',
-        id: 'detail-pane',
-        el: componentDetailViewTemplate,
         _cachedViews: [],
         _cachedCollection: null,
 
         initialize: function() {
             _.bindAll(this, 'render', 'clear', 'destroyOneFieldView', 'addOneFieldView');
             this.template = Handlebars.compile(detailFieldTemplate);
-            this.$el.attr('id', this.id);
-            this.$fields = this.$el.find('.span8');
+            this.$el.append(Handlebars.compile(template));
+            this.$fields = this.$el.find('fieldset');
         },
 
         //: TODO this should be redone and re optimized for finer grained updates
         render: function(spec) {
+            console.log('renderrr');
             if (this._cachedCollection !== spec.viewContext.model.collection) {
                 _.each(this._cachedViews, this.destroyOneFieldView);
                 //: empty the cached view array
