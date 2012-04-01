@@ -35,6 +35,8 @@ define(function(require) {
         } else if (e.which === 38) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
+        } else if (e.which === 37 || e.which === 39) {
+            if (_prevClickedView.foldToggle) _prevClickedView.foldToggle();
         }
     }, mediator));
 
