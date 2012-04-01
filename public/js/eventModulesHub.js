@@ -48,32 +48,36 @@ define(function(require) {
     var selectComponent = function(spec) {
         componentDetailView.render(spec);
         //: TODO readjust componentDetailView scrollpos when the selected element is out of view
-        componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName).select();
+        var $detailView = componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName);
+        //: TODO fix bug where when we are traversing up the tree and are under a segment with a large
+        //: number of elements and the offset 100 is not enough to show the bottom field view on the detail screen
+        if ($detailView.length) adjustScrollPos($detailView, componentDetailView.$el, 100);
+        $detailView.select();
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)
         _prevClickedView = spec.viewContext;
     };
 
-    var adjustScrollPos = function(view) {
-        var curSelectPos = view.$el.position().top;
-        var curScrollPos = mediator.doctree.$el.scrollTop();
+    var adjustScrollPos = function($selected, $container, yoffset) {
+        var curSelectPos = $selected.position().top;
+        var curScrollPos = $container.scrollTop();
         //: if else statement that readjusts the doctree's scroll position
         if  (curSelectPos > 640) {
-            mediator.doctree.$el.scrollTop(curScrollPos + 30);
+            $container.scrollTop(curScrollPos + yoffset);
         } else if (curSelectPos < 120) {
-            mediator.doctree.$el.scrollTop(curScrollPos - 30);
+            $container.scrollTop(curScrollPos - yoffset);
         }
     };
 
     mediator.on('downArrow:keyboard', 'keyboardDownArrowHandler', function(e) {
         treeViewUtils.traverseTreeDown(e, _prevClickedView);
-        adjustScrollPos(_prevClickedView);
+        adjustScrollPos(_prevClickedView.$el, mediator.doctree.$el, 30);
     });
 
     mediator.on('upArrow:keyboard', 'keyboardUpArrowHandler', function(e) {
         treeViewUtils.traverseTreeUp(e, _prevClickedView);
-        adjustScrollPos(_prevClickedView);
+        adjustScrollPos(_prevClickedView.$el, mediator.doctree.$el, 30);
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
