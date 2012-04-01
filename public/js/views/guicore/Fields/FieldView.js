@@ -8,8 +8,10 @@ define(function(require) {
 
     var FieldView = Backbone.View.extend({
         initialize: function(options) {
-            _.bindAll(this, 'render', 'destroy', 'bindEventHandlers', 'unbindEventHandlers', 'reRender');
+            _.bindAll(this, 'render', 'destroy', 'bindEventHandlers', 'unbindEventHandlers',
+                'reRender');
             this.template = Handlebars.compile(options.template || detailFieldTemplate);
+            this.$dataRepr = this.$el.find('.data-repr');
             this.custom = this.model.custom;
             this.bindEventHandlers();
         },
@@ -29,13 +31,12 @@ define(function(require) {
                 fullName: this.model.get('fullName'),
                 data: this.model.get('data') || null
             }));
-            this.$data = this.$el.find('.data-repr');
             if (this.custom) _.bind(this.custom, this)();
             return this;
         },
 
         reRender: function() {
-            this.$data.text(this.model.get('data'));
+            this.$dataRepr.val(this.model.get('data'));
             return this;
         },
 

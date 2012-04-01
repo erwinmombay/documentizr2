@@ -36,7 +36,6 @@ define(function(require) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
         }
-    }, mediator)).on('keyup', _.bind(function(e) {
     }, mediator));
 
     //: proxy/handle all events that modalEditorView triggers to mediator
@@ -46,6 +45,8 @@ define(function(require) {
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
         componentDetailView.render(spec);
+        //: TODO readjust componentDetailView scrollpos when the selected element is out of view
+        componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName).select();
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)

@@ -14,38 +14,41 @@ define(function(require) {
         _cachedCollection: null,
 
         initialize: function() {
-            _.bindAll(this, 'render', 'clear', 'destroyOneFieldView', 'addOneFieldView');
+            _.bindAll(this, 'render', 'clear', 'destroyOne', 'addOne');
             this.template = Handlebars.compile(detailFieldTemplate);
             this.$el.append(Handlebars.compile(template));
-            this.$fields = this.$el.find('fieldset');
+            this.$fieldset = this.$el.find('fieldset');
         },
 
         //: TODO this should be redone and re optimized for finer grained updates
         render: function(spec) {
-            console.log('renderrr');
             if (this._cachedCollection !== spec.viewContext.model.collection) {
-                _.each(this._cachedViews, this.destroyOneFieldView);
+                _.each(this._cachedViews, this.destroyOne);
                 //: empty the cached view array
                 this._cachedViews.length = 0;
                 this._cachedCollection = spec.viewContext.model.collection;
-                _.each(this._cachedCollection.models, this.addOneFieldView);
+                _.each(this._cachedCollection.models, this.addOne);
             }
             return this;
         },
 
-        destroyOneFieldView: function(view) {
+        destroyOne: function(view) {
+            //: before destroying an element, save its data
+            if (view.model.schema.nodeType === 'e') {
+                view.model.set('data', view.$el.find('.data-repr').val());
+            }
             view.destroy();
         },
 
-        addOneFieldView: function(model) {
+        addOne: function(model) {
             var field;
             field = new FieldView({ model: model });
             this._cachedViews.push(field);
-            this.$fields.append(field.render().$el);
+            this.$fieldset.append(field.render().$el);
         },
 
         clear: function() {
-            this.$fields.empty();
+            this.$fieldset.empty();
             return this;
         }
     });
