@@ -49,6 +49,7 @@ define(function(require) {
     var selectComponent = function(spec) {
         //: TODO readjust componentDetailView scrollpos when the selected element is out of view
         var $detailView = componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName);
+        console.log($detailView);
         //: TODO fix bug where when we are traversing up the tree and are under a segment with a large
         //: number of elements and the offset 100 is not enough to show the bottom field view on the detail screen
         if ($detailView.length) adjustScrollPos($detailView, componentDetailView.$el, 100);
@@ -61,11 +62,18 @@ define(function(require) {
     var adjustScrollPos = function($selected, $container, yoffset) {
         var curSelectPos = $selected.position().top;
         var curScrollPos = $container.scrollTop();
+        var containerHeight = $container.height();
+        console.log('select Pos ' + curSelectPos);
+        console.log('cont height ' + containerHeight);
         //: if else statement that readjusts the doctree's scroll position
-        if  (curSelectPos > 640) {
-            $container.scrollTop(curScrollPos + yoffset);
-        } else if (curSelectPos < 120) {
-            $container.scrollTop(curScrollPos - yoffset);
+        if (curSelectPos > containerHeight) {
+            $container.scrollTop(curScrollPos + (curSelectPos - containerHeight));
+        } else {
+            if  (curSelectPos > 640) {
+                $container.scrollTop(curScrollPos + yoffset);
+            } else if (curSelectPos < 120) {
+                $container.scrollTop(curScrollPos - yoffset);
+            }
         }
     };
 
@@ -80,8 +88,8 @@ define(function(require) {
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
-        selectComponent(spec);
         componentDetailView.render({ collectionContext: spec.viewContext.model.collection });
+        selectComponent(spec);
         componentDetailView.$el.find('#field' + spec.viewContext.model.cid).select();
     });
 
