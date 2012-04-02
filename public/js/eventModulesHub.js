@@ -148,7 +148,9 @@ define(function(require) {
     });
     
     mediator.on('click:dataRepr', 'detailDataReprClickHandler', function(spec) {
-        mediator.doctree.$el.find('#' + spec.id).trigger({ type: 'mousedown', which: 1 });
+        mediator.doctree.$el.find('#' + spec.id)
+            .filter(':visible')
+            .trigger({ type: 'mousedown', which: 1 });
     });
 
     //: unused events, document this later on
