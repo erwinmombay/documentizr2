@@ -115,7 +115,9 @@ define(function(require) {
         e.preventDefault();
         //: if prevView is a composite then it will have children
         //: we should select its children on arrow down
-        $children = prevView.$el.children('ul.tvc-ul:visible:first').children('li:first');
+        $children = prevView.$el.children('ul.tvc-ul')
+                        .filter(':visible:first')
+                        .children('li:first');
         //: if prevView doesnt have any children then it is a leaf,
         //: so we should only select its next sibling
         $next = $children.length ? $children : prevView.$el.next();
@@ -146,7 +148,7 @@ define(function(require) {
         //: else if check if the previous sibling has any descendant `li` and if it does
         //: select the very last one
         } else {
-            $children = $prev.find('li.tvc:visible:last');
+            $children = $prev.find('li.tvc').filter(':visible:last');
             if ($children.length) $prev = $children;
         }
         $prev.trigger({ type: 'mousedown', which: 1 });
