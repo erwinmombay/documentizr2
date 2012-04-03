@@ -21,7 +21,7 @@ define(function(require) {
             expect(m instanceof ComponentModel).toBeTruthy();
         });
 
-        it('has the url /component inherited from ComponentCollection', function() {
+        it('has the url "/component" inherited from ComponentCollection', function() {
             var ComponentCollection = require('collections/ComponentCollection');
             var collection = new ComponentCollection().add(new ComponentModel());
             expect(collection.at(0).url()).toBe('/component');

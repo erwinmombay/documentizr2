@@ -115,16 +115,14 @@ define(function(require) {
         e.preventDefault();
         //: if prevView is a composite then it will have children
         //: we should select its children on arrow down
-        $children = prevView.$el.children('ul.tvc-ul')
-                        .filter(':visible:first')
-                        .children('li:first');
+        $children = prevView.$el.children('ul').filter(':visible').children('li:first');
         //: if prevView doesnt have any children then it is a leaf,
         //: so we should only select its next sibling
         $next = $children.length ? $children : prevView.$el.next();
         //: if there is a next sibling then select it
         if (!$next.length) {
         //: else there is no next sibling and try to traverse parent instead
-            $next = prevView.$el.parent().parent('li.tvc');
+            $next = prevView.$el.parent('ul').parent('li');
             while ($next.length) {
                 if ($next.next().length) {
                     $next = $next.next();
@@ -143,12 +141,12 @@ define(function(require) {
         $prev = prevView.$el.prev();
         //: if previous sibling doesnt exist select the parent's parent(the previous `li`
         if (!$prev.length) {
-            $prev = prevView.$el.parent('ul.tvc-ul').parent('li.tvc');
+            $prev = prevView.$el.parent('ul').parent('li');
         //TODO optimize this.. seems to cause some lag(expected because of heavy dom traversal)
         //: else if check if the previous sibling has any descendant `li` and if it does
         //: select the very last one
         } else {
-            $children = $prev.find('li.tvc').filter(':visible:last');
+            $children = $prev.find('li').filter(':visible:last');
             if ($children.length) $prev = $children;
         }
         $prev.trigger({ type: 'mousedown', which: 1 });
