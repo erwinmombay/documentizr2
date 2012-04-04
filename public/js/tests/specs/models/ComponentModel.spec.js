@@ -5,20 +5,24 @@ define(function(require) {
         beforeEach(function() {
             ComponentModel = require('models/ComponentModel');
             server = sinon.fakeServer.create();
+            server.respondWith('GET', '/component',
+                [200, {'Content-Type': 'application/json'}, JSON.stringify('reso')]
+            );
+        });
+
+        afterEach(function() {
+            server.restore();
+        });
+
+        it('should make the correct request', function() {
+            var m = new ComponentModel();
+            m.url = '/component';
+            m.fetch();
+            server.respond();
         });
 
         it('is defined and exists in path: "models/ComponentModel"', function () {
             expect(ComponentModel).toBeDefined();
-        });
-
-        it('is a class that can be instantiated', function() {
-            expect(new ComponentModel()).toBeDefined();
-        });
-
-        it('has a working constructor', function() {
-            var m;
-            m = new ComponentModel();
-            expect(m instanceof ComponentModel).toBeTruthy();
         });
 
         it('has the url "/component" inherited from ComponentCollection', function() {
