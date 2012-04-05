@@ -1,4 +1,7 @@
-/* @depend ../sinon.js */
+/**
+ * @depend ../sinon.js
+ * @depend match.js
+ */
 /*jslint eqeqeq: false, onevar: false, plusplus: false*/
 /*global module, require, sinon*/
 /**
@@ -389,7 +392,7 @@
             },
 
             returned: function returned(value) {
-                return this.returnValue === value;
+                return sinon.deepEqual(value, this.returnValue);
             },
 
             threw: function threw(error) {

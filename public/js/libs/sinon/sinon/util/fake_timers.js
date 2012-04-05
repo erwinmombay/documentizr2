@@ -41,7 +41,8 @@ if (typeof sinon == "undefined") {
         this.timeouts[toId] = {
             id: toId,
             func: args[0],
-            callAt: this.now + delay
+            callAt: this.now + delay,
+            invokeArgs: Array.prototype.slice.call(args, 2)
         };
 
         if (recurring === true) {
@@ -175,7 +176,8 @@ if (typeof sinon == "undefined") {
                             func: this.timeouts[id].func,
                             callAt: this.timeouts[id].callAt,
                             interval: this.timeouts[id].interval,
-                            id: this.timeouts[id].id
+                            id: this.timeouts[id].id,
+                            invokeArgs: this.timeouts[id].invokeArgs
                         };
                     }
                 }
@@ -185,9 +187,15 @@ if (typeof sinon == "undefined") {
         },
 
         callTimer: function (timer) {
+            if (typeof timer.interval == "number") {
+                this.timeouts[timer.id].callAt += timer.interval;
+            } else {
+                delete this.timeouts[timer.id];
+            }
+
             try {
                 if (typeof timer.func == "function") {
-                    timer.func.call(null);
+                    timer.func.apply(null, timer.invokeArgs);
                 } else {
                     eval(timer.func);
                 }
@@ -200,12 +208,6 @@ if (typeof sinon == "undefined") {
                   throw exception;
                 }
                 return;
-            }
-
-            if (typeof timer.interval == "number") {
-                this.timeouts[timer.id].callAt += timer.interval;
-            } else {
-                delete this.timeouts[timer.id];
             }
 
             if (exception) {
