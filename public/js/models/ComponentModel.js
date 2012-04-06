@@ -36,7 +36,7 @@ define(function(require) {
             var i, l;
             if (this.componentCollection && (options && options.cascade)) {
                 for (i = 0, l = this.componentCollection.length; i < l; i++) {
-                    this.componentCollection.models[0].destroy();
+                    this.componentCollection.models[0].destroy(options);
                 }
             }
             Backbone.Model.prototype.destroy.call(this, options);

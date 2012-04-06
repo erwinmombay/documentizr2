@@ -5,16 +5,16 @@ define(function(require) {
         beforeEach(function() {
             c = new ComponentCollection();
         });
-
-        it("#add => should add a model", function() {
-            c.add({ id: 1 });
-            expect(c.length).toEqual(1);
+        describe('#add', function() {
+            it("should add a model", function() {
+                c.add({ id: 1 });
+                expect(c.length).toEqual(1);
+            });
         });
 
         describe('#fetch', function() {
             beforeEach(function() {
                 server = sinon.fakeServer.create();
-                c.url = '/component';
                 server.respondWith('GET', '/component', [
                     200,
                     { "Content-Type": "application/json" },
