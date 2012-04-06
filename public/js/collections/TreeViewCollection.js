@@ -15,7 +15,9 @@ define(function(require) {
         initialize: function(models, options) {
             _.bindAll(this, 'fetch');
         },
-
+        
+        //: TODO convert this fetch into a parse instead
+        //: much more appropriate override than overriding fetch
         fetch: function(options) {
             var newOptions = {
                 url: this.url,

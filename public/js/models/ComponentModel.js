@@ -23,7 +23,7 @@ define(function(require) {
         },
 
         _allowProperties: function(value, key) {
-            if (!this.hasOwnProperty(key) || _.include(this._allowedProperties, key)) {
+            if (!this.hasOwnProperty(key) && _.include(this._allowedProperties, key)) {
                 this[key] = value;
             }
         },
