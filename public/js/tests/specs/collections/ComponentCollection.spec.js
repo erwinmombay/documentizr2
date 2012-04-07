@@ -1,14 +1,23 @@
 define(function(require) {
     describe('ComponentCollection', function() {
-        var c, m, server, ComponentCollection;
+        var c, server, ComponentModel, ComponentCollection;
+        ComponentModel = require('models/ComponentModel');
         ComponentCollection = require('collections/ComponentCollection');
+
         beforeEach(function() {
             c = new ComponentCollection();
         });
+
         describe('#add', function() {
-            it("should add a model", function() {
+            it('should add an object literal', function() {
                 c.add({ id: 1 });
-                expect(c.length).toEqual(1);
+                expect(c.length).toBe(1);
+            });
+
+            it('should add `ComponentModel`', function() {
+               var m = new ComponentModel();
+               c.add(m);
+               expect(c.length).toBe(1);
             });
         });
 
@@ -18,7 +27,7 @@ define(function(require) {
                 server.respondWith('GET', '/component', [
                     200,
                     { "Content-Type": "application/json" },
-                    '{ "OK" : "True "}'
+                    JSON.stringify({ 'OK' : 'True' })
                 ]);
             });
 
@@ -28,22 +37,18 @@ define(function(require) {
 
             it('should make the correct GET request', function() {
                 c.fetch();
-                expect(server.requests.length).toEqual(1);
-                expect(server.requests[0].method).toEqual('GET');
-                expect(server.requests[0].url).toEqual('/component');
+                expect(server.requests.length).toBe(1);
+                expect(server.requests[0].method).toBe('GET');
+                expect(server.requests[0].url).toBe('/component');
             });
 
             it('should get models from the response', function() {
                 var spy = sinon.spy();
-                var spy2 = sinon.spy();
-                c.fetch({ success: spy, error: spy2 });
+                c.fetch({ success: spy });
                 server.respond();
-                expect(spy.called).toBeTruthy();
-                expect(spy2.called).toBeFalsy();
-                expect(c.length).toEqual(1);
+                expect(spy.called).toBe(true);
+                expect(c.length).toBe(1);
             });
-
         });
-
     });
 });
