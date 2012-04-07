@@ -10,6 +10,7 @@ define(function(require) {
         });
 
         afterEach(function() {
+            permissions = { 'testEvent': { 'testEventHandler': true } };
         });
 
         it('is a singleton', function() {
@@ -24,30 +25,54 @@ define(function(require) {
             expect(_.isElement(mediator)).toBe(false);
         });
         
-        describe('#proxyAllEvents', function() {
-            it('has a `proxyAllEvents` method', function() {
-                expect(_.has(mediator, 'proxyAllEvents')).toEqual(true);
-                expect(_.isFunction(mediator.proxyAllEvents)).toBe(true);
+        it('has a `proxyAllEvents` method', function() {
+            expect(_.has(mediator, 'proxyAllEvents')).toEqual(true);
+            expect(_.isFunction(mediator.proxyAllEvents)).toBe(true);
+        });
+
+         describe('#proxyAllEvents and #trigger', function() {
+            var spy1, spy2;
+
+            beforeEach(function() {
+                spy1 = sinon.spy(emitter, 'trigger');
+                spy2 = sinon.spy(mediator, 'trigger');
+                mediator.proxyAllEvents(emitter);
+            });
+
+            afterEach(function() {
+                emitter.trigger.restore();
+                mediator.trigger.restore();
             });
 
             it('proxies the `all` event', function() {
-                mediator.proxyAllEvents(emitter);
-                var spy1 = sinon.spy(emitter, 'trigger');
-                var spy2 = sinon.spy(mediator, 'trigger');
-                emitter.trigger('14');
-                sinon.assert.calledWith(spy1, 'blah');
-                expect(spy2).toHaveBeenCalled();
+                emitter.trigger('all');
+                sinon.assert.calledWithExactly(spy1, 'all');
+                sinon.assert.calledWithExactly(spy2, 'all');
             });
 
+            it('proxies a `custom:event` with an extra argument', function() {
+                var extraArg = { test: 'test value' };
+                emitter.trigger('custom:event', extraArg);
+                sinon.assert.calledWithExactly(spy1, 'custom:event', { test: 'test value' });
+                sinon.assert.calledWithExactly(spy1, 'custom:event', { test: 'test value' });
+            });
         });
 
         describe('#on', function() {
+            beforeEach(function() {
+                mediator.proxyAllEvents(emitter);
+            });
+            
+            afterEach(function() {
+                mediator.off();
+            });
+
+            it('allows a subscriber to subscribe to a channel', function() {
+            });
         });
 
         describe('#off', function() {
         });
 
-        describe('#trigger', function() {
-        });
     });
 });
