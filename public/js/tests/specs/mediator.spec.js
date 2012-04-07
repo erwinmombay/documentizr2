@@ -1,10 +1,15 @@
 define(function(require) {
     describe('mediator', function() {
+        var permissons, emitter;
         var mediator = require('mediator');
         var ComponentModel = require('models/ComponentModel');
-        var permissions = { 'testEvent': { 'testEventHandler': true } };
 
         beforeEach(function() {
+            emitter = _.extend({}, Backbone.Events);
+            permissions = { 'testEvent': { 'testEventHandler': true } };
+        });
+
+        afterEach(function() {
         });
 
         it('is a singleton', function() {
@@ -26,7 +31,12 @@ define(function(require) {
             });
 
             it('proxies the `all` event', function() {
-
+                mediator.proxyAllEvents(emitter);
+                var spy1 = sinon.spy(emitter, 'trigger');
+                var spy2 = sinon.spy(mediator, 'trigger');
+                emitter.trigger('14');
+                sinon.assert.calledWith(spy1, 'blah');
+                expect(spy2).toHaveBeenCalled();
             });
 
         });

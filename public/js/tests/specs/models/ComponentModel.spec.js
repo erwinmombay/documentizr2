@@ -10,6 +10,7 @@ define(function(require) {
         });
         
         it('should be addable to a ComponentCollection', function() {
+            expect(c.length).toBe(0);
             c.add(m);
             expect(c.length).toBe(1);
         });
@@ -22,7 +23,7 @@ define(function(require) {
         describe('#constructor', function() {
             it('should turn any value passed in the options hash that exists in _allowedProperties as true object properties', function() {
                 var m2 = new ComponentModel({ schema: 'test string' });
-                expect(m2.get('schema')).toBeUndefined();
+                expect(m2.has('schema')).toBe(false);
                 expect(m2.schema).toBe('test string');
             });
 

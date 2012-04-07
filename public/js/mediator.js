@@ -59,7 +59,7 @@ define(function(require) {
         return this;
     };
 
-    mediator.proxyAllEvents = function(obj, specificEvent) {
+    mediator.proxyAllEvents = function(obj) {
         if (obj && obj.on) {
             obj.on('all', function() { mediator.trigger.apply(mediator, arguments); });
         }
