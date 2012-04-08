@@ -70,7 +70,7 @@ define(function(require) {
                 spy1 = sinon.spy();
                 mediator.on('custom:event', 'customEventHandler1', spy1);
                 emitter.trigger('custom:event');
-                expect(spy1.calledOnce).toBe(true);
+                sinon.assert.calledOnce(spy1);
             });
         });
 
@@ -85,22 +85,22 @@ define(function(require) {
             it('should unsubsribe "customEventHandler1" subscriber when unsubsribing by `subsriber` name', function() {
                 mediator.off(null, 'customEventHandler1', null, null);
                 emitter.trigger('custom:event');
-                expect(spy1.calledOnce).toBe(false);
-                expect(spy2.calledOnce).toBe(true);
+                sinon.assert.notCalled(spy1);
+                sinon.assert.calledOnce(spy2);
             });
 
             it('should not unsubscribe "customEventHandler2" when unsubscribing "customEventhandler1" by `subscriber` name', function() {
                 mediator.off(null, 'customEventHandler1', null, null);
                 emitter.trigger('custom:event');
-                expect(spy1.calledOnce).toBe(false);
-                expect(spy2.calledOnce).toBe(true);
+                sinon.assert.notCalled(spy1);
+                sinon.assert.calledOnce(spy2);
             });
 
             it('should not unsubscribe "customEventHandler2" when unsubscribing "customEventhandler1" by `callback`', function() {
                 mediator.off(null, null, spy1, null);
                 emitter.trigger('custom:event');
-                expect(spy1.calledOnce).toBe(false);
-                expect(spy2.calledOnce).toBe(true);
+                sinon.assert.notCalled(spy1);
+                sinon.assert.calledOnce(spy2);
             });
         });
 
