@@ -95,7 +95,6 @@ define(function(require) {
                 expect(spy2.calledOnce).toBe(true);
             });
 
-
             it('should not unsubscribe "customEventHandler2" when unsubscribing "customEventhandler1" by `callback`', function() {
                 mediator.off(null, null, spy1, null);
                 emitter.trigger('custom:event');
