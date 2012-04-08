@@ -1,23 +1,27 @@
 define(function(require) {
     describe('mediator', function() {
-        var emitter;
+        var spy1, spy2, spy3, emitter;
         var mediator = require('mediator');
         var eventProxyPermissions = require('eventProxyPermissions');
         var ComponentModel = require('models/ComponentModel');
-        var spy1, spy2;
 
         beforeEach(function() {
             emitter = _.extend({}, Backbone.Events);
-            eventProxyPermissions['custom:event'] = { 'customEventHandler': true };
-            spy1 = sinon.spy(emitter, 'trigger');
-            spy2 = sinon.spy(mediator, 'trigger');
+            eventProxyPermissions['custom:event'] = {
+                'customEventHandler1': true,
+                'customEventHandler2': true
+            };
             mediator.proxyAllEvents(emitter);
         });
 
         afterEach(function() {
-            eventProxyPermissions['custom:event'] = { 'customEventHandler': true };
-            emitter.trigger.restore();
-            mediator.trigger.restore();
+            spy1 = null;
+            spy2 = null;
+            spy3 = null;
+            eventProxyPermissions['custom:event'] = {
+                'customEventHandler1': true,
+                'customEventHandler2': true
+            };
             emitter.off();
             mediator.off();
         });
@@ -33,14 +37,24 @@ define(function(require) {
             expect(_.isArray(mediator)).toBe(false);
             expect(_.isElement(mediator)).toBe(false);
         });
-        
+
         it('has a `proxyAllEvents` method', function() {
             expect(_.has(mediator, 'proxyAllEvents')).toEqual(true);
             expect(_.isFunction(mediator.proxyAllEvents)).toBe(true);
         });
 
-         describe('#proxyAllEvents', function() {
-            it('proxies all events from the originating event emitter', function() {
+        describe('#proxyAllEvents', function() {
+            beforeEach(function() {
+                spy1 = sinon.spy(emitter, 'trigger');
+                spy2 = sinon.spy(mediator, 'trigger');
+            });
+
+            afterEach(function() {
+                emitter.trigger.restore();
+                mediator.trigger.restore();
+            });
+
+            it('should proxy all events from the originating event emitter', function() {
                 emitter.trigger('test');
                 sinon.assert.calledWithExactly(spy1, 'test');
                 sinon.assert.calledWithExactly(spy2, 'test');
@@ -49,52 +63,77 @@ define(function(require) {
                 sinon.assert.calledWithExactly(spy2, 'test2');
             });
         });
-        
+
         describe('#on', function() {
-            it('subscribes a `customEventHandler` to the `custom:event` channel when custom `on` is invoked', function() {
-                var spy3 = sinon.spy();
-                mediator.on('custom:event', 'customEventHandler', spy3);
+            it('subscribes a `customEventHandler1` to the `custom:event` channel', function() {
+                spy1 = sinon.spy();
+                mediator.on('custom:event', 'customEventHandler1', spy1);
                 emitter.trigger('custom:event');
-                sinon.assert.calledWithExactly(spy1, 'custom:event');
-                sinon.assert.calledWithExactly(spy2, 'custom:event');
-                expect(spy3.calledOnce).toBe(true);
+                expect(spy1.calledOnce).toBe(true);
             });
         });
 
         describe('#off', function() {
-            it('unsubscribes a `customEventHandler` from the `custom:event` channel when custom `off` ' + 
-               'is invoked with `subscriber` passed in while leaving `customEventHandler2` intact', function() {
-                var spy3 = sinon.spy();
-                var spy4 = sinon.spy();
-                eventProxyPermissions['custom:event']['customEventHandler2'] = true;
-                //: register 2 event handlers to the the same `custom:event` channel
-                mediator.on('custom:event', 'customEventHandler', spy3);
-                mediator.on('custom:event', 'customEventHandler2', spy4);
-                //: test the custom remove by subsriber behaviour
-                mediator.off(null, 'customEventHandler', null, null);
+            beforeEach(function() {
+                spy1 = sinon.spy();
+                spy2 = sinon.spy();
+                mediator.on('custom:event', 'customEventHandler1', spy1);
+                mediator.on('custom:event', 'customEventHandler2', spy2);
+            });
+
+            it('should unsubsribe "customEventHandler1" subscriber when unsubsribing by `subsriber` name', function() {
+                mediator.off(null, 'customEventHandler1', null, null);
                 emitter.trigger('custom:event');
-                sinon.assert.calledWithExactly(spy1, 'custom:event');
-                sinon.assert.calledWithExactly(spy2, 'custom:event');
-                //: we expect that only customEventHandler should not be called
-                //: while customEventHandler2 should be called
-                expect(spy3.calledOnce).toBe(false);
-                expect(spy4.calledOnce).toBe(true);
-                //: we make sure that the old off behaviour is intact
-                //: by doing a remove by `callback`
-                mediator.off(null, null, spy4, null);
+                expect(spy1.calledOnce).toBe(false);
+                expect(spy2.calledOnce).toBe(true);
+            });
+
+            it('should not unsubscribe "customEventHandler2" when unsubscribing "customEventhandler1" by `subscriber` name', function() {
+                mediator.off(null, 'customEventHandler1', null, null);
                 emitter.trigger('custom:event');
-                sinon.assert.calledWithExactly(spy1, 'custom:event');
-                sinon.assert.calledWithExactly(spy2, 'custom:event');
-                expect(spy4.calledTwice).toBe(false);
+                expect(spy1.calledOnce).toBe(false);
+                expect(spy2.calledOnce).toBe(true);
+            });
+
+
+            it('should not unsubscribe "customEventHandler2" when unsubscribing "customEventhandler1" by `callback`', function() {
+                mediator.off(null, null, spy1, null);
+                emitter.trigger('custom:event');
+                expect(spy1.calledOnce).toBe(false);
+                expect(spy2.calledOnce).toBe(true);
             });
         });
 
          describe('#trigger', function() {
-            it('proxies a `custom:event` with an extra argument', function() {
+            beforeEach(function() {
+                spy1 = sinon.spy(emitter, 'trigger');
+                spy2 = sinon.spy(mediator, 'trigger');
+                spy3 = sinon.spy();
+            });
+
+            afterEach(function() {
+                emitter.trigger.restore();
+                mediator.trigger.restore();
+            });
+
+            it('should proxy `custom:event` with extra arguments to "customEventHandler1" when permissions is `true`', function() {
                 var extraArg = { test: 'test value' };
+                mediator.on('custom:event', 'customEventHandler1', spy3);
                 emitter.trigger('custom:event', extraArg);
                 sinon.assert.calledWithExactly(spy1, 'custom:event', { test: 'test value' });
                 sinon.assert.calledWithExactly(spy2, 'custom:event', { test: 'test value' });
+                sinon.assert.calledWithExactly(spy3, { test: 'test value' });
+            });
+
+
+            it('should not proxy `custom:event` to "customEventHandler1" when permissions is `false`', function() {
+                var extraArg = { test: 'test value' };
+                mediator.on('custom:event', 'customEventHandler1', spy3);
+                eventProxyPermissions['custom:event']['customEventHandler1'] = false;
+                emitter.trigger('custom:event', extraArg);
+                sinon.assert.calledWithExactly(spy1, 'custom:event', { test: 'test value' });
+                sinon.assert.calledWithExactly(spy2, 'custom:event', { test: 'test value' });
+                expect(spy3.called).toBe(false);
             });
         });
     });
