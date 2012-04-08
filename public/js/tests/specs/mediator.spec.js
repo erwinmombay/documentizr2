@@ -65,7 +65,7 @@ define(function(require) {
         });
 
         describe('#on', function() {
-            it('subscribes a `customEventHandler1` to the `custom:event` channel', function() {
+            it('should subscribe `customEventHandler1` subscriber to the `custom:event` channel', function() {
                 spy1 = sinon.spy();
                 mediator.on('custom:event', 'customEventHandler1', spy1);
                 emitter.trigger('custom:event');

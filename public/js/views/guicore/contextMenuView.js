@@ -12,8 +12,7 @@ define(function(require) {
         _cachedTargetView: null,
 
         initialize: function(options) {
-            _.bindAll(this, 'render','_onMouseDown', 'hide', 'createMenuOptions',
-                'createMenuListItems');
+            _.bindAll(this);
             this.$body = $('body').on('mousedown', this._onMouseDown);
             //: we append to the body so and not on the contextView
             //: so that we only need to append once

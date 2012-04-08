@@ -56,9 +56,10 @@ define(function(require) {
         initialize: function(options) {
             //: note that constructor and apply properties are not binded since they
             //: are used before initialize is even called
-            _.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit',
-                '_onMouseDown', 'droppable', 'bindEventHandlers', 'unbindEventHandlers',
-                'destroy', 'clear');
+            //_.bindAll(this, '_onDoubleClick', '_onDrop', '_onHoverEnter', '_onHoverExit',
+                //'_onMouseDown', 'droppable', 'bindEventHandlers', 'unbindEventHandlers',
+                //'destroy', 'clear');
+            _.bindAll(this);
             //: _type is used for namspacing the trigger events. ex. `doubleClick:composite`
             this._type = 'component';
             this.bindEventHandlers();

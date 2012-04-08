@@ -18,7 +18,7 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'show', 'hide', '_onOptionClick');
+            _.bindAll(this);
             this._cachedTargetView = null;
         },
 

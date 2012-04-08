@@ -16,7 +16,7 @@ define(function(require) {
         },
 
         initialize: function() {
-            _.bindAll(this, 'render', 'arrowKeyControl', 'buildOnOffButtonGroup');
+            _.bindAll(this);
             this.buttonGroupTemplate = Handlebars.compile(buttonGroupTemplate);
             this.$arrowKeyControls = this.buildOnOffButtonGroup({ 
                 id: 'arrow-key-control', description: 'use up/down arrow keys to navigate tree view',

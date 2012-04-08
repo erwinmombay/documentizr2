@@ -13,7 +13,7 @@ define(function(require) {
         url: '/document',
 
         initialize: function(models, options) {
-            _.bindAll(this, 'fetch');
+            _.bindAll(this);
         },
         
         //: TODO convert this fetch into a parse instead

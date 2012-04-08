@@ -9,7 +9,7 @@ define(function(require) {
     var DocCompositeComponentView = CompositeComponentView.extend({
         initialize: function(options) {
             CompositeComponentView.prototype.initialize.call(this, options);
-            _.bindAll(this, 'render');
+            _.bindAll(this);
             this.schema = options.schema || {};
         },
 

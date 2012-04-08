@@ -1,5 +1,5 @@
 define(function(require) {
-    describe('ComponentModel', function () {
+    describe('ComponentModel', function() {
         var m, c, server, ComponentModel, ComponentCollection;
         ComponentModel = require('models/ComponentModel');
         ComponentCollection = require('collections/ComponentCollection');

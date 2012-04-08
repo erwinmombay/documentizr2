@@ -19,7 +19,7 @@ define(function(require) {
 
     var mainView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this, 'render');
+            _.bindAll(this);
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',

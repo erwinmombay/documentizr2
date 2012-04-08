@@ -19,7 +19,7 @@ define(function(require) {
         },
 
         initialize: function() {
-            _.bindAll(this, 'render', 'destroyOne', 'destroyAll', 'addOne', 'dataReprClicked');
+            _.bindAll(this);
             this.template = Handlebars.compile(detailFieldTemplate);
             this.$el.append(Handlebars.compile(template));
             this.$fieldset = this.$el.find('fieldset');
