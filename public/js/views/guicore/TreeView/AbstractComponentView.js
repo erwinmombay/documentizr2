@@ -73,6 +73,8 @@ define(function(require) {
             this.off();
         },
 
+        render: function() {},
+
         clear: function() {
             this.$el.empty();
             this.trigger('clear:' + this._type);

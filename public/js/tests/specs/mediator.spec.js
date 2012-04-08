@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     describe('mediator', function() {
         var spy1, spy2, spy3, emitter;
         var mediator = require('mediator');

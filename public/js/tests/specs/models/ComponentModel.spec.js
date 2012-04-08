@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     describe('ComponentModel', function() {
         var m, c, server, ComponentModel, ComponentCollection;
         ComponentModel = require('models/ComponentModel');
