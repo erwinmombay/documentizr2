@@ -13,7 +13,6 @@ define(function(require) {
 
     var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
-    var treeViewUtils = require('utils/treeViewUtils');
 
     var DocTreeView = require('views/guicore/DocTreeView/DocTreeView');
 
@@ -27,17 +26,11 @@ define(function(require) {
                 rootFullName: 'TS_810',
                 rootName: '810'
             });
-            this.doctree.componentCollection.fetch({
-                context: this.doctree,
-                success: _.bind(function() {
-                    this.doctree.render();
-                    treeViewUtils.walkTreeViewModels(this.doctree.componentCollection.at(0));
-                }, this)
-            });
             mediator.proxyAllEvents(this.doctree);
             //: give mediator direct access to doctree(to trigger scroll when traversing 
             //: tree through arrowkeys)
             mediator.doctree = this.doctree;
+            this.doctree.componentCollection.fetch();
         },
 
         render: function() {

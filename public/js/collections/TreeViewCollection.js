@@ -15,33 +15,14 @@ define(function(require) {
         initialize: function(models, options) {
             _.bindAll(this);
         },
-        
-        //: TODO convert this fetch into a parse instead
-        //: much more appropriate override than overriding fetch
-        fetch: function(options) {
-            var newOptions = {
-                url: this.url,
-                success: _.bind(function(data, status, xhr) {
-                    _.each(data, function(value) {
-                        var model = new this.model({
-                            name: options.context.rootName,
-                            fullName: options.context.rootFullName,
-                            schema: value,
-                            componentCollection: new ComponentCollection()
-                        });
-                        this.add(model, { silent: true });
-                    }, this);
-                    if (options) {
-                        if (options.success) {
-                            options.success();
-                        }
-                    }
-                }, this),
-                error: _.bind(function(xhr, status, errObj) {
-                    alert('An error has occured fetching the document. Please refresh this page or check your internet connection.');
-                }, this)
-            };
-            $.ajax(newOptions);
+
+        parse: function(resp) {
+            return [{
+                name: this.tree.rootName,
+                fullName: this.tree.rootFullName,
+                schema: resp[this.tree.rootFullName],
+                componentCollection: new ComponentCollection()    
+            }];
         }
     });
     return TreeViewCollection;
