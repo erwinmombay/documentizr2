@@ -15,7 +15,6 @@ define(function(require) {
             //: `this` LeafComponentView instance.
             //: this is like calling super() in javascript
             AbstractComponentView.prototype.initialize.apply(this, arguments);
-            _.bindAll(this);
             this._type = 'leaf';
             this.template = Handlebars.compile(options.template || this.template);
         },
