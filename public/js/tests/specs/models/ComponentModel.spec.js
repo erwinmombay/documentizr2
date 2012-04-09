@@ -1,25 +1,27 @@
 define(function(require) {
     'use strict';
     describe('ComponentModel', function() {
-        var m, c, server, ComponentModel, ComponentCollection;
+        var m1, c, server, ComponentModel, ComponentCollection;
         ComponentModel = require('models/ComponentModel');
         ComponentCollection = require('collections/ComponentCollection');
 
         beforeEach(function() {
-            m = new ComponentModel();
+            m1 = new ComponentModel();
             //TODO use stub or mock instead
             c = new ComponentCollection();
         });
 
         it('should be addable to a ComponentCollection', function() {
             expect(c.length).toBe(0);
-            c.add(m);
+            c.add(m1);
             expect(c.length).toBe(1);
         });
 
-        it('has an empty array customValidationList', function() {
-            expect(m.customValidationList).toBeDefined();
-            expect(m.customValidationList.length).toBe(0);
+        it('has an empty array customValidationList instance property', function() {
+            var m2 = new ComponentModel();
+            expect(m1.customValidationList).toBeDefined();
+            expect(m1.customValidationList.length).toBe(0);
+            expect(m1.customValidationList).not.toBe(m2.customValidationList);
         });
 
         describe('#constructor', function() {
@@ -38,7 +40,7 @@ define(function(require) {
 
         describe('#destroy', function() {
             it('should call `destroy` on nested models when top level model is destroyed and option `cascade` true is passed', function() {
-                var m1 = new ComponentModel({ componentCollection: new ComponentCollection() });
+                m1 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 var m2 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 var m3 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 m1.componentCollection.add(m2);
@@ -53,7 +55,7 @@ define(function(require) {
             });
 
             it('should not call `destroy` on nested models when top level model is destroyed and option `cascade` false is passed', function() {
-                var m1 = new ComponentModel({ componentCollection: new ComponentCollection() });
+                m1 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 var m2 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 var m3 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 m1.componentCollection.add(m2);
@@ -68,7 +70,7 @@ define(function(require) {
             });
 
             it('should not call `destroy` on nested models when top level model is destroyed and option `cascade` is not passed', function() {
-                var m1 = new ComponentModel({ componentCollection: new ComponentCollection() });
+                m1 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 var m2 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 var m3 = new ComponentModel({ componentCollection: new ComponentCollection() });
                 m1.componentCollection.add(m2);
@@ -91,8 +93,8 @@ define(function(require) {
                     {'Content-Type': 'application/json'},
                     JSON.stringify({ 'fullName': 'ST_0100' })
                 ]);
-                c.add(m);
-                m.fetch();
+                c.add(m1);
+                m1.fetch();
             });
 
             afterEach(function() {
@@ -107,7 +109,7 @@ define(function(require) {
 
             it('should have "ST_0100" as the `fullName` attribute', function() {
                 server.respond();
-                expect(m.get('fullName')).toBe('ST_0100');
+                expect(m1.get('fullName')).toBe('ST_0100');
             });
         });
     });
