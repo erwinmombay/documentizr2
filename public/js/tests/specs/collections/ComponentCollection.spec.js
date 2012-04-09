@@ -16,9 +16,10 @@ define(function(require) {
             });
 
             it('should add `ComponentModel`', function() {
-               var m = new ComponentModel();
-               c.add(m);
-               expect(c.length).toBe(1);
+                //TODO use stub or mock instead
+                var m = new ComponentModel();
+                c.add(m);
+                expect(c.length).toBe(1);
             });
         });
 
@@ -26,7 +27,8 @@ define(function(require) {
             beforeEach(function() {
                 server = sinon.fakeServer.create();
                 server.respondWith('GET', '/component', [
-                    200, { "Content-Type": "application/json" },
+                    200,
+                    { "Content-Type": "application/json" },
                     JSON.stringify({ 'OK' : 'True' })
                 ]);
             });

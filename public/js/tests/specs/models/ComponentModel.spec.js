@@ -7,6 +7,7 @@ define(function(require) {
 
         beforeEach(function() {
             m = new ComponentModel();
+            //TODO use stub or mock instead
             c = new ComponentCollection();
         });
 
