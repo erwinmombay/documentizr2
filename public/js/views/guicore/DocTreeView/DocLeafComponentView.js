@@ -12,7 +12,6 @@ define(function(require) {
 
         initialize: function(options) {
             LeafComponentView.prototype.initialize.call(this, options);
-            _.bindAll(this, 'render');
             this.schema = options.schema || {};
         },
 

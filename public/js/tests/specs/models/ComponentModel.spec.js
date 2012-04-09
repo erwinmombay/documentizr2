@@ -1,20 +1,22 @@
 define(function(require) {
-    describe('ComponentModel', function () {
+    'use strict';
+    describe('ComponentModel', function() {
         var m, c, server, ComponentModel, ComponentCollection;
         ComponentModel = require('models/ComponentModel');
         ComponentCollection = require('collections/ComponentCollection');
 
         beforeEach(function() {
             m = new ComponentModel();
+            //TODO use stub or mock instead
             c = new ComponentCollection();
         });
-        
+
         it('should be addable to a ComponentCollection', function() {
             expect(c.length).toBe(0);
             c.add(m);
             expect(c.length).toBe(1);
         });
-        
+
         it('has an empty array customValidationList', function() {
             expect(m.customValidationList).toBeDefined();
             expect(m.customValidationList.length).toBe(0);
@@ -45,9 +47,9 @@ define(function(require) {
                 var spy2 = sinon.spy(m2, 'destroy');
                 var spy3 = sinon.spy(m3, 'destroy');
                 m1.destroy({ cascade: true });
-                expect(spy1).toHaveBeenCalled();
-                expect(spy2).toHaveBeenCalled();
-                expect(spy3).toHaveBeenCalled();
+                sinon.assert.calledOnce(spy1);
+                sinon.assert.calledOnce(spy2);
+                sinon.assert.calledOnce(spy3);
             });
 
             it('should not call `destroy` on nested models when top level model is destroyed and option `cascade` false is passed', function() {
@@ -60,9 +62,9 @@ define(function(require) {
                 var spy2 = sinon.spy(m2, 'destroy');
                 var spy3 = sinon.spy(m3, 'destroy');
                 m1.destroy({ cascade: false });
-                expect(spy1).toHaveBeenCalled();
-                expect(spy2).not.toHaveBeenCalled();
-                expect(spy3).not.toHaveBeenCalled();
+                sinon.assert.calledOnce(spy1);
+                sinon.assert.notCalled(spy2);
+                sinon.assert.notCalled(spy3);
             });
 
             it('should not call `destroy` on nested models when top level model is destroyed and option `cascade` is not passed', function() {
@@ -75,9 +77,9 @@ define(function(require) {
                 var spy2 = sinon.spy(m2, 'destroy');
                 var spy3 = sinon.spy(m3, 'destroy');
                 m1.destroy();
-                expect(spy1).toHaveBeenCalled();
-                expect(spy2).not.toHaveBeenCalled();
-                expect(spy3).not.toHaveBeenCalled();
+                sinon.assert.calledOnce(spy1);
+                sinon.assert.notCalled(spy2);
+                sinon.assert.notCalled(spy3);
             });
         });
 

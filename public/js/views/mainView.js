@@ -13,31 +13,34 @@ define(function(require) {
 
     var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
-    var treeViewUtils = require('utils/treeViewUtils');
+
+    var ComponentModel = require('models/ComponentModel');
+
+    var ComponentCollection = require('collections/ComponentCollection');
 
     var DocTreeView = require('views/guicore/DocTreeView/DocTreeView');
 
     var mainView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this, 'render');
+            _.bindAll(this);
             this.doctree = new DocTreeView({
                 tagName: 'div',
                 id: 'doctree',
                 className: 'tree-panel',
                 rootFullName: 'TS_810',
                 rootName: '810'
-            });
-            this.doctree.componentCollection.fetch({
-                context: this.doctree,
-                success: _.bind(function() {
-                    this.doctree.render();
-                    treeViewUtils.walkTreeViewModels(this.doctree.componentCollection.at(0));
-                }, this)
-            });
+            }).render();
             mediator.proxyAllEvents(this.doctree);
             //: give mediator direct access to doctree(to trigger scroll when traversing 
             //: tree through arrowkeys)
             mediator.doctree = this.doctree;
+            var model = new ComponentModel({
+                name: this.doctree.rootName,    
+                fullName: this.doctree.rootFullName,
+                schema: bootstrapData[this.doctree.rootFullName],
+                componentCollection: new ComponentCollection()    
+            });
+            this.doctree.componentCollection.add(model);
         },
 
         render: function() {

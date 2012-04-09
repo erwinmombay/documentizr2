@@ -29,7 +29,7 @@ define(function(require) {
         },
 
         initialize: function(attr) {
-            _.bindAll(this, 'destroy', 'validation');
+            _.bindAll(this);
         },
 
         destroy: function(options) {

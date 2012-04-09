@@ -15,9 +15,7 @@ define(function(require) {
             //: rebind all the inherited methods from AbstractComponentView to
             //: `this` CompositeComponent instance.
             //: this is like calling super() in javascript
-            AbstractComponentView.prototype.initialize.apply(this, arguments);
-            _.bindAll(this, 'render', 'addOne', 'addAll', 'foldToggle', 'selectable',
-                'sortable', 'bindEventHandlers', 'unbindEventHandlers');
+            AbstractComponentView.prototype.initialize.call(this, options);
             this._type = 'composite';
             this.template = Handlebars.compile(options.template || this.template);
             //: models have componentCollection while views have

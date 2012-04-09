@@ -13,13 +13,17 @@ html(lang="eng")
     //- link(rel="stylesheet/less", href="/css/custom.less")
     link(rel="stylesheet", type="text/css", href="/css/custom.css")
     block extra-css
-    
+
     script(type="text/javascript")
-      if(!window.console) { console = { log: function(){ } } }; 
-    
+      if(!window.console) { console = { log: function(){ } } };
+
+    //- bootstrap our json data on html render instead of doing an ajax request
+    - var bootstrapData= '<script type="text/javascript">bootstrapData = ' + data + '</script>'
+      | !{bootstrapData}
+
     //- script(type="text/javascript", src="/js/libs/less/less.min.js")
     script(data-main="js/main", src="js/libs/require/require.min.js")
 
     body!= body
- 
+
 

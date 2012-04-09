@@ -13,12 +13,16 @@ define(function(require) {
     var DocTreeView = TreeView.extend({
         initialize: function(options) {
             TreeView.prototype.initialize.call(this, options);
-            _.bindAll(this, 'render');
             this.schema = options.schema || null;
             this.rootName = options.rootName;
             this.rootFullName = options.rootFullName;
             this.$spinner = $(spinner);
             this.$el.append(this.$spinner);
+        },
+
+        bindEventHandlers: function() {
+            TreeView.prototype.bindEventHandlers.call(this);
+            this.componentCollection.on('reset', this.render, this);
         },
 
         render: function() {

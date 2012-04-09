@@ -13,10 +13,24 @@ define(function(require) {
         el: TreeViewTemplate,
 
         initialize: function(options) {
-            _.bindAll(this, 'render', 'addOne', 'addAll');
+            _.bindAll(this);
             this.componentCollection = options.componentCollection || new TreeViewCollection();
-            this.componentCollection.on('add', this.addOne);
             this.$componentCollection = null;
+            this.bindEventHandlers();
+        },
+
+        bindEventHandlers: function() {
+            this.componentCollection.on('add', this.addOne);
+        },
+        
+        unbindEventHandlers: function() {
+            this.componentCollection.off(null, null, this);
+        },
+        
+        destroy: function() {
+            this.remove();
+            this.unbindEventHandlers();
+            this.off();
         },
 
         render: function() {
@@ -29,7 +43,7 @@ define(function(require) {
             this.trigger('addOne:tree', { viewContext: this, model: model });
         },
 
-        addAll: function () {
+        addAll: function() {
             this.componentCollection.each(this.addOne);
         }
     });

@@ -8,8 +8,7 @@ define(function(require) {
 
     var FieldView = Backbone.View.extend({
         initialize: function(options) {
-            _.bindAll(this, 'render', 'destroy', 'bindEventHandlers', 'unbindEventHandlers',
-                'reRender');
+            _.bindAll(this);
             this.template = Handlebars.compile(options.template || detailFieldTemplate);
             this.$dataRepr = this.$el.find('.data-repr');
             this.custom = this.model.custom;

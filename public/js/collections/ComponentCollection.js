@@ -13,5 +13,6 @@ define(function(require) {
         initialize: function(models, options) {
         }
     });
+
     return ComponentCollection;
 });

@@ -125,6 +125,7 @@ define(function(require) {
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
         treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
         spec.viewContext.$el.find('li:first').trigger({ type: 'mousedown', which: 1 });
+        treeViewUtils.walkTreeViewModels(spec.model);
     });
 
     mediator.on('addOne:accordion', 'accordionAddOneSubViewHandler', function(spec) {

@@ -1,4 +1,5 @@
 define(function(require) {
+    'use strict';
     describe('ComponentCollection', function() {
         var c, server, ComponentModel, ComponentCollection;
         ComponentModel = require('models/ComponentModel');
@@ -15,9 +16,10 @@ define(function(require) {
             });
 
             it('should add `ComponentModel`', function() {
-               var m = new ComponentModel();
-               c.add(m);
-               expect(c.length).toBe(1);
+                //TODO use stub or mock instead
+                var m = new ComponentModel();
+                c.add(m);
+                expect(c.length).toBe(1);
             });
         });
 
