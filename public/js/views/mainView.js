@@ -14,6 +14,10 @@ define(function(require) {
     var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
 
+    var ComponentModel = require('models/ComponentModel');
+
+    var ComponentCollection = require('collections/ComponentCollection');
+
     var DocTreeView = require('views/guicore/DocTreeView/DocTreeView');
 
     var mainView = Backbone.View.extend({
@@ -25,12 +29,18 @@ define(function(require) {
                 className: 'tree-panel',
                 rootFullName: 'TS_810',
                 rootName: '810'
-            });
+            }).render();
             mediator.proxyAllEvents(this.doctree);
             //: give mediator direct access to doctree(to trigger scroll when traversing 
             //: tree through arrowkeys)
             mediator.doctree = this.doctree;
-            this.doctree.componentCollection.fetch();
+            var model = new ComponentModel({
+                name: this.doctree.rootName,    
+                fullName: this.doctree.rootFullName,
+                schema: bootstrapData[this.doctree.rootFullName],
+                componentCollection: new ComponentCollection()    
+            });
+            this.doctree.componentCollection.add(model);
         },
 
         render: function() {

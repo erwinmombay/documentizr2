@@ -17,12 +17,13 @@ define(function(require) {
         },
 
         parse: function(resp) {
-            return [{
-                name: this.tree.rootName,
-                fullName: this.tree.rootFullName,
-                schema: resp[this.tree.rootFullName],
-                componentCollection: new ComponentCollection()    
-            }];
+            return resp;
+            //return [{
+                //name: this.tree.rootName,
+                //fullName: this.tree.rootFullName,
+                //schema: resp[this.tree.rootFullName],
+                //componentCollection: new ComponentCollection()    
+            //}];
         }
     });
     return TreeViewCollection;

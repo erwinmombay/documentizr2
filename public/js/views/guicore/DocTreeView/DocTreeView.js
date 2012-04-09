@@ -13,7 +13,6 @@ define(function(require) {
     var DocTreeView = TreeView.extend({
         initialize: function(options) {
             TreeView.prototype.initialize.call(this, options);
-            this.componentCollection.tree = this;
             this.schema = options.schema || null;
             this.rootName = options.rootName;
             this.rootFullName = options.rootFullName;

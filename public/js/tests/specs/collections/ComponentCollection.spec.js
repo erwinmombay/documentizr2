@@ -26,8 +26,7 @@ define(function(require) {
             beforeEach(function() {
                 server = sinon.fakeServer.create();
                 server.respondWith('GET', '/component', [
-                    200,
-                    { "Content-Type": "application/json" },
+                    200, { "Content-Type": "application/json" },
                     JSON.stringify({ 'OK' : 'True' })
                 ]);
             });

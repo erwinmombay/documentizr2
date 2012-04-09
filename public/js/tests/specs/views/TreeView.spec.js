@@ -61,7 +61,7 @@ define(function(require) {
                     CompositeComponentView.prototype.destroy.restore();
                 });
 
-                it('should be triggered on any model `destroy` event', function() {
+                it('should be triggered once on one model `destroy` event', function() {
                     m2.destroy();
                     sinon.assert.calledOnce(spy1);
                 });
