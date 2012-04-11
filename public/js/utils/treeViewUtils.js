@@ -74,9 +74,11 @@ define(function(require) {
             //: we proxy/handle all the events `view` triggers to mediator
             mediator.proxyAllEvents(view);
             //: append this new view to the previous viewContext
-            //console.log(spec.viewContext.$componentCollection);
             spec.viewContext.$componentCollection.append(view.$el);
-            if (view.model.schema.nodeType === 's' && isInitialTreeRender) view.foldToggle();
+            if (view.model.schema.nodeType === 's' && isInitialTreeRender) {
+                view.foldToggle();
+                view.$componentCollection.hide();
+            }
             return view;
         }
     };
