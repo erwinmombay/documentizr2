@@ -1,5 +1,5 @@
 define(function(require) {
-    'use strict';
+    //'use strict';
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
@@ -85,9 +85,13 @@ define(function(require) {
         return this;
     };
 
+    mediator.allProxy = function() {
+        mediator.trigger.apply(mediator, arguments);
+    };
+
     mediator.proxyAllEvents = function(obj) {
         if (obj && obj.on) {
-            obj.on('all', function() { mediator.trigger.apply(mediator, arguments); });
+            obj.on('all', mediator.allProxy);
         }
     };
 

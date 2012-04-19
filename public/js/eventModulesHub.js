@@ -128,14 +128,6 @@ define(function(require) {
         treeViewUtils.walkTreeViewModels(spec.model);
     });
 
-    mediator.on('addOne:accordion', 'accordionAddOneSubViewHandler', function(spec) {
-        treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
-    });
-
-    mediator.on('addOne:accordionGroup', 'accordionGroupAddOneSubViewHandler', function(spec) {
-        treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
-    });
-
     mediator.on('optionClick:modalEditor', 'modalEditorOptionClickHandler', function(spec) {
         _isInitialTreeRender = false;
         var targetId = $(spec.event.target).attr('id');
@@ -146,12 +138,6 @@ define(function(require) {
             data: 'default'
         });
         spec.viewContext.model.componentCollection.add(model);
-    });
-    
-    mediator.on('click:dataRepr', 'detailDataReprClickHandler', function(spec) {
-        mediator.doctree.$el.find('#' + spec.id)
-            .filter(':visible')
-            .trigger({ type: 'mousedown', which: 1 });
     });
 
     //: unused events, document this later on
