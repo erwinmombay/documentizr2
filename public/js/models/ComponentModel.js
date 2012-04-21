@@ -5,7 +5,6 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var ComponentModel = Backbone.Model.extend({
-        customValidationList: [],
         _allowedProperties: ['componentCollection', 'schema'],
         _ignoredAttributes: ['componentCollection', 'schema'],
 
@@ -30,6 +29,7 @@ define(function(require) {
 
         initialize: function(attr) {
             _.bindAll(this);
+            this.customValidationList = [];
         },
 
         destroy: function(options) {
