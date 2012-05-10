@@ -49,7 +49,7 @@ define(function(require) {
                 view = new DocCompositeComponentView({ model: spec.model, id: spec.model.cid });
                 view.render().sortable().menu = {
                     'add new node': function(e) {
-                        modalEditorView.render({ viewContext: view, event: e }).show();
+                        modalEditorView.render({ ctx: view, event: e }).show();
                     },
                     'delete node': function(e) {
                         view.$el.fadeOut('fast', function() {
@@ -73,8 +73,8 @@ define(function(require) {
             treeViewUtils.bindCustomContextMenu(view);
             //: we proxy/handle all the events `view` triggers to mediator
             mediator.proxyAllEvents(view);
-            //: append this new view to the previous viewContext
-            spec.viewContext.$componentCollection.append(view.$el);
+            //: append this new view to the previous ctx
+            spec.ctx.$componentCollection.append(view.$el);
             if (view.model.schema.nodeType === 's' && isInitialTreeRender) {
                 view.foldToggle();
                 view.$componentCollection.hide();
@@ -100,7 +100,7 @@ define(function(require) {
 
     treeViewUtils.bindCustomContextMenu = function(view) {
         view.$el.on('contextmenu', function(e) {
-            contextMenuView.render({ viewContext: view, event: e });
+            contextMenuView.render({ ctx: view, event: e });
             e.preventDefault();
         });
     };
@@ -109,7 +109,7 @@ define(function(require) {
         if (prevHighlightedView) {
             prevHighlightedView.$el.children('div:first').css({ 'background-color': '#FFFFFF' });
         }
-        spec.viewContext.$el.children('div:first').css({ 'background-color': '#D9EDF7' });
+        spec.ctx.$el.children('div:first').css({ 'background-color': '#D9EDF7' });
     };
 
     treeViewUtils.traverseTreeDown = function(e, prevView) {

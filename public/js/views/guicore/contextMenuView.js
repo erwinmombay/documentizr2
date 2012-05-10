@@ -31,7 +31,7 @@ define(function(require) {
             //: if needed.
             this.$el.hide(spec.event);
             this.$options.empty();
-            this._cachedTargetView = spec.viewContext;
+            this._cachedTargetView = spec.ctx;
             this.createMenuOptions(this._cachedTargetView.menu);
             //: recalculate position by using e.pageX/pageY
             this.$el.css({

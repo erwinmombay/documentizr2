@@ -24,11 +24,8 @@ define(function(require) {
         initialize: function() {
             _.bindAll(this);
             this.doctree = new DocTreeView({
-                tagName: 'div',
-                id: 'doctree',
-                className: 'tree-panel',
-                rootFullName: 'TS_810',
-                rootName: '810'
+                tagName: 'div', id: 'doctree', className: 'tree-panel',
+                rootFullName: 'TS_810', rootName: '810'
             }).render();
             mediator.proxyAllEvents(this.doctree);
             //: give mediator direct access to doctree(to trigger scroll when traversing 

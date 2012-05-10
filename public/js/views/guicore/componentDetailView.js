@@ -71,7 +71,7 @@ define(function(require) {
 
         dataReprClicked: function(e) {
             this.trigger('click:dataRepr', {
-                viewContext: this, event: e, id: $(e.target).attr('id').substring(5)
+                ctx: this, event: e, id: $(e.target).attr('id').substring(5)
             });
         }
     });
