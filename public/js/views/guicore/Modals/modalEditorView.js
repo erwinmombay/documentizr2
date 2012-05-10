@@ -24,12 +24,12 @@ define(function(require) {
 
         render: function(spec) {
             this.$el.empty();
-            this._cachedTargetView = spec.viewContext;
+            this._cachedTargetView = spec.ctx;
             var template = Handlebars.compile(this.template);
-            template = template({ curNode: spec.viewContext.model.get('name') + '. Choose a child node below.' });
+            template = template({ curNode: spec.ctx.model.get('name') + '. Choose a child node below.' });
             this.$el.append(template);
             var $body = this.$el.find('div.modal-body');
-            _.each(spec.viewContext.model.schema.collection, function(value) {
+            _.each(spec.ctx.model.schema.collection, function(value) {
                 var $link = $('<a/>', {
                     'href': '#',
                     'id': value.fullName || value.name,
@@ -60,7 +60,7 @@ define(function(require) {
         },
 
         _onOptionClick: function(e) {
-            this.trigger('optionClick:modalEditor', { viewContext: this._cachedTargetView, event: e });
+            this.trigger('optionClick:modalEditor', { ctx: this._cachedTargetView, event: e });
             this.hide();
         }
     }, Backbone.Events);

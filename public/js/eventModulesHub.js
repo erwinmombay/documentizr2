@@ -48,14 +48,14 @@ define(function(require) {
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {
         //: TODO readjust componentDetailView scrollpos when the selected element is out of view
-        var $detailView = componentDetailView.$el.find('.data-repr.' + spec.viewContext.model.schema.fullName);
+        var $detailView = componentDetailView.$el.find('.data-repr.' + spec.ctx.model.schema.fullName);
         //: TODO fix bug where when we are traversing up the tree and are under a segment with a large
         //: number of elements and the offset 100 is not enough to show the bottom field view on the detail screen
         if ($detailView.length) adjustScrollPos($detailView, componentDetailView.$el);
         treeViewUtils.hightlightComponent(spec, _prevClickedView);
         //: we cache the current selected View Component to _prevClickedView so that
         //: on the next selection we know which component we need to reset(highlighting etc..)
-        _prevClickedView = spec.viewContext;
+        _prevClickedView = spec.ctx;
     };
 
     var adjustScrollPos = function($selected, $container, yoffset) {
@@ -82,21 +82,21 @@ define(function(require) {
     });
 
     mediator.on('leftClick:leaf', 'leafLeftClickHandler', function(spec) {
-        componentDetailView.render({ collectionContext: spec.viewContext.model.collection });
+        componentDetailView.render({ collectionContext: spec.ctx.model.collection });
         selectComponent(spec);
-        componentDetailView.$el.find('#field' + spec.viewContext.model.cid).select();
+        componentDetailView.$el.find('#field' + spec.ctx.model.cid).select();
     });
 
     mediator.on('leftClick:composite', 'compositeLeftClickHandler', function(spec) {
         //: optimiziation by delaying the rendering of the elements/leaf nodes until first leftClick on the segment
-        if (!spec.viewContext.$el.find('li').length) {
-            spec.viewContext.model.componentCollection.each(function(model) {
+        if (!spec.ctx.$el.find('li').length) {
+            spec.ctx.model.componentCollection.each(function(model) {
                 _isInitialTreeRender = false;
-                treeViewUtils.createSubViewFromSpec({ model: model, viewContext: spec.viewContext }, _isInitialTreeRender);
+                treeViewUtils.createSubViewFromSpec({ model: model, ctx: spec.ctx }, _isInitialTreeRender);
             });
         }
         selectComponent(spec);
-        componentDetailView.render({ collectionContext: spec.viewContext.model.componentCollection });
+        componentDetailView.render({ collectionContext: spec.ctx.model.componentCollection });
         componentDetailView.$el.find('.data-repr:first').select();
     });
 
@@ -114,7 +114,7 @@ define(function(require) {
 
     mediator.on('doubleClick:composite', 'compositeDoubleClickHandler', function(spec) {
         spec.event.stopPropagation();
-        spec.viewContext.foldToggle();
+        spec.ctx.foldToggle();
     });
 
     mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
@@ -124,20 +124,20 @@ define(function(require) {
 
     mediator.on('addOne:tree', 'treeAddOneSubViewHandler', function(spec) {
         treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
-        spec.viewContext.$el.find('li:first').trigger({ type: 'mousedown', which: 1 });
+        spec.ctx.$el.find('li:first').trigger({ type: 'mousedown', which: 1 });
         treeViewUtils.walkTreeViewModels(spec.model);
     });
 
     mediator.on('optionClick:modalEditor', 'modalEditorOptionClickHandler', function(spec) {
         _isInitialTreeRender = false;
         var targetId = $(spec.event.target).attr('id');
-        var schema = spec.viewContext.model.schema.collection[targetId];
+        var schema = spec.ctx.model.schema.collection[targetId];
         var model = new ComponentModel({
             name: schema.name, fullName: schema.fullName, schema: schema || null,
             componentCollection: schema && schema.collection && new ComponentCollection(),
             data: 'default'
         });
-        spec.viewContext.model.componentCollection.add(model);
+        spec.ctx.model.componentCollection.add(model);
     });
 
     //: unused events, document this later on

@@ -97,22 +97,22 @@ define(function(require) {
         },
 
         _onDoubleClick: function(e) {
-            this.trigger('doubleClick:' + this._type, { viewContext: this, event: e });
+            this.trigger('doubleClick:' + this._type, { ctx: this, event: e });
         },
 
         _onDrop: function(e, ui) {
-            this.trigger('drop:' + this._type, { viewContext: this, event: e, ui: ui });
+            this.trigger('drop:' + this._type, { ctx: this, event: e, ui: ui });
         },
 
         //: TODO optimize this class in the future by having a settings has to turn these events
         //: on and off. onhover events are a good example why we would want this as it is slightly expensive
         //: on every hover triggering an event.
         _onHoverEnter: function(e, ui) {
-            this.trigger('hoverEnter:' + this._type, { viewContext: this, event: e, ui: ui });
+            this.trigger('hoverEnter:' + this._type, { ctx: this, event: e, ui: ui });
         },
 
         _onHoverExit: function(e, ui) {
-            this.trigger('hoverExit:' + this._type, { viewContext: this, event: e, ui: ui });
+            this.trigger('hoverExit:' + this._type, { ctx: this, event: e, ui: ui });
         },
 
         _onMouseDown: function(e) {
@@ -122,14 +122,14 @@ define(function(require) {
             //:~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             //: 1 is a mouse left click event.
             var $target = $(e.target);
-            if (e.which == 1 && $target.closest(this.tagName).is(this.$el)) {
-                this.trigger('leftClick:' + this._type, { viewContext: this, event: e });
+            if (e.which === 1 && $target.closest(this.tagName).is(this.$el)) {
+                this.trigger('leftClick:' + this._type, { ctx: this, event: e });
             //: 3 is a mouse right click event
-            } else if (e.which == 3 && $target.closest(this.tagName).is(this.$el)) {
-                this.trigger('rightClick:' + this._type, { viewContext: this, event: e });
+            } else if (e.which === 3 && $target.closest(this.tagName).is(this.$el)) {
+                this.trigger('rightClick:' + this._type, { ctx: this, event: e });
             //: 2 is a middle click event
-            } else if (e.which == 2 && $target.closest(this.tagName).is(this.$el)) {
-                this.trigger('middleClick:' + this._type, { viewContext: this, event: e });
+            } else if (e.which === 2 && $target.closest(this.tagName).is(this.$el)) {
+                this.trigger('middleClick:' + this._type, { ctx: this, event: e });
             }
         }
     });

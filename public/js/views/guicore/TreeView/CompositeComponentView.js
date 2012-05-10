@@ -50,7 +50,7 @@ define(function(require) {
         },
 
         addOne: function(model) {
-            this.trigger('addOne:composite', { viewContext: this, model: model });
+            this.trigger('addOne:composite', { ctx: this, model: model });
         },
 
         addAll: function() {
