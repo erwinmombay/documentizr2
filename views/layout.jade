@@ -5,6 +5,7 @@ html(lang="eng")
     title= title
     meta(name="description", content="")
     meta(name="author", content="erwin.mombay")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, user-scalable=no")
     //- HTML5 shim, for IE 6-8 support of HTML elements
     //- if lt IE 9
     //- script(src="http://html5shim.googlecode.com/svn/trunk/html5.js")
@@ -15,7 +16,7 @@ html(lang="eng")
     block extra-css
 
     script(type="text/javascript")
-      if(!window.console) { console = { log: function(){ } } };
+      if(!window.console){console={log:function(){}}};
 
     //- bootstrap our json data on html render instead of doing an ajax request
     - var bootstrapData= '<script type="text/javascript">bootstrapData = ' + data + '</script>'

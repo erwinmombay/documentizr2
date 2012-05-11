@@ -1,5 +1,6 @@
 var express = require('express');
 var routes = require('./routes');
+var gzippo = require('gzippo');
 
 var app = module.exports = express.createServer();
 //var io = require('socket.io').listen(app);
@@ -15,7 +16,10 @@ app.configure(function() {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(app.router);
-    app.use(express.static(__dirname + '/public'));
+    //app.use(express.static(__dirname + '/public'));
+    app.use(gzippo.staticGzip(__dirname + '/public'));
+    //app.use(gzippo.compress());
+    app.enable('view cache');
 });
 
 app.configure('development', function() {
