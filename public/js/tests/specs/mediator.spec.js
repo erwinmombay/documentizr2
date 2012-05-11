@@ -1,3 +1,4 @@
+/*global define:true, _:true, Backbone:true, afterEach:true, sinon:true */
 define(function(require) {
     'use strict';
     describe('mediator', function() {
