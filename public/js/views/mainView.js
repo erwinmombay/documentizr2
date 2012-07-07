@@ -5,12 +5,9 @@
  * @author erwin.mombay
  */
 
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true, bootstrapData:true*/
 define(function(require) {
     'use strict';
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Backbone = require('backbone');
-
     var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
 
