@@ -1,3 +1,4 @@
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true*/
 /**
  * views/TreeView/guicore/AbstractComponent.js
  * ~~~~~~~~~~~~~~~~~~~
@@ -8,10 +9,6 @@
 
 define(function(require) {
     'use strict';
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Backbone = require('backbone');
-    
     //:~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //: AbstractComponent should not be instantiated.
     //: I had originally put a guard on the initialize method to throw

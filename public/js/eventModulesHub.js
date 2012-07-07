@@ -1,9 +1,6 @@
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true*/
 define(function(require) {
     'use strict';
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Backbone = require('backbone');
-
     var modalEditorView = require('views/guicore/Modals/modalEditorView');
     var componentDetailView = require('views/guicore/componentDetailView');
     var eventProxyPermissions = require('eventProxyPermissions');

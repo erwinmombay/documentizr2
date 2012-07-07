@@ -1,8 +1,5 @@
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true*/
 define(function(require) {
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Backbone = require('backbone');
-
     var modalTemplate = require('text!templates/ModalEditor.html');
 
     var modalEditorView = Backbone.View.extend({

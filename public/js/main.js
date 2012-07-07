@@ -1,3 +1,4 @@
+/*global define: true*/
 /**
  * main.js
  * ~~~~~~~~~~~~~~~~~~~
@@ -6,35 +7,39 @@
  * @author erwin.mombay
  */
 
-'use strict';
-
 //: we set up aliases for our most frequently used imported files/modules/dir
 require.config({
     paths: {
-        order: 'libs/require/order.min',
         jquery: 'libs/jquery/jquery-1.7.2.min',
         jqueryui: 'libs/jquery/jquery-ui-1.8.18.custom.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
         handlebars: 'libs/handlebars/handlebars',
-        text: 'libs/require/text.min',
+        text: 'libs/require/text',
         templates: '../templates',
         models: 'models',
         collections: 'collections',
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal'
+    },
+    shim: {
+        backbone: {
+            deps: ['underscore', 'jquery'],
+            exports: 'Backbone'
+        }
     }
 });
 
 //: we use the order plugin the load the library's synchronously
 define(function(require) {
-    var $ = require('order!jquery');
-    var _ = require('order!underscore');
-    var Backbone = require('order!backbone');
-    var handlebars = require('order!handlebars');
-    var jqui = require('order!jqueryui');
-    var App = require('order!app');
-    var modal = require('order!modal');
+    'use strict';
+    var App = require('app');
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var Backbone = require('backbone');
+    var jqui = require('jqueryui');
+    var handlebars = require('handlebars');
+    var modal = require('modal');
 
     App.initialize();
 });
