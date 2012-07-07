@@ -1,4 +1,3 @@
-/*global define: true*/
 /**
  * main.js
  * ~~~~~~~~~~~~~~~~~~~
@@ -31,6 +30,7 @@ require.config({
 });
 
 //: we use the order plugin the load the library's synchronously
+/*global define: true*/
 define(function(require) {
     'use strict';
     var App = require('app');
