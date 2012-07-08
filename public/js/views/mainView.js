@@ -5,12 +5,9 @@
  * @author erwin.mombay
  */
 
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true, bootstrapData:true*/
 define(function(require) {
     'use strict';
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Backbone = require('backbone');
-
     var mediator = require('mediator');
     var eventModulesHub = require('eventModulesHub');
 
@@ -28,14 +25,14 @@ define(function(require) {
                 rootFullName: 'TS_810', rootName: '810'
             }).render();
             mediator.proxyAllEvents(this.doctree);
-            //: give mediator direct access to doctree(to trigger scroll when traversing 
+            //: give mediator direct access to doctree(to trigger scroll when traversing
             //: tree through arrowkeys)
             mediator.doctree = this.doctree;
             var model = new ComponentModel({
-                name: this.doctree.rootName,    
+                name: this.doctree.rootName,
                 fullName: this.doctree.rootFullName,
                 schema: bootstrapData[this.doctree.rootFullName],
-                componentCollection: new ComponentCollection()    
+                componentCollection: new ComponentCollection()
             });
             this.doctree.componentCollection.add(model);
         },

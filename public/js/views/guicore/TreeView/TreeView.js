@@ -1,9 +1,6 @@
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true*/
 define(function(require) {
     'use strict';
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Backbone = require('backbone');
-    
     var CompositeComponentView = require('views/guicore/TreeView/CompositeComponentView');
     var LeafComponentView = require('views/guicore/TreeView/LeafComponentView');
     var TreeViewCollection = require('collections/TreeViewCollection');

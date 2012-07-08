@@ -1,3 +1,4 @@
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true*/
 define(function(require) {
     'use strict';
     var eventProxyPermissions = {

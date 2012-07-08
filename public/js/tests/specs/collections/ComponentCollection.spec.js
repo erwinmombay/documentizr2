@@ -1,34 +1,28 @@
+/*global define:true, Backbone:true, afterEach:true, sinon:true*/
 define(function(require) {
     'use strict';
     describe('ComponentCollection', function() {
         var c, m, mStub, server, ComponentModel, ComponentCollection;
-        ComponentModel = require('models/ComponentModel');
         ComponentCollection = require('collections/ComponentCollection');
 
         beforeEach(function() {
-            mStub = sinon.stub(ComponentModel);
+            mStub = sinon.stub();
             m = new Backbone.Model({ id: 1, fullName: 'ST_0100'});
             mStub.returns(m);
             c = new ComponentCollection();
-            c.model = ComponentModel;
-            c.add({ id: 1, fullName: 'ST_0100' });
-        });
-
-        afterEach(function() {
-            mStub.restore();
+            c.model = mStub;
         });
 
         describe('#add', function() {
             it('should add an object literal', function() {
-                //c.add({ id: 1 });
-                expect(c.length).toBe(1);
+                c.add({ id: 1 });
+                expect(c.length).toEqual(1);
             });
 
             it('should add `ComponentModel`', function() {
-                //TODO use stub or mock instead
-                //var m = new ComponentModel();
-                //c.add(m);
-                expect(c.length).toBe(1);
+                c.add(m);
+                expect(c.get(1)).toBe(m);
+                expect(c.length).toEqual(1);
             });
         });
 

@@ -1,9 +1,6 @@
+/*global define:true, $:true, Backbone:true, _:true, Handlebars:true*/
 define(function(require) {
     'use strict';
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Backbone = require('backbone');
-
     var FieldView = require('views/guicore/Fields/FieldView');
 
     var detailFieldTemplate = require('text!templates/Fields/DetailField.html');
