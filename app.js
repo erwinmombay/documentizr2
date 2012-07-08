@@ -1,6 +1,6 @@
 var express = require('express');
 var routes = require('./routes');
-var gzippo = require('gzippo');
+//var gzippo = require('gzippo');
 
 var app = module.exports = express.createServer();
 //var io = require('socket.io').listen(app);
