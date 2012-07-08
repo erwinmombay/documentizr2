@@ -102,6 +102,12 @@ define(function(require) {
     });
 
     mediator.on('rightClick:composite', 'compositeRightClickHandler', function(spec) {
+        if (!spec.ctx.$el.find('li').length) {
+            spec.ctx.model.componentCollection.each(function(model) {
+                _isInitialTreeRender = false;
+                treeViewUtils.createSubViewFromSpec({ model: model, ctx: spec.ctx }, _isInitialTreeRender);
+            });
+        }
         selectComponent(spec);
     });
 
