@@ -25,14 +25,14 @@ define(function(require) {
                 rootFullName: 'TS_810', rootName: '810'
             }).render();
             mediator.proxyAllEvents(this.doctree);
-            //: give mediator direct access to doctree(to trigger scroll when traversing 
+            //: give mediator direct access to doctree(to trigger scroll when traversing
             //: tree through arrowkeys)
             mediator.doctree = this.doctree;
             var model = new ComponentModel({
-                name: this.doctree.rootName,    
+                name: this.doctree.rootName,
                 fullName: this.doctree.rootFullName,
                 schema: bootstrapData[this.doctree.rootFullName],
-                componentCollection: new ComponentCollection()    
+                componentCollection: new ComponentCollection()
             });
             this.doctree.componentCollection.add(model);
         },

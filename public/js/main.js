@@ -33,13 +33,14 @@ require.config({
 /*global define: true*/
 define(function(require) {
     'use strict';
-    var App = require('app');
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
+    var text = require('text');
     var jqui = require('jqueryui');
     var handlebars = require('handlebars');
     var modal = require('modal');
+    var App = require('app');
 
     App.initialize();
 });
