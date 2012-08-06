@@ -39,7 +39,7 @@ define(function(require) {
         }
     };
 
-    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
+    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender, hiddenSubView) {
         var view;
         if ((spec.model.schema.nodeType !== 'e' && isInitialTreeRender) || !isInitialTreeRender) {
             if (spec.model.componentCollection) {
@@ -74,7 +74,7 @@ define(function(require) {
             spec.ctx.$componentCollection.append(view.$el);
             if (view.model.schema.nodeType === 's' && isInitialTreeRender) {
                 view.foldToggle();
-                view.$componentCollection.hide();
+                if (hiddenSubView) view.$componentCollection.hide();
             }
             return view;
         }

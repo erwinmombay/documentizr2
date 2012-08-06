@@ -121,7 +121,7 @@ define(function(require) {
     });
 
     mediator.on('addOne:composite', 'compositeAddOneSubViewHandler', function(spec) {
-        var view = treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender);
+        var view = treeViewUtils.createSubViewFromSpec(spec, _isInitialTreeRender, true);
         if (!_isInitialTreeRender && view) view.$el.trigger({ type: 'mousedown', which: 1 });
     });
 
