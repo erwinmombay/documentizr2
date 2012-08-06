@@ -23,7 +23,7 @@ define(function(require) {
         },
 
         render: function() {
-            _.defer(TreeView.prototype.render.call(this));
+            TreeView.prototype.render.call(this);
             this.$spinner.remove();
             return this;
         }
