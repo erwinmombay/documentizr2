@@ -39,7 +39,7 @@ define(function(require) {
         }
     };
 
-    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender) {
+    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender, hiddenSubView) {
         var view;
         if ((spec.model.schema.nodeType !== 'e' && isInitialTreeRender) || !isInitialTreeRender) {
             if (spec.model.componentCollection) {
@@ -70,12 +70,12 @@ define(function(require) {
             treeViewUtils.bindCustomContextMenu(view);
             //: we proxy/handle all the events `view` triggers to mediator
             mediator.proxyAllEvents(view);
-            //: append this new view to the previous ctx
-            spec.ctx.$componentCollection.append(view.$el);
             if (view.model.schema.nodeType === 's' && isInitialTreeRender) {
                 view.foldToggle();
-                view.$componentCollection.hide();
+                if (hiddenSubView) view.$componentCollection.hide();
             }
+            //: append this new view to the previous ctx
+            spec.ctx.$componentCollection.append(view.$el);
             return view;
         }
     };

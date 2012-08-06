@@ -7,6 +7,7 @@ define(function(require) {
         initialize: function(options) {
             CompositeComponentView.prototype.initialize.call(this, options);
             this.schema = options.schema || {};
+            this._initState = true;
         },
 
         render: function() {
@@ -23,6 +24,7 @@ define(function(require) {
                 _.include(['810', 'Table_1', 'Table_2', 'Table_3'], this.model.schema.name)) {
                     this.$el.find('.tvc-label').css({ 'color': 'red' });
             }
+            this._initState = false;
             return this;
         }
     });

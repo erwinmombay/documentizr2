@@ -14,40 +14,7 @@
     <script type="text/javascript" src="/js/tests/libs/jasmine/jasmine-jquery.js"></script>
     <!--<script type="text/javascript" src="/js/tests/libs/sinon/jasmine-sinon.js"></script>-->
 
-    <script type="text/javascript" src="/js/libs/require/require.min.js"></script>
-
-    <script type="text/javascript">
-      $(document).ready(function() {
-        require.config({
-          baseUrl: '../',
-            paths: {
-              jquery: 'libs/jquery/jquery-1.7.1.min',
-              underscore: 'libs/underscore/underscore.min',
-              backbone: 'libs/backbone/backbone.min',
-              handlebars: 'libs/handlebars/handlebars',
-              text: 'libs/require/text.min',
-              templates: '../templates',
-              models: 'models',
-              views: 'views',
-              collections: 'collections',
-              utils: 'utils',
-              modal: 'libs/bootstrap/bootstrap-modal'
-            }
-          });
-
-        require([
-          'tests/specs/mediator.spec',
-          'tests/specs/models/ComponentModel.spec',
-          'tests/specs/collections/ComponentCollection.spec',
-          'tests/specs/views/TreeView.spec'
-        ],
-
-        function() {
-          jasmine.getEnv().addReporter(new jasmine.HtmlReporter());
-          jasmine.getEnv().execute();
-        });
-      });
-    </script>
+    <script type="text/javascript" data-main="specs/main" src="/js/libs/require/require.min.js"></script>
   </head>
 
   <body>
