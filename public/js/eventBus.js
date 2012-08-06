@@ -22,6 +22,10 @@ define(function(require) {
     //: the last click event on(used for tree traversal, highlighting purposes)
     var _prevClickedView = null;
 
+    var debouncedToggle = _.debounce(function() {
+        _prevClickedView.foldToggle();
+    }, 300, true);
+
     //: we proxy jquery events a little differently than Backbone events.
     //: we proxy the $body jquery object's keydown event to the anonymous function
     //: but only trigger on mousedown down/up(40/38 respectively) arrow key events.
@@ -33,7 +37,7 @@ define(function(require) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
         } else if (e.which === 37 || e.which === 39) {
-            if (_prevClickedView.foldToggle) _prevClickedView.foldToggle();
+            if (_prevClickedView.foldToggle) debouncedToggle();
         }
     }, mediator));
 
