@@ -40,7 +40,7 @@ define(function(require) {
     //: proxy/handle all events that modalEditorView triggers to mediator
     mediator.proxyAllEvents(modalEditorView);
     mediator.proxyAllEvents(componentDetailView);
-    //: we leave the `selectComponent` function in eventModulesHub since
+    //: we leave the `selectComponent` function in eventBus since
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {

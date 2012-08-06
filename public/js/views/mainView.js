@@ -9,7 +9,7 @@
 define(function(require) {
     'use strict';
     var mediator = require('mediator');
-    var eventModulesHub = require('eventModulesHub');
+    var eventBus = require('eventBus');
 
     var ComponentModel = require('models/ComponentModel');
 
