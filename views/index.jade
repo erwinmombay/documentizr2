@@ -1,10 +1,11 @@
 body
   include header
-  .container-fluid
+  #loader.progress.progress-striped.active.span4
+    .bar(style="width: 100%;")
+  #app-panel.container-fluid.hide
     .row-fluid
-      .span5
-        #control-panel
-        #sidebar.sidebar-nav
+      #sidebar.span5
+        .sidebar-nav
       #content.span7
         .row-fluid
           #detail-panel

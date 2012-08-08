@@ -39,12 +39,12 @@ define(function(require) {
         }
     };
 
-    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender, hiddenSubView) {
-        var view;
+    treeViewUtils.createSubViewFromSpec = function(spec, isInitialTreeRender, hideSubView) {
+        var view = null;
         if ((spec.model.schema.nodeType !== 'e' && isInitialTreeRender) || !isInitialTreeRender) {
             if (spec.model.componentCollection) {
                 view = new DocCompositeComponentView({ model: spec.model, id: spec.model.cid });
-                view.render().sortable().menu = {
+                view.render().menu = {
                     'add new node': function(e) {
                         modalEditorView.render({ ctx: view, event: e }).show();
                     },
@@ -72,12 +72,15 @@ define(function(require) {
             mediator.proxyAllEvents(view);
             if (view.model.schema.nodeType === 's' && isInitialTreeRender) {
                 view.foldToggle();
-                if (hiddenSubView) view.$componentCollection.hide();
+                if (hideSubView) view.$componentCollection.hide();
             }
             //: append this new view to the previous ctx
-            spec.ctx.$componentCollection.append(view.$el);
-            return view;
+                spec.ctx.$componentCollection.append(view.$el);
+            if (spec.ctx.$componentCollection.is(':visible')) {
+                spec.ctx.$componentCollection.hide().fadeIn('slow');
+            }
         }
+        return view;
     };
 
     /**************************************************************
