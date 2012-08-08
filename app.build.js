@@ -15,6 +15,7 @@
         text: 'libs/require/text',
         templates: '../templates',
         models: 'models',
+        views: 'views',
         collections: 'collections',
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal'

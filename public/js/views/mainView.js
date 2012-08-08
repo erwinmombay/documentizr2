@@ -19,26 +19,28 @@ define(function(require) {
 
     var mainView = Backbone.View.extend({
         initialize: function() {
-            _.bindAll(this);
             this.doctree = new DocTreeView({
                 tagName: 'div', id: 'doctree', className: 'tree-panel',
                 rootFullName: 'TS_810', rootName: '810'
-            }).render();
+            });
             mediator.proxyAllEvents(this.doctree);
             //: give mediator direct access to doctree(to trigger scroll when traversing
             //: tree through arrowkeys)
             mediator.doctree = this.doctree;
+        },
+
+        render: function() {
             var model = new ComponentModel({
                 name: this.doctree.rootName,
                 fullName: this.doctree.rootFullName,
                 schema: bootstrapData[this.doctree.rootFullName],
                 componentCollection: new ComponentCollection()
             });
+            this.doctree.render();
+            this.$('#sidebar > .sidebar-nav').append(this.doctree.$el);
+            this.$('#loader').remove();
+            this.$('#app-panel').show();
             this.doctree.componentCollection.add(model);
-        },
-
-        render: function() {
-            $('.sidebar-nav').append(this.doctree.el);
             return this;
         },
 
@@ -56,5 +58,5 @@ define(function(require) {
         }
     });
 
-    return new mainView({ el: 'div#app-panel' });
+    return new mainView({ el: $('body') });
 });

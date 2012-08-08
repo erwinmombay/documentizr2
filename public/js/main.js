@@ -39,7 +39,7 @@ define(function(require) {
     var Backbone = require('backbone');
     var text = require('text');
     var jqui = require('jqueryui');
-    var handlebars = require('handlebars');
+    var Handlebars = require('handlebars');
     var modal = require('modal');
     var App = require('app');
 
