@@ -29,6 +29,7 @@ define(function(require) {
 
     require([
         'tests/specs/mediator.spec',
+        'tests/specs/visitor.spec',
         'tests/specs/models/ComponentModel.spec',
         'tests/specs/collections/ComponentCollection.spec',
         'tests/specs/views/TreeView.spec'
