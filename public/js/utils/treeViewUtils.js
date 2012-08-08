@@ -75,7 +75,7 @@ define(function(require) {
                 if (hideSubView) view.$componentCollection.hide();
             }
             //: append this new view to the previous ctx
-                spec.ctx.$componentCollection.append(view.$el);
+            spec.ctx.$componentCollection.append(view.$el);
             if (spec.ctx.$componentCollection.is(':visible')) {
                 spec.ctx.$componentCollection.hide().fadeIn('slow');
             }
