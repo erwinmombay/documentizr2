@@ -17,6 +17,7 @@ require.config({
         text: 'libs/require/text',
         templates: '../templates',
         models: 'models',
+        views: 'views',
         collections: 'collections',
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal'
@@ -38,7 +39,7 @@ define(function(require) {
     var Backbone = require('backbone');
     var text = require('text');
     var jqui = require('jqueryui');
-    var handlebars = require('handlebars');
+    var Handlebars = require('handlebars');
     var modal = require('modal');
     var App = require('app');
 

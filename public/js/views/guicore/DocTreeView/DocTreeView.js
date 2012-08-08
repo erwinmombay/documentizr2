@@ -5,16 +5,12 @@ define(function(require) {
     var ComponentModel = require('models/ComponentModel');
     var ComponentCollection = require('collections/ComponentCollection');
 
-    var spinner = require('text!templates/Spinner.html');
-    
     var DocTreeView = TreeView.extend({
         initialize: function(options) {
             TreeView.prototype.initialize.call(this, options);
             this.schema = options.schema || null;
             this.rootName = options.rootName;
             this.rootFullName = options.rootFullName;
-            this.$spinner = $(spinner);
-            this.$el.append(this.$spinner);
         },
 
         bindEventHandlers: function() {
@@ -24,7 +20,6 @@ define(function(require) {
 
         render: function() {
             TreeView.prototype.render.call(this);
-            this.$spinner.remove();
             return this;
         }
     });

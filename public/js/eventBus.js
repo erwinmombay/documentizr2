@@ -12,6 +12,13 @@ define(function(require) {
     var mediator = require('mediator');
     var treeViewUtils = require('utils/treeViewUtils');
 
+    var charMap = {
+        down: 40,
+        up: 38,
+        left: 37,
+        right: 39
+    };
+
     //: _isInitialTreeRender is a flag used to identify if there are no changes
     //: to the treeview except the original recursive tree walker building the tree.
     //: this is used so that we dont trigger any click events(for highlighting)
@@ -21,26 +28,32 @@ define(function(require) {
     //: _prevClickedView is the cache of the View Object that we triggered
     //: the last click event on(used for tree traversal, highlighting purposes)
     var _prevClickedView = null;
+    
+    //: use debouncedFoldToggle on left/right arrow keys so that we dont repeatedly
+    //: toggle the node when the user holds down the left/arrow keys
+    var debouncedFoldToggle = _.debounce(function() {
+        _prevClickedView.foldToggle();
+    }, 200, true);
 
     //: we proxy jquery events a little differently than Backbone events.
     //: we proxy the $body jquery object's keydown event to the anonymous function
     //: but only trigger on mousedown down/up(40/38 respectively) arrow key events.
-    var $body = $('body').on('keydown', _.bind(function(e) {
-        if (e.which === 40) {
+    var $body = $('body').on('keydown', function(e) {
+        if (e.which === charMap.down) {
             e.preventDefault();
             mediator.trigger('downArrow:keyboard', e);
-        } else if (e.which === 38) {
+        } else if (e.which === charMap.up) {
             e.preventDefault();
             mediator.trigger('upArrow:keyboard', e);
-        } else if (e.which === 37 || e.which === 39) {
-            if (_prevClickedView.foldToggle) _prevClickedView.foldToggle();
+        } else if (e.which === charMap.left || e.which === charMap.right) {
+            if (_prevClickedView.foldToggle) debouncedFoldToggle();
         }
-    }, mediator));
+    });
 
     //: proxy/handle all events that modalEditorView triggers to mediator
     mediator.proxyAllEvents(modalEditorView);
     mediator.proxyAllEvents(componentDetailView);
-    //: we leave the `selectComponent` function in eventModulesHub since
+    //: we leave the `selectComponent` function in eventBus since
     //: it is the function that caches _prevClickedView(instead of the individual event handlers
     //: needing to cache it individually..leftclick, rightclick etc)
     var selectComponent = function(spec) {

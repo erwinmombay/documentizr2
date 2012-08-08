@@ -12,7 +12,10 @@ define(function(require) {
 
         render: function() {
             this.$el.empty();
-            this.$el.append(this.template({ label: this.model.get('name'), fullName: this.model.schema.fullName }));
+            this.$el.append(this.template({
+                label: this.model.get('name'),
+                fullName: this.model.schema.fullName
+            }));
             this.$componentCollection = this.$el.children('.tvc-ul');
             this.$tvcHandle = this.$('.handle');
             this.$tvcToggle = this.$tvcHandle.children('i');
