@@ -12,7 +12,13 @@ require.config({
         collections: 'collections',
         utils: 'utils',
         modal: 'libs/bootstrap/bootstrap-modal',
-        tests: 'tests'
+        tests: 'tests',
+        shim: {
+            backbone: {
+                deps: ['underscore', 'jquery'],
+                exports: 'Backbone'
+            }
+        }
     }
 });
 
