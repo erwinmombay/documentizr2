@@ -1,30 +1,34 @@
 /*global define:true, $:true, Backbone:true, _:true*/
 define(function() {
-    var TsetVisitor = (function() {
-        var _root, _currentNode, _depth, _pos;
+    var ComponentModelVisitor = (function() {
+        var _root, _curNode, _depth, _pos, _stack;
+        _root = _curNode = _pos = _depth = null;
+        _stack = [];
         return {
-            reset: function() {
-                _root = _currentNode = _pos = _depth = undefined;
+            init: function() {
+                _root = _curNode = _pos = _depth = null;
             },
 
             setTarget: function(target) {
-                _root = _currentNode = target;
+                _root = _curNode = target;
                 _pos = _depth = 0;
+                _stack.length = 0;
+                _stack.push(target);
             },
 
             getRoot: function() {
                 return _root;
             },
 
-            getNode: function() {
-                return _currentNode;
+            getCurNode: function() {
+                return _curNode;
             },
             
-            getDepth: function() {
+            getCurDepth: function() {
                 return _depth;
             },
 
-            getPosition: function() {
+            getCurPos: function() {
                 return _pos;
             },
 
@@ -32,8 +36,18 @@ define(function() {
 
             },
 
-            child: function() {
-                
+            child: function(index) {
+                if (_curNode && _curNode.componentCollection) {
+                    return _curNode.componentCollection.at(index || 0);
+                }
+                return null;
+            },
+
+            children: function() {
+                if (_curNode && _curNode.componentCollection) {
+                    return _curNode.componentColletion.models;
+                }
+                return null;
             },
 
             prev: function() {
@@ -45,5 +59,5 @@ define(function() {
             }
         };
     }());
-    return TsetVisitor;
+    return ComponentModelVisitor;
 });
