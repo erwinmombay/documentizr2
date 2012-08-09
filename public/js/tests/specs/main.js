@@ -11,7 +11,8 @@ require.config({
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal'
+        modal: 'libs/bootstrap/bootstrap-modal',
+        tests: 'tests'
     }
 });
 
