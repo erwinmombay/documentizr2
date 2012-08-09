@@ -6,10 +6,12 @@ define(function(require) {
     describe('mediator', function() {
         var spy1, spy2, spy3, emitter;
         var mediator = require('mediator');
+        var custom = require('tests/specs/customMatchers');
         var eventProxyPermissions = require('eventProxyPermissions');
         var ComponentModel = require('models/ComponentModel');
 
         beforeEach(function() {
+            this.addMatchers(custom);
             emitter = _.extend({}, Backbone.Events);
             eventProxyPermissions['custom:event'] = {
                 'customEventHandler1': true,
@@ -31,15 +33,7 @@ define(function(require) {
         });
 
         it('is a singleton', function() {
-            expect(_.isObject(mediator)).toBe(true);
-            expect(_.isFunction(mediator)).toBe(false);
-            expect(_.isString(mediator)).toBe(false);
-            expect(_.isArguments(mediator)).toBe(false);
-            expect(_.isDate(mediator)).toBe(false);
-            expect(_.isNaN(mediator)).toBe(false);
-            expect(_.isNumber(mediator)).toBe(false);
-            expect(_.isArray(mediator)).toBe(false);
-            expect(_.isElement(mediator)).toBe(false);
+            expect(mediator).toBeSingleton();
         });
 
         it('has a `proxyAllEvents` method', function() {
