@@ -1,17 +1,17 @@
 /*global define:true, $:true, Backbone:true, _:true*/
 define(function() {
     var ComponentModelVisitor = (function() {
-        var _root, _curNode, _depth, _pos, _stack;
-        _root = _curNode = _pos = _depth = null;
+        var _root, _curNode, _curDepth, _curPos, _stack;
+        _root = _curNode = _curPos = _curDepth = null;
         _stack = [];
         return {
             init: function() {
-                _root = _curNode = _pos = _depth = null;
+                _root = _curNode = _curPos = _curDepth = null;
             },
 
             setTarget: function(target) {
                 _root = _curNode = target;
-                _pos = _depth = 0;
+                _curPos = _curDepth = 0;
                 _stack.length = 0;
             },
 
@@ -24,11 +24,11 @@ define(function() {
             },
 
             getCurDepth: function() {
-                return _depth;
+                return _curDepth;
             },
 
             getCurPos: function() {
-                return _pos;
+                return _curPos;
             },
 
             parent: function() {
@@ -52,20 +52,34 @@ define(function() {
             },
 
             up: function() {
-
+                var temp = _stack.pop();
+                if (temp) {
+                    _curNode = temp;
+                    return true;
+                }
+                return false;
             },
-
+            
+            //: traverses down, returns true on success, false otherwise
             down: function() {
                 var child;
-                child = _curNode.componentCollection.at(0);
-                if (child) {
-                    _stack.push(_curNode);
-                    _curNode = child;
+                if (_curNode.componentCollection) {
+                    child = _curNode.componentCollection.at(_curPos = 0);
+                    if (child) {
+                        _stack.push(_curNode);
+                        _curNode = child;
+                        return true;
+                    }
                 }
+                return false;
             },
 
             prev: function() {
-
+                var parent = _stack[_stack.length - 1];
+                if (_curPos > 0 && parent && parent.componentCollection) {
+                    return parent.componentCollection.at(--_curPos);
+                }
+                return null;
             },
 
             next: function() {

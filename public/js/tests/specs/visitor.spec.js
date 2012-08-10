@@ -8,27 +8,27 @@ define(function(require) {
         var ComponentModel = require('models/ComponentModel');
         var ComponentCollection = require('collections/ComponentCollection');
         
-        var root, level1, level2;
+        var root, depth1, depth2;
 
         beforeEach(function() {
             this.addMatchers(custom);
             root = new ComponentModel({
                 name: 'root', componentCollection: new ComponentCollection()
             });
-            level1 = [
+            depth1 = [
                 new ComponentModel({
-                    name: 'depth1_pos0', componentCollection: new ComponentCollection()
+                    name: 'depth1_index0', componentCollection: new ComponentCollection()
                 }),
-                new ComponentModel({ name: 'depth1_pos1' }),
-                new ComponentModel({ name: 'depth1_pos2' })
+                new ComponentModel({ name: 'depth1_index1' }),
+                new ComponentModel({ name: 'depth1_index2' })
             ];
-            level2 = [
-                new ComponentModel({ name: 'depth2_pos0' }),
-                new ComponentModel({ name: 'depth2_pos1' })
+            depth2 = [
+                new ComponentModel({ name: 'depth2_index0' }),
+                new ComponentModel({ name: 'depth2_index1' })
             ];
-            root.componentCollection.add(level1);
+            root.componentCollection.add(depth1);
             root.componentCollection.at(0)
-                .componentCollection.add(level2);
+                .componentCollection.add(depth2);
             visitor.setTarget(root);
         });
 
@@ -65,31 +65,68 @@ define(function(require) {
         describe('#child', function() {
             it('should return model on depth 1 index 0 when calling `child` from `root`', function() {
                 expect(visitor.getCurNode().get('name')).toBe('root');
-                expect(visitor.child().get('name')).toBe('depth1_pos0');
-                expect(visitor.child()).toBe(level1[0]);
+                expect(visitor.child().get('name')).toBe('depth1_index0');
+                expect(visitor.child()).toBe(depth1[0]);
             });
 
-            it('should return model on depth 1 index 2 when calling `child` with arg pos 2 from `root`', function() {
+            it('should return model on depth 1 index 1 when calling `child` with arg pos 2 from `root`', function() {
                 expect(visitor.getCurNode().get('name')).toBe('root');
-                expect(visitor.child().get('name')).toBe('depth1_pos0');
-                expect(visitor.child()).toBe(level1[0]);
+                expect(visitor.child(1).get('name')).toBe('depth1_index1');
+                expect(visitor.child(1)).toBe(depth1[1]);
             });
         });
 
         describe('#parent', function() {
-            it('should return model\'s parent if there is any', function() {
+            it('should return null when current node has no parent(is root)', function() {
+                expect(visitor.getCurNode().get('name')).toBe('root');
                 expect(visitor.parent()).toBeNull();
-                //TODO
+            });
+
+            it('should return model\'s parent', function() {
+                expect(visitor.down(1)).toBe(true);
+                expect(visitor.parent().get('name')).toBe('root');
             });
         });
 
         describe('#down', function() {
-            it('should go down 1 depth on call to `down`', function() {
+
+            it('should go down 1 depth on call to `down` and return true', function() {
                 expect(visitor.getCurNode().get('name')).toBe('root');
-                visitor.down();
-                expect(visitor.getCurNode().get('name')).toBe('depth1_pos0');
-                visitor.down();
-                expect(visitor.getCurNode().get('name')).toBe('depth2_pos0');
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('depth1_index0');
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('depth2_index0');
+            });
+
+            it('should return false when no children can be found and not change current node', function() {
+                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('depth1_index0');
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('depth2_index0');
+                expect(visitor.down()).toBe(false);
+                expect(visitor.getCurNode().get('name')).toBe('depth2_index0');
+            });
+        });
+
+        describe('#up', function() {
+            it('should go up 1 depth on call to `up`', function() {
+                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('depth1_index0');
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('depth2_index0');
+                expect(visitor.up()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('depth1_index0');
+                expect(visitor.up()).toBe(true);
+                expect(visitor.getCurNode().get('name')).toBe('root');
+            });
+
+            it('should return false when there is no parent and not change current node', function() {
+                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.up()).toBe(false);
+                expect(visitor.getCurNode().get('name')).toBe('root');
+
             });
         });
     });
