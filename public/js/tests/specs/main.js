@@ -1,7 +1,7 @@
 require.config({
     baseUrl: '../',
     paths: {
-        jquery: 'libs/jquery/jquery-1.7.2.min',
+        jquery: 'libs/jquery/jquery-1.8.0.min',
         jqueryui: 'libs/jquery/jquery-ui-1.8.18.custom.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
