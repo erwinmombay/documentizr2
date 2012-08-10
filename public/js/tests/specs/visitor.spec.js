@@ -41,7 +41,6 @@ define(function(require) {
         });
         
         describe('#init', function() {
-
             it('should have null initial state', function() {
                 visitor.init();
                 expect(visitor.getRoot()).toBeNull();
@@ -52,7 +51,6 @@ define(function(require) {
         });
         
         describe('#setTarget', function() {
-
             it('should reset state when calling `setTarget`', function() {
                 visitor.setTarget(root);
                 expect(visitor.getRoot()).toBe(root);
@@ -64,32 +62,29 @@ define(function(require) {
 
         describe('#child', function() {
             it('should return model on depth 1 index 0 when calling `child` from `root`', function() {
-                expect(visitor.getCurNode().get('name')).toBe('root');
-                expect(visitor.child().get('name')).toBe('depth1_index0');
+                expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.child()).toBe(depth1[0]);
             });
 
             it('should return model on depth 1 index 1 when calling `child` with arg index 2 from `root`', function() {
-                expect(visitor.getCurNode().get('name')).toBe('root');
-                expect(visitor.child(1).get('name')).toBe('depth1_index1');
+                expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.child(1)).toBe(depth1[1]);
             });
         });
 
         describe('#parent', function() {
             it('should return null when current node has no parent(is root)', function() {
-                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.parent()).toBeNull();
             });
 
             it('should return model\'s parent', function() {
                 expect(visitor.down(1)).toBe(true);
-                expect(visitor.parent().get('name')).toBe('root');
+                expect(visitor.parent()).toBe(root);
             });
         });
 
         describe('#down', function() {
-
             it('should go down 1 depth on call to `down` and return true', function() {
                 expect(visitor.getCurNode().get('name')).toBe('root');
                 expect(visitor.down()).toBe(true);
