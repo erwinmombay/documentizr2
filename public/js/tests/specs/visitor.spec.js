@@ -66,7 +66,7 @@ define(function(require) {
                 expect(visitor.child()).toBe(depth1[0]);
             });
 
-            it('should return model on depth 1 index 1 when calling `child` with arg index 2 from `root`', function() {
+            it('should return model on depth 1 index 1 when calling `child` with arg index 1 from `root`', function() {
                 expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.child(1)).toBe(depth1[1]);
             });
