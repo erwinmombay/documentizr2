@@ -47,7 +47,7 @@ define(function(require) {
                 expect(visitor.getRoot()).toBeNull();
                 expect(visitor.getCurNode()).toBeNull();
                 expect(visitor.getCurDepth()).toBeNull();
-                expect(visitor.getCurPos()).toBeNull();
+                expect(visitor.getCurIndex()).toBeNull();
             });
         });
         
@@ -58,7 +58,7 @@ define(function(require) {
                 expect(visitor.getRoot()).toBe(root);
                 expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.getCurDepth()).toEqual(0);
-                expect(visitor.getCurPos()).toEqual(0);
+                expect(visitor.getCurIndex()).toEqual(0);
             });
         });
 
@@ -69,7 +69,7 @@ define(function(require) {
                 expect(visitor.child()).toBe(depth1[0]);
             });
 
-            it('should return model on depth 1 index 1 when calling `child` with arg pos 2 from `root`', function() {
+            it('should return model on depth 1 index 1 when calling `child` with arg index 2 from `root`', function() {
                 expect(visitor.getCurNode().get('name')).toBe('root');
                 expect(visitor.child(1).get('name')).toBe('depth1_index1');
                 expect(visitor.child(1)).toBe(depth1[1]);

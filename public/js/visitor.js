@@ -1,17 +1,17 @@
 /*global define:true, $:true, Backbone:true, _:true*/
 define(function() {
     var ComponentModelVisitor = (function() {
-        var _root, _curNode, _curDepth, _curPos, _stack;
-        _root = _curNode = _curPos = _curDepth = null;
+        var _root, _curNode, _curDepth, _curIndex, _stack;
+        _root = _curNode = _curIndex = _curDepth = null;
         _stack = [];
         return {
             init: function() {
-                _root = _curNode = _curPos = _curDepth = null;
+                _root = _curNode = _curIndex = _curDepth = null;
             },
 
             setTarget: function(target) {
                 _root = _curNode = target;
-                _curPos = _curDepth = 0;
+                _curIndex = _curDepth = 0;
                 _stack.length = 0;
             },
 
@@ -27,8 +27,8 @@ define(function() {
                 return _curDepth;
             },
 
-            getCurPos: function() {
-                return _curPos;
+            getCurIndex: function() {
+                return _curIndex;
             },
 
             parent: function() {
@@ -64,7 +64,7 @@ define(function() {
             down: function() {
                 var child;
                 if (_curNode.componentCollection) {
-                    child = _curNode.componentCollection.at(_curPos = 0);
+                    child = _curNode.componentCollection.at(_curIndex = 0);
                     if (child) {
                         _stack.push(_curNode);
                         _curNode = child;
@@ -76,13 +76,18 @@ define(function() {
 
             prev: function() {
                 var parent = _stack[_stack.length - 1];
-                if (_curPos > 0 && parent && parent.componentCollection) {
-                    return parent.componentCollection.at(--_curPos);
+                if (_curIndex > 0 && parent && parent.componentCollection) {
+                    return parent.componentCollection.at(--_curIndex);
                 }
                 return null;
             },
 
             next: function() {
+                var parent = _stack[_stack.length - 1];
+                if (_curIndex !== (_stack.length - 1) && parent && parent.componentCollection) {
+                    return parent.componentCollection.at(--_curIndex);
+                }
+                return null;
 
             }
         };
