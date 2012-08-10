@@ -13,7 +13,6 @@ define(function() {
                 _root = _curNode = target;
                 _pos = _depth = 0;
                 _stack.length = 0;
-                _stack.push(target);
             },
 
             getRoot: function() {
@@ -23,7 +22,7 @@ define(function() {
             getCurNode: function() {
                 return _curNode;
             },
-            
+
             getCurDepth: function() {
                 return _depth;
             },
@@ -33,7 +32,9 @@ define(function() {
             },
 
             parent: function() {
-
+                var len = _stack.length;
+                if (len) return _stack[len - 1];
+                return null;
             },
 
             child: function(index) {
@@ -48,6 +49,19 @@ define(function() {
                     return _curNode.componentColletion.models;
                 }
                 return null;
+            },
+
+            up: function() {
+
+            },
+
+            down: function() {
+                var child;
+                child = _curNode.componentCollection.at(0);
+                if (child) {
+                    _stack.push(_curNode);
+                    _curNode = child;
+                }
             },
 
             prev: function() {
