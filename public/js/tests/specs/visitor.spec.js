@@ -94,35 +94,65 @@ define(function(require) {
             });
 
             it('should return false when no children can be found and not change current node', function() {
-                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.down()).toBe(true);
-                expect(visitor.getCurNode().get('name')).toBe('depth1_index0');
+                expect(visitor.getCurNode()).toBe(depth1[0]);
                 expect(visitor.down()).toBe(true);
-                expect(visitor.getCurNode().get('name')).toBe('depth2_index0');
+                expect(visitor.getCurNode()).toBe(depth2[0]);
                 expect(visitor.down()).toBe(false);
-                expect(visitor.getCurNode().get('name')).toBe('depth2_index0');
+                expect(visitor.getCurNode()).toBe(depth2[0]);
             });
         });
 
         describe('#up', function() {
             it('should go up 1 depth on call to `up`', function() {
-                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.down()).toBe(true);
-                expect(visitor.getCurNode().get('name')).toBe('depth1_index0');
+                expect(visitor.getCurNode()).toBe(depth1[0]);
                 expect(visitor.down()).toBe(true);
-                expect(visitor.getCurNode().get('name')).toBe('depth2_index0');
+                expect(visitor.getCurNode()).toBe(depth2[0]);
                 expect(visitor.up()).toBe(true);
-                expect(visitor.getCurNode().get('name')).toBe('depth1_index0');
+                expect(visitor.getCurNode()).toBe(depth1[0]);
                 expect(visitor.up()).toBe(true);
-                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.getCurNode()).toBe(root);
             });
 
             it('should return false when there is no parent and not change current node', function() {
-                expect(visitor.getCurNode().get('name')).toBe('root');
+                expect(visitor.getCurNode()).toBe(root);
                 expect(visitor.up()).toBe(false);
-                expect(visitor.getCurNode().get('name')).toBe('root');
-
+                expect(visitor.getCurNode()).toBe(root);
             });
+        });
+
+
+        describe('#next', function() {
+            it('it should return null when there is no following sibling', function() {
+                expect(visitor.next()).toBe(null);
+            });
+
+            it('should return following sibling and move cursor ahead by 1 when `next` is called', function() {
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode()).toBe(depth1[0]);
+                expect(visitor.next()).toBe(depth1[1]);
+                expect(visitor.next()).toBe(depth1[2]);
+                expect(visitor.next()).toBe(null);
+            });
+        });
+
+        describe('#prev', function() {
+            it('it should return null when there is no preceding sibling', function() {
+                expect(visitor.prev()).toBeNull();
+            });
+
+            it('should return previous sibling and move cursor behind by 1 when `prev` is called', function() {
+                expect(visitor.down()).toBe(true);
+                expect(visitor.getCurNode()).toBe(depth1[0]);
+                expect(visitor.next()).toBe(depth1[1]);
+                expect(visitor.next()).toBe(depth1[2]);
+                expect(visitor.next()).toBe(null);
+                expect(visitor.prev()).toBe(depth1[1]);
+            });
+
         });
     });
 });

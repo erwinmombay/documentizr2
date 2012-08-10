@@ -84,8 +84,9 @@ define(function() {
 
             next: function() {
                 var parent = _stack[_stack.length - 1];
-                if (_curIndex !== (_stack.length - 1) && parent && parent.componentCollection) {
-                    return parent.componentCollection.at(--_curIndex);
+                if (parent && parent.componentCollection &&
+                    parent.componentCollection.length > (_curIndex + 1)) {
+                    return parent.componentCollection.at(++_curIndex);
                 }
                 return null;
 
