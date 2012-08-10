@@ -1,7 +1,7 @@
 require.config({
     baseUrl: '../',
     paths: {
-        jquery: 'libs/jquery/jquery-1.7.2.min',
+        jquery: 'libs/jquery/jquery-1.8.0.min',
         jqueryui: 'libs/jquery/jquery-ui-1.8.18.custom.min',
         underscore: 'libs/underscore/underscore.min',
         backbone: 'libs/backbone/backbone.min',
@@ -11,7 +11,14 @@ require.config({
         models: 'models',
         collections: 'collections',
         utils: 'utils',
-        modal: 'libs/bootstrap/bootstrap-modal'
+        modal: 'libs/bootstrap/bootstrap-modal',
+        tests: 'tests',
+        shim: {
+            backbone: {
+                deps: ['underscore', 'jquery'],
+                exports: 'Backbone'
+            }
+        }
     }
 });
 
@@ -29,6 +36,7 @@ define(function(require) {
 
     require([
         'tests/specs/mediator.spec',
+        'tests/specs/visitor.spec',
         'tests/specs/models/ComponentModel.spec',
         'tests/specs/collections/ComponentCollection.spec',
         'tests/specs/views/TreeView.spec'

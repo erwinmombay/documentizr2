@@ -8,6 +8,7 @@ define(function(require) {
             CompositeComponentView.prototype.initialize.call(this, options);
             this.schema = options.schema || {};
             this._initState = true;
+            this.menu = null;
         },
 
         render: function() {
