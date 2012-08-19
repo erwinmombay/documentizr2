@@ -3,15 +3,16 @@ var db = require('../database');
 var pgClient = db.pgClient;
 
 exports.buildDocLevelSchema = function(data) {
+    var alias = { 'Table_1': 'Header', 'Table_2': 'Detail', 'Table_3': 'Summary' };
     var tsets = {}; //: root
     var tsetName = data[0].document;
     tsets['TS_' + tsetName] = { name: tsetName, fullName: 'TS_' + tsetName, collection: {} };
     var tables = _.uniq(_.pluck(data, 'doc_table'));
     _.each(tables, function(value) {
         var tableName = 'Table_' + value;
-        var curTable = { name: tableName, fullName: tableName, collection: {} };
+        var curTable = { name: alias[tableName], fullName: tableName, collection: {} };
         var curTableSegments = _.filter(data, function(segment) {
-            return segment.doc_table == value;
+            return segment.doc_table === value;
         }, this);
         this.buildTableLevelSchema(curTable, curTableSegments);
         tsets['TS_' + tsetName].collection[tableName] = curTable;
