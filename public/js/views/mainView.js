@@ -41,20 +41,24 @@ define(function(require) {
             this.$('#loader').remove();
             this.$('#app-panel').show();
             this.doctree.componentCollection.add(model);
+            this.debugJSON();
             return this;
         },
 
         debugJSON: function() {
-            $.ajax({
-                context: this,
-                url: '/document',
-                success: function(data) {
-                    var $pre = $('<pre/>', { 'class': 'prettyprint' });
-                    var $code = $('<code/>', { 'class': 'language-js' });
-                    $code.append(JSON.stringify(data, null, 4));
-                    $('#content').append($pre.append($code));
-                }
-            });
+            //: any argument passed will cause debugJSON to not run
+            if (!arguments[0]) {
+                $.ajax({
+                    context: this,
+                    url: '/document',
+                    success: function(data) {
+                        var $pre = $('<pre/>', { 'class': 'prettyprint' });
+                        var $code = $('<code/>', { 'class': 'language-js' });
+                        $code.append(JSON.stringify(data, null, 4));
+                        $('#detail-panel').append($pre.append($code));
+                    }
+                });
+            }
         }
     });
 
